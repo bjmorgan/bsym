@@ -18,8 +18,8 @@ def unique_configurations_from_sites( site_distribution, spacegroup, verbose=Fal
     return( unique_configurations )
 
 def coordinate_list_from_sitelists( configs, labels, sitelists ):
-    for idx, config in enumerate( configs ):
-        print( "\n# " + str( idx + 1 ) )
+    for idx, config in enumerate( configs, start=1 ):
+        print( "\n# " + str( idx ) )
         for label in labels:
             for pos in config.position( label ):
                 for sitelist in sitelists:
