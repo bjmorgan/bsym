@@ -16,3 +16,11 @@ def unique_configurations_from_sites( site_distribution, spacegroup, verbose=Fal
     if verbose:
         print( 'unique configurations: ' + str( len( unique_configurations ) ) ) 
     return( unique_configurations )
+
+def coordinate_list_from_sitelists( configs, labels, sitelists ):
+    for idx, config in enumerate( configs ):
+        print( "\n# " + str( idx + 1 ) )
+        for label in labels:
+            for pos in config.position( label ):
+                for sitelist in sitelists:
+                    sitelist.print_site( pos )
