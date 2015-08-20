@@ -134,11 +134,11 @@ The full set of labels for a SpaceGroup object `sg` can be obtained using
 
 and individual symmetry operations can be referenced using
 
-  sg.by_label( label )
+    sg.by_label( label )
 
 Once generated, the set of mapping vectors (symmetry operations) that make up a space group can be save to a file using
 
-  sg.save_symmetry_operation_vectors_to( filename )
+    sg.save_symmetry_operation_vectors_to( filename )
 
 [gpm]: https://en.wikipedia.org/wiki/Generalized_permutation_matrix
 
