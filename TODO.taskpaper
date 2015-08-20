@@ -1,2 +1,9 @@
 Update README.md:
     - Add links to lithium titanate spinel surfaces paper once this is deposited in a repository / published.
+
+Documentation:
+    - Add proper doc strings to the routines
+    - Provide a more complex usage example:
+        - using labelled symmetry operations.
+        - generating new symmetry operations by similarity transforms, and adding these to a space group.
+        - generating lists of occupied sites for use in automated calculations. 
