@@ -1,6 +1,6 @@
 # symmetry
 
-This library has been written to identify symmetry inequivalent arrangements of objects on a periodic 2D lattice.
+This library has been written to identify symmetry inequivalent arrangements of objects on an arbitrary lattice.
 It's intended application is for enumeration of atom configurations on crystalline surfaces.
 An example application is described in [this publication][LTO surfaces paper].
 
