@@ -10,6 +10,10 @@ Source code is available as a git repository at [https://github.com/bjmorgan/sym
 
 Please direct any enquiries to b.j.morgan@bath.ac.uk.
 
+If you use this code in your research, please provide a link to this repository and cite TO BE ADDED.
+
+BJM 20/08/15
+
 [LTO surfaces paper]: TODO
 [my site]: http://analysisandsynthesis.com
 [github]: https://github.com/bjmorgan/symmetry
