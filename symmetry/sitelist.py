@@ -9,6 +9,7 @@ class SiteList( list ):
 
         Args:
             filename (str): name of the file to be read.
+
         Returns:
             a new SiteList instance
         """
@@ -20,6 +21,7 @@ class SiteList( list ):
 
         Args:
             index (list): list of indices for which site coordinates to print
+
         Returns:
             None
         """
