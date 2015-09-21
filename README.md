@@ -86,7 +86,7 @@ A rotation of 90 degrees clockwise moves these to:
       - -
 
 which can be described with a vector `2 4 1 3`: each entry encodes the initial site as the index within the vector, and the final site as the value at that index.
-Internally "SpaceGroup" objects are stored as matrices that map from the initial to final coordinates (these are [generalized permutation matrices][gpm]), but can be initialised from vector notation using
+Internally "SpaceGroup" objects are stored as matrices that map from the initial to final coordinates (these are [generalized permutation matrices][gpm]), but can be initialised from vector notation using TODO: matrices also have every element as 1 or 0.
 
     SpaceGroup.from_vector( <vector> )
 
