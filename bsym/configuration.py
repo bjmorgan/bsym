@@ -1,5 +1,5 @@
 import numpy as np
-from symmetry.permutations  import unique_permutations, all_permutations
+from bsym.permutations  import unique_permutations, all_permutations
 
 class Configuration( np.matrix ):
     def matches( self, test_configuration ):

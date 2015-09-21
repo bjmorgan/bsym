@@ -1,5 +1,5 @@
-from symmetry.permutations  import unique_permutations, all_permutations
-from symmetry.configuration import Configuration
+from bsym.permutations  import unique_permutations, all_permutations
+from bsym.configuration import Configuration
 
 def unique_configurations_from_sites( site_distribution, spacegroup, verbose=False ):
     number_of_sites = sum( site_distribution.values() )

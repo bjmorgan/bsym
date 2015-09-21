@@ -14,14 +14,14 @@ class SpaceGroup:
 
     @classmethod
     def read_from_file( cls, filename ):
-        from symmetry import symmetry_operation as so
+        from bsym import symmetry_operation as so
         data = np.loadtxt( filename, dtype=int )
         symmetry_operations = [ so.SymmetryOperation.from_vector( row.tolist() ) for row in data ]
         return( cls( symmetry_operations = symmetry_operations ) )
 
     @classmethod
     def read_from_file_with_labels( cls, filename ):
-        from symmetry import symmetry_operation as so
+        from bsym import symmetry_operation as so
         data = np.genfromtxt( filename, dtype=None )
         labels = [ row.tolist()[0].decode( 'utf-8' ) for row in data ]
         symmetry_operations = [ so.SymmetryOperation.from_vector( row.tolist()[1:] ) for row in data ]

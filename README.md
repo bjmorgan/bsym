@@ -1,22 +1,21 @@
-# symmetry
+# bsym
 
 This library has been written to identify symmetry inequivalent arrangements of objects on an arbitrary lattice.
-It's intended application is for enumeration of atom configurations on crystalline surfaces.
-An example application is described in [this publication][LTO surfaces paper].
+It's initial application was the enumeration of atom configurations on crystalline surfaces, described in [this publication][LTO surfaces paper]. 
 
 The initial version was written by [Benjamin J. Morgan][my site] in 2014.
 
-Source code is available as a git repository at [https://github.com/bjmorgan/symmetry][github]
+Source code is available as a git repository at [https://github.com/bjmorgan/bsym][github]
 
 Please direct any enquiries to b.j.morgan@bath.ac.uk.
 
-If you use this code in your research, please provide a link to this repository and cite TO BE ADDED.
+If you use this code in your research, please provide a link to this repository and cite [this paper][LTO surfaces paper].
 
 BJM 20/08/15
 
-[LTO surfaces paper]: TODO
+[LTO surfaces paper]: TODO add this on publication
 [my site]: http://analysisandsynthesis.com
-[github]: https://github.com/bjmorgan/symmetry
+[github]: https://github.com/bjmorgan/bsym
 
 # introduction
 
