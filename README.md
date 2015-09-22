@@ -1,7 +1,7 @@
 # bsym
 
 This library has been written to identify symmetry inequivalent arrangements of objects on an arbitrary lattice.
-It's initial application was the enumeration of atom configurations on crystalline surfaces, described in [this publication][LTO surfaces paper]. 
+Its initial application was the enumeration of atom configurations on crystalline surfaces, described in [this publication][LTO surfaces paper]. 
 
 The initial version was written by [Benjamin J. Morgan][my site] in 2014.
 
