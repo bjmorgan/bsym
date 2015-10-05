@@ -26,7 +26,7 @@ class SymmetryOperation:
         else:
             raise TypeError
         self.label = label
-        return self
+#        return self
 
     def __mul__( self, other ):
         """
