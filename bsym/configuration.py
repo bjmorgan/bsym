@@ -2,6 +2,7 @@ import numpy as np
 from bsym.permutations  import unique_permutations, all_permutations
 
 class Configuration( np.matrix ):
+
     def matches( self, test_configuration ):
         return ( ( self == test_configuration ).all() )
 
@@ -20,11 +21,20 @@ class Configuration( np.matrix ):
             return False
 
     def has_equivalent_in_list( self, list, symmetry_operations ):
+        print( 'i' )
         for config in list:
+            print( config.as_number, self.as_number )
             if ( self.is_equivalent_to( config, symmetry_operations ) ):
                 return True
         else:
             return False
+
+    def set_lowest_numeric_representation( self, symmetry_operations ):
+       self.lowest_numeric_representation = min( [ symmetry_operation.operate_on( self ).as_number for symmetry_operation in symmetry_operations ] )
+
+    @property
+    def as_number( self ):
+        return int( ''.join( str(e) for e in self.tolist() ) )
 
     @classmethod
     def from_tuple( cls, this_tuple ):

@@ -9,10 +9,14 @@ def unique_configurations_from_sites( site_distribution, spacegroup, verbose=Fal
     if verbose:
         print( 'total permutations: ' + str( len( permutations ) ) ) 
     all_configurations = [ Configuration.from_tuple( p ) for p in permutations ]
+    for i, config in enumerate( all_configurations ):
+        config.set_lowest_numeric_representation( spacegroup.symmetry_operations ) 
+    seen = set()
     unique_configurations = []
     for config in all_configurations:
-        if not config.has_equivalent_in_list( unique_configurations, spacegroup.symmetry_operations ): 
-            unique_configurations.append( config ) 
+        if config.lowest_numeric_representation not in seen:
+            seen.add( config.lowest_numeric_representation )
+            unique_configurations.append( config )
     if verbose:
         print( 'unique configurations: ' + str( len( unique_configurations ) ) ) 
     return( unique_configurations )
