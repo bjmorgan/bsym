@@ -20,8 +20,8 @@ def unique_symmetry_operations_as_vectors_from_structure( structure ):
 
     mappings = []
     for symmop in symmetry_operations:
-        new_structure = Structure( structure.lattice, structure.species, symmop.operate_multi( structure.cart_coords ) )
-        new_mapping = [ x+1 for x in list( coord_list_mapping_pbc( new_structure.cart_coords, structure.cart_coords ) ) ]
+        new_structure = Structure( structure.lattice, structure.species, symmop.operate_multi( structure.frac_coords ) )
+        new_mapping = [ x+1 for x in list( coord_list_mapping_pbc( new_structure.frac_coords, structure.frac_coords ) ) ]
         if new_mapping not in mappings:
             mappings.append( new_mapping )
 
