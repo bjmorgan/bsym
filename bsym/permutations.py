@@ -19,7 +19,7 @@ def unique_permutation_helper( unique_list, result_list,d ):
             if i.occurrences > 0:
                 result_list[d] = i.value
                 i.occurrences -= 1
-                for g in  unique_permutation_helper( unique_list, result_list, d-1 ):
+                for g in unique_permutation_helper( unique_list, result_list, d-1 ):
                     yield g
                 i.occurrences += 1
 
