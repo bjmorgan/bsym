@@ -3,7 +3,7 @@
 from bsym import bsym as sym
 
 def complete_spacegroup():
-    sg_filename = "../spacegroups/Li7Ti5O12_Li_surface"
+    sg_filename = "../../spacegroups/Li7Ti5O12_Li_surface"
     sg = sym.SpaceGroup.read_from_file_with_labels( sg_filename )
     # generate symmetry operations that aren't already in the sg file
     c3_4 = sg.by_label( 'c3_4' )

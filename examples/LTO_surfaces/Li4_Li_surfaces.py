@@ -2,7 +2,7 @@
 
 from bsym import bsym as sym
 
-sg_filename = "../spacegroups/Li4Ti5O12_Li_surface"
+sg_filename = "../../spacegroups/Li4Ti5O12_Li_surface"
 
 sg = sym.SpaceGroup.read_from_file_with_labels( sg_filename )
 
