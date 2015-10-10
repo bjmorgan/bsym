@@ -32,6 +32,9 @@ class Configuration( np.matrix ):
     def set_lowest_numeric_representation( self, symmetry_operations ):
        self.lowest_numeric_representation = min( [ symmetry_operation.operate_on( self ).as_number for symmetry_operation in symmetry_operations ] )
 
+    def numeric_equivalents( self, symmetry_operations ):
+        return [ symmetry_operation.operate_on( self ).as_number for symmetry_operation in symmetry_operations ]
+
     @property
     def as_number( self ):
         return int( ''.join( str(e) for e in self.tolist() ) )

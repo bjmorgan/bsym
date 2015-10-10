@@ -1,29 +1,30 @@
-from bsym.permutations  import unique_permutations, all_permutations
+from bsym.permutations  import unique_permutations, next_permutationS, flatten_list
 from bsym.configuration import Configuration
 
 def unique_configurations_from_sites( site_distribution, spacegroup, verbose=False ):
     number_of_sites = sum( site_distribution.values() )
     if verbose:
-        print( 'total number of sites: ' + str( number_of_sites ) ) 
-    permutations = all_permutations( site_distribution, number_of_sites = number_of_sites )
-    if verbose:
-        print( 'total permutations: ' + str( len( permutations ) ) ) 
-    all_configurations = [ Configuration.from_tuple( p ) for p in permutations ]
-    for i, config in enumerate( all_configurations ):
-        config.set_lowest_numeric_representation( spacegroup.symmetry_operations ) 
+        print( 'total number of sites: ' + str( number_of_sites ) )
+        print( 'found {:d} inequivalent symmetry operations: '.format( len( spacegroup.symmetry_operations ) ) )
+    permutations = []
+    working = True
     seen = set()
-    unique_configuration_counts = {}
     unique_configurations = []
-    for config in all_configurations:
-        if config.lowest_numeric_representation not in seen:
-            seen.add( config.lowest_numeric_representation )
+    count = 0
+    s = flatten_list( [ [ key ] * site_distribution[ key ] for key in site_distribution ] )
+    while working:
+        working, new_permutation = next_permutationS( s )
+        count += 1
+        config = Configuration.from_tuple( new_permutation )
+        config_id = int( ''.join( map( str, new_permutation ) ) )
+        if config_id not in seen:
+            [ seen.add( i ) for i in config.numeric_equivalents( spacegroup.symmetry_operations ) ]
             unique_configurations.append( config )
-            unique_configuration_counts[ config.lowest_numeric_representation ] = 1
-        else:
-            unique_configuration_counts[ config.lowest_numeric_representation ] += 1
+            if verbose:
+                print( "found {:d}, screened {:d}".format( len( unique_configurations ), len( seen ) ) )
     if verbose:
-        print( 'unique configurations: ' + str( len( unique_configurations ) ) ) 
-    return( unique_configurations )
+        print( 'unique configurations: ' + str( len( unique_configurations ) ) )
+    return( unique_configurations ) 
 
 def coordinate_list_from_sitelists( configs, labels, sitelists ):
     for idx, config in enumerate( configs, start=1 ):
