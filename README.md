@@ -11,7 +11,9 @@ Please direct any enquiries to b.j.morgan@bath.ac.uk.
 
 If you use this code in your research, please provide a link to this repository and cite [this paper][LTO surfaces paper].
 
-BJM 20/08/15
+Contributors:
+Benjamin J. Morgan
+Conn O'Rourke
 
 [LTO surfaces paper]: TODO add this on publication
 [my site]: http://analysisandsynthesis.com
