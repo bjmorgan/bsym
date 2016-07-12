@@ -1,5 +1,6 @@
 from bsym.permutations  import unique_permutations, next_permutationS, flatten_list
 from bsym.configuration import Configuration
+import numpy as np
 
 def unique_configurations_from_sites( site_distribution, spacegroup, verbose=False ):
     number_of_sites = sum( site_distribution.values() )
@@ -33,3 +34,14 @@ def coordinate_list_from_sitelists( configs, labels, sitelists ):
             for pos in config.position( label ):
                 for sitelist in sitelists:
                     sitelist.print_site( pos )
+
+def list_of_coordinates_from_sitelists( configs, labels, sitelists ):
+    all_coords = []
+    for config in configs:
+        coords = [] 
+        for label in labels:
+            for pos in config.position( label ):
+                for sitelist in sitelists:
+                    coords.append( sitelist[ pos ] )   
+        all_coords.append( coords )
+    return np.array( all_coords )

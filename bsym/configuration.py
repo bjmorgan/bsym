@@ -21,7 +21,6 @@ class Configuration( np.matrix ):
             return False
 
     def has_equivalent_in_list( self, list, symmetry_operations ):
-        print( 'i' )
         for config in list:
             print( config.as_number, self.as_number )
             if ( self.is_equivalent_to( config, symmetry_operations ) ):
