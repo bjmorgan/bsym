@@ -18,7 +18,7 @@ def unique_symmetry_operations_as_vectors_from_structure( structure, subset = No
     """
     symmetry_analyzer = SpacegroupAnalyzer( structure )
 
-    print( "The spacegroup for structure is {}".format(symmetry_analyzer.get_spacegroup_symbol()) )
+    print( "The spacegroup for structure is {}".format(symmetry_analyzer.get_space_group_symbol()) )
 
     symmetry_operations = symmetry_analyzer.get_symmetry_operations()
 
