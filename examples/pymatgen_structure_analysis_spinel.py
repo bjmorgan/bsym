@@ -25,7 +25,7 @@ if __name__ == '__main__':
     sg = spacegroup_from_structure( parent_structure )
 
     # define the site occupations
-    site_dist = { 1 : 1, 
+    site_dist = { 1 : 4, 
                   0 : 4 }
 
     # find the unique configurations
