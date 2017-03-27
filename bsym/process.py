@@ -1,4 +1,4 @@
-from bsym.permutations  import unique_permutations, next_permutationS, flatten_list
+from bsym.permutations  import flatten_list, unique_permutations
 from bsym.configuration import Configuration
 import numpy as np
 
@@ -11,11 +11,8 @@ def unique_configurations_from_sites( site_distribution, spacegroup, verbose=Fal
     working = True
     seen = set()
     unique_configurations = []
-    count = 0
     s = flatten_list( [ [ key ] * site_distribution[ key ] for key in site_distribution ] )
-    while working:
-        working, new_permutation = next_permutationS( s )
-        count += 1
+    for new_permutation in unique_permutations( s ):
         config = Configuration.from_tuple( new_permutation )
         config_id = int( ''.join( map( str, new_permutation ) ) )
         if config_id not in seen:

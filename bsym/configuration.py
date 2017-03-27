@@ -1,5 +1,4 @@
 import numpy as np
-from bsym.permutations  import unique_permutations, all_permutations
 
 class Configuration( np.matrix ):
 
