@@ -16,10 +16,12 @@ class PermutationsTestCase( unittest.TestCase ):
                              [ 0, 1, 1, 0 ],
                              [ 0, 1, 0, 1 ],
                              [ 0, 0, 1, 1 ] ]
-        unique_permutations = list( permutations.unique_permutations( seq ) )
         for p in all_permutations:
-            self.assertEqual( p in all_permutations, True )
-        self.assertEqual( len( all_permutations ), len( unique_permutations ) )
+            unique_permutations = list( permutations.unique_permutations( p ) )
+            for p2 in unique_permutations:
+                self.assertEqual( p2 in all_permutations, True )
+            self.assertEqual( len( all_permutations ), len( unique_permutations ) )
+
  
 if __name__ == '__main__':
     unittest.main()
