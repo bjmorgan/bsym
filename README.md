@@ -9,13 +9,13 @@ Source code is available as a git repository at [https://github.com/bjmorgan/bsy
 
 Please direct any enquiries to b.j.morgan@bath.ac.uk.
 
-If you use this code in your research, please provide a link to this repository and cite [this paper][LTO surfaces paper].
+If you use this code in your research, please cite the repository doi [![DOI](https://zenodo.org/badge/19279643.svg)](https://zenodo.org/badge/latestdoi/19279643) and cite [this paper][LTO surfaces paper].
 
 Contributors:  
 Benjamin J. Morgan  
 Conn O'Rourke
 
-[LTO surfaces paper]: TODO add this on publication
+[LTO surfaces paper]: http://pubs.rsc.org/en/content/articlelanding/2016/TA/c6ta05980e#!divAbstract 
 [my site]: http://analysisandsynthesis.com
 [github]: https://github.com/bjmorgan/bsym
 
