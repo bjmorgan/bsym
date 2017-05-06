@@ -72,7 +72,7 @@ We then define the distribution of different sites, e.g. for 2 occupied and 2 un
      
  A clean print of the occupation vectors for the results is generated with:
  
- [ config.pprint() for config in unique_configurations ] 
+    [ config.pprint() for config in unique_configurations ] 
  
  In this case we get:
  
