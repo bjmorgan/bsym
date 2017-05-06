@@ -1,2 +1,4 @@
 numpy
 pymatgen
+coverage
+codeclimate-test-reporter
