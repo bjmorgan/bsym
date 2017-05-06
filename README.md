@@ -3,7 +3,7 @@
 [![Code Climate](https://codeclimate.com/github/bjmorgan/bsym/badges/gpa.svg)](https://codeclimate.com/github/bjmorgan/bsym)
 [![Test Coverage](https://codeclimate.com/github/bjmorgan/bsym/badges/coverage.svg)](https://codeclimate.com/github/bjmorgan/bsym/coverage)
 
-# bsym
+# Bsym - a Basic Symmetry Module in Python
 
 This library has been written to identify symmetry inequivalent arrangements of objects on an arbitrary lattice.
 Its initial application was the enumeration of atom configurations on crystalline surfaces, described in [this publication][LTO surfaces paper]. 
@@ -25,7 +25,18 @@ Conn O'Rourke
 [github]: https://github.com/bjmorgan/bsym
 [doi]: https://zenodo.org/badge/latestdoi/19279643
 
-# introduction
+## Tests
+
+Automated testing of the latest build happens [here](https://travis-ci.org/bjmorgan/bsym).
+
+Manual tests can be run using
+```
+python -m unittest discover
+```
+
+The code has been tested with Python versions 3.5 and above.
+
+# Introduction
 
 A simple example of this code if provided in `./examples/first_example.py`. This enumerates the possible ways to occupy two sites (out of four) on a square 2x2 lattice.
 
