@@ -127,7 +127,7 @@ Finally, a useful method for generating new symmetry operations is
 
     symmetry_operation.similarity_transform( symmetry_operation_2 )
 
-which calculates S^{-1}.A.S
+which calculates S<sup>-1</sup>.A.S
 This can be used to build up the full set of symmetry operations for a space group using e.g.
 
     sg.append( s5_1.similarity_transform( c3_4 ).set_label( 's5_2' ) )
