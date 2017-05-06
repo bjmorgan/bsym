@@ -27,7 +27,7 @@ Conn O'Rourke
 
 ## Tests
 
-Automated testing of the latest build happens [here](https://travis-ci.org/bjmorgan/bsym).
+Automated testing of the latest commit happens [here](https://travis-ci.org/bjmorgan/bsym).
 
 Manual tests can be run using
 ```
@@ -47,7 +47,7 @@ Sites in a square lattice can be represented by numerical labels:
     | 3 4 |
       - -
 
-The script first constructs the "space group" by reading a file containing all relevant symmetry operations.
+The script first constructs the &ldquo;space group&rdquo; by reading a file containing all relevant symmetry operations.
 
     spacegroup_filename = '../spacegroups/cubic_spacegroup_annotated'
     sg = sym.SpaceGroup.read_from_file( spacegroup_filename )
@@ -56,8 +56,8 @@ This file contains a list of integer vectors. Each entry describes the mapping f
 e.g.
 
 - the identity keeps all sites unchanged: `1 2 3 4`
-- a 90 degree rotation clockwise maps 1 -> 2, 2 -> 4, 4 -> 3, and 3 -> 1, and is encoded as `2 4 1 3`.
-- a translation by half the cell to the right maps 1 -> 2, 2 -> 1, 3 -> 4, and 4 -> 3, and is encoded as `2 1 4 3`.
+- a 90 degree rotation clockwise maps 1 &rarr; 2, 2 &rarr; 4, 4 &rarr; 3, and 3 &rarr; 1, and is encoded as `2 4 1 3`.
+- a translation by half the cell to the right maps 1 &rarr; 2, 2 &rarr; 1, 3 &rarr; 4, and 4 &rarr; 3, and is encoded as `2 1 4 3`.
 
 We then define the distribution of different sites, e.g. for 2 occupied and 2 unoccupied sites:
 
@@ -105,7 +105,7 @@ A rotation of 90 degrees clockwise moves these to:
       - -
 
 which can be described with a vector `2 4 1 3`: each entry encodes the initial site as the index within the vector, and the final site as the value at that index.
-Internally "SpaceGroup" objects are stored as matrices that map from the initial to final coordinates (these are [generalized permutation matrices][gpm]), but can be initialised from vector notation using TODO: matrices also have every element as 1 or 0.
+Internally &ldquo;SpaceGroup&rdquo; objects are stored as matrices that map from the initial to final coordinates (these are [generalized permutation matrices][gpm]), but can be initialised from vector notation using TODO: matrices also have every element as 1 or 0.
 
     SpaceGroup.from_vector( <vector> )
 
