@@ -7,3 +7,6 @@ Documentation:
         - using labelled symmetry operations.
         - generating new symmetry operations by similarity transforms, and adding these to a space group.
         - generating lists of occupied sites for use in automated calculations. 
+
+Examples:
+    - Add a README to the LTO_surfaces examples directory to explain what this is / link to the LTO surfaces paper
