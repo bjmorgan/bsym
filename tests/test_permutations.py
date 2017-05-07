@@ -21,7 +21,6 @@ class PermutationsTestCase( unittest.TestCase ):
             for p2 in unique_permutations:
                 self.assertEqual( p2 in all_permutations, True )
             self.assertEqual( len( all_permutations ), len( unique_permutations ) )
-
  
 if __name__ == '__main__':
     unittest.main()

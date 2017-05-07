@@ -1,1 +1,3 @@
 bsym/__pycache__
+.coverage
+tests/.coverage
