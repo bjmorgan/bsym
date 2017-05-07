@@ -3,22 +3,16 @@
 [![Code Climate](https://codeclimate.com/github/bjmorgan/bsym/badges/gpa.svg)](https://codeclimate.com/github/bjmorgan/bsym)
 [![Test Coverage](https://codeclimate.com/github/bjmorgan/bsym/badges/coverage.svg)](https://codeclimate.com/github/bjmorgan/bsym/coverage)
 
-# Bsym - a Basic Symmetry Module in Python
+# bsym - a Basic Symmetry Module in Python
 
 This library has been written to identify symmetry inequivalent arrangements of objects on an arbitrary lattice.
 Its initial application was the enumeration of atom configurations on crystalline surfaces, described in [this publication][LTO surfaces paper]. 
-
-The initial version was written by [Benjamin J. Morgan][my site] in 2014.
 
 Source code is available as a git repository at [https://github.com/bjmorgan/bsym][github]
 
 Please direct any enquiries to b.j.morgan@bath.ac.uk.
 
 If you use this code in your research, please cite the repository [doi][doi] and cite [this paper][LTO surfaces paper].
-
-Contributors:  
-Benjamin J. Morgan  
-Conn O'Rourke
 
 [LTO surfaces paper]: http://pubs.rsc.org/en/content/articlelanding/2016/TA/c6ta05980e#!divAbstract 
 [my site]: http://analysisandsynthesis.com
