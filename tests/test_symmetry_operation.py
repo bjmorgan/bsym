@@ -87,6 +87,11 @@ class SymmetryOperationTestCase( unittest.TestCase ):
         matrix = np.matrix( [ [ 1, 0 ], [ 0, 1 ] ] )
         so = SymmetryOperation( matrix )
         self.assertEqual( so.as_vector(), [ 1, 2 ] )
-   
+  
+    def test_as_vector_counting_from_zero( self ):
+        matrix = np.matrix( [ [ 1, 0 ], [ 0, 1 ] ] )
+        so = SymmetryOperation( matrix )
+        self.assertEqual( so.as_vector( count_from_zero=True ), [ 0, 1 ] )
+ 
 if __name__ == '__main__':
     unittest.main()
