@@ -68,7 +68,7 @@ class SymmetryOperation:
             a new SymmetryOperation object
         """
         if not count_from_zero:
-            vector = [ element - 1 for element in vector ]
+            vector = list( map( lambda x: x - 1, vector ) )
         dim = len( vector )
         new_symmetry_operation = cls( np.zeros( ( dim, dim ), dtype=int ) )
         for index, element in enumerate( vector ):
