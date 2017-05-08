@@ -1,6 +1,7 @@
 branches:
   only:
     - master
+    - testing
 language: python
 notifications:
   email: false
