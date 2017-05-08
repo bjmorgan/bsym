@@ -1,6 +1,5 @@
 [![DOI](https://zenodo.org/badge/19279643.svg)](https://zenodo.org/badge/latestdoi/19279643)
 [![Build Status](https://travis-ci.org/bjmorgan/bsym.svg?branch=master)](https://travis-ci.org/bjmorgan/bsym)
-[![Code Climate](https://codeclimate.com/github/bjmorgan/bsym/badges/gpa.svg)](https://codeclimate.com/github/bjmorgan/bsym)
 [![Test Coverage](https://codeclimate.com/github/bjmorgan/bsym/badges/coverage.svg)](https://codeclimate.com/github/bjmorgan/bsym/coverage)
 
 # bsym - a Basic Symmetry Module in Python
