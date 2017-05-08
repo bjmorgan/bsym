@@ -78,10 +78,15 @@ class SymmetryOperationTestCase( unittest.TestCase ):
             mock_configuration.return_value = 'foo'
             so.operate_on( configuration )
             self.assertEqual( mock_configuration.call_args[0][0], ( so.matrix * configuration ).tolist() )
-    def test_trace( self ):
+    def test_character( self ):
         matrix = np.matrix( [ [ 1, 0 ], [ 0, 1 ] ] )
         so = SymmetryOperation( matrix )
         self.assertEqual( so.character(), 2 )
 
+    def test_as_vector( self ):
+        matrix = np.matrix( [ [ 1, 0 ], [ 0, 1 ] ] )
+        so = SymmetryOperation( matrix )
+        self.assertEqual( so.as_vector(), [ 1, 2 ] )
+   
 if __name__ == '__main__':
     unittest.main()
