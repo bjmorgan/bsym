@@ -3,6 +3,7 @@ import numpy as np
 from bsym.symmetry_operation import SymmetryOperation
 from bsym.configuration import Configuration
 from unittest.mock import patch
+import io
 
 class SymmetryOperationTestCase( unittest.TestCase ):
     """Tests for symmetry operation functions"""
@@ -92,6 +93,26 @@ class SymmetryOperationTestCase( unittest.TestCase ):
         matrix = np.matrix( [ [ 1, 0 ], [ 0, 1 ] ] )
         so = SymmetryOperation( matrix )
         self.assertEqual( so.as_vector( count_from_zero=True ), [ 0, 1 ] )
- 
+
+    def test_se_label( self ):
+        matrix = np.matrix( [ [ 1, 0 ], [ 0, 1 ] ] )
+        so = SymmetryOperation( matrix )
+        so.set_label( 'new_label' )
+        self.assertEqual( so.label, 'new_label' )
+
+    def test_pprint( self ):
+        matrix = np.matrix( [ [ 1, 0 ], [ 0, 1 ] ] )
+        so = SymmetryOperation( matrix )
+        with patch( 'sys.stdout', new=io.StringIO() ) as mock_stdout:
+            so.pprint()
+            self.assertEqual( mock_stdout.getvalue(), '--- : 1 2\n' ) 
+
+    def test_pprint_with_label( self ):
+        matrix = np.matrix( [ [ 1, 0 ], [ 0, 1 ] ] )
+        so = SymmetryOperation( matrix, label='L' )
+        with patch( 'sys.stdout', new=io.StringIO() ) as mock_stdout:
+            so.pprint()
+            self.assertEqual( mock_stdout.getvalue(), 'L : 1 2\n' ) 
+
 if __name__ == '__main__':
     unittest.main()
