@@ -18,11 +18,11 @@ def unique_symmetry_operations_as_vectors_from_structure( structure, verbose=Tru
     """
     symmetry_analyzer = SpacegroupAnalyzer( structure )
     if verbose:
-        print( "The spacegroup for this structure is {}".format(symmetry_analyzer.get_space_group_symbol()) )
+        print( "The spacegroup for this structure is {}".format( symmetry_analyzer.get_space_group_symbol()) )
     symmetry_operations = symmetry_analyzer.get_symmetry_operations()
     mappings = []
     if subset:
-        species_subset = [ spec for i,spec in enumerate(structure.species) if i in subset]
+        species_subset = [ spec for i,spec in enumerate( structure.species ) if i in subset]
         frac_coords_subset = [ coord for i, coord in enumerate( structure.frac_coords ) if i in subset ]
         mapping_structure = Structure( structure.lattice, species_subset, frac_coords_subset ) 
     else:
