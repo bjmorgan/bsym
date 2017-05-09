@@ -9,7 +9,7 @@ class TestPymatgenInterface( unittest.TestCase ):
     def test_unique_symmetry_operations_as_vectors_from_structure( self ):
         # integration test
         # construct a pymatgen Structure instance using the site fractional coordinates
-        # fcc lattice
+        # face-centered cubic lattice
         coords = np.array( [ [ 0.0, 0.0, 0.0 ],
                              [ 0.5, 0.5, 0.0 ],
                              [ 0.0, 0.5, 0.5 ],
