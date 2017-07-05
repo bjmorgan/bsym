@@ -12,7 +12,7 @@ except ImportError:
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-VERSION = '0.1.2'
+VERSION = '0.1.3'
 
 config = {
     'description': 'A Basic Symmetry Module'
