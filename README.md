@@ -157,7 +157,7 @@ Once generated, the set of mapping vectors (symmetry operations) that make up a 
 
 [gpm]: https://en.wikipedia.org/wiki/Generalized_permutation_matrix
 
-# Citing `bsym`
+## Citing `bsym`
 
 This code can be cited as:
 
@@ -165,6 +165,7 @@ Morgan, Benjamin J. (2017, July 5). *bsym - a Basic Symmetry Module*. Zenodo. ht
 
 ### BibTeX
 
+```
 @misc{morgan_benjamin_j_2017_823127,
   author       = {Morgan, Benjamin J.},
   title        = {bsym - a Basic Symmetry Module},
@@ -173,6 +174,7 @@ Morgan, Benjamin J. (2017, July 5). *bsym - a Basic Symmetry Module*. Zenodo. ht
   doi          = {10.5281/zenodo.823127},
   url          = {https://doi.org/10.5281/zenodo.823127}
 }
+```
 
 ## References
 
