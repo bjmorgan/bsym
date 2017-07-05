@@ -17,10 +17,10 @@ class SiteList( list ):
 
     def print_site( self, index ):
         """
-        Print a subset of sites as x1, y1, z1, etc.
+        Print coordinates of a single site: x1, y1, z1.
 
         Args:
-            index (list): list of indices for which site coordinates to print
+            index (Int): index for the site coordinates to print
 
         Returns:
             None
