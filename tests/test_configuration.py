@@ -29,12 +29,12 @@ class TestConfiguration( unittest.TestCase ):
 
     def test_is_in_list( self ):
         configuration_list = [ Configuration( [ 0, 1, 0 ] ), Configuration( [ 1, 0, 0 ] ) ]
-        configuration.matches = Mock( return_value=True )
+        self.configuration.matches = Mock( return_value=True )
         self.assertEqual( self.configuration.is_in_list( configuration_list ), True )
 
     def test_is_in_list_fails( self ):
         configuration_list = [ Configuration( [ 0, 1, 0 ] ), Configuration( [ 0, 0, 1 ] ) ]
-        configuration.matches = Mock( return_value=False )
+        self.configuration.matches = Mock( return_value=False )
         self.assertEqual( self.configuration.is_in_list( configuration_list ), False )
 
 if __name__ == '__main__':
