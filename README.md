@@ -5,7 +5,7 @@
 # bsym - a Basic Symmetry Module in Python
 
 This library has been written to identify symmetry inequivalent arrangements of objects on an arbitrary lattice.
-Its initial application was the enumeration of atom configurations on crystalline surfaces, described in [this publication][LTO surfaces paper]. 
+Its initial application was the enumeration of atom configurations on crystalline surfaces, described in [this publication][LTO surfaces paper]\[1\]. 
 
 Source code is available as a git repository at [https://github.com/bjmorgan/bsym][github]
 
@@ -156,4 +156,25 @@ Once generated, the set of mapping vectors (symmetry operations) that make up a 
     sg.save_symmetry_operation_vectors_to( filename )
 
 [gpm]: https://en.wikipedia.org/wiki/Generalized_permutation_matrix
+
+# Citing `bsym`
+
+This code can be cited as:
+
+Morgan, Benjamin J. (2017, July 5). *bsym - a Basic Symmetry Module*. Zenodo. http://doi.org/10.5281/zenodo.823127
+
+### BibTeX
+
+@misc{morgan_benjamin_j_2017_823127,
+  author       = {Morgan, Benjamin J.},
+  title        = {bsym - a Basic Symmetry Module},
+  month        = jul,
+  year         = 2017,
+  doi          = {10.5281/zenodo.823127},
+  url          = {https://doi.org/10.5281/zenodo.823127}
+}
+
+## References
+
+1. B. J. Morgan *et al.* Variation in surface energy and reduction drive of a metal oxide lithium-ion anode with stoichiometry: a DFT study of lithium titanate spinel surfaces. *J Mater Chem A*, (2016) **vol. 4** (43) pp. 17180&endash;17192. doi:[10.1039/C6TA5980E](http://dx.doi.org/10.1039/C6TA05980E)
 
