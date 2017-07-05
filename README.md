@@ -178,5 +178,5 @@ Morgan, Benjamin J. (2017, July 5). *bsym - a Basic Symmetry Module*. Zenodo. ht
 
 ## References
 
-1. B. J. Morgan *et al.* Variation in surface energy and reduction drive of a metal oxide lithium-ion anode with stoichiometry: a DFT study of lithium titanate spinel surfaces. *J Mater Chem A*, (2016) **vol. 4** (43) pp. 17180&endash;17192. doi:[10.1039/C6TA5980E](http://dx.doi.org/10.1039/C6TA05980E)
+1. B. J. Morgan *et al.* Variation in surface energy and reduction drive of a metal oxide lithium-ion anode with stoichiometry: a DFT study of lithium titanate spinel surfaces. *J Mater Chem A*, (2016) **vol. 4** (43) pp. 17180&ndash;17192. doi:[10.1039/C6TA5980E](http://dx.doi.org/10.1039/C6TA05980E)
 
