@@ -98,7 +98,7 @@ A rotation of 90 degrees clockwise moves these to:
       - -
 
 which can be described with a vector `2 4 1 3`: each entry encodes the initial site as the index within the vector, and the final site as the value at that index.
-Internally &ldquo;SpaceGroup&rdquo; objects are stored as matrices that map from the initial to final coordinates (these are [generalized permutation matrices][gpm]), but can be initialised from vector notation using TODO: matrices also have every element as 1 or 0.
+Internally &ldquo;SpaceGroup&rdquo; objects are stored as matrices that map from the initial to final coordinates (these are [permutation matrices][pm]), but can be initialised from vector notation using TODO: matrices also have every element as 1 or 0.
 
     SpaceGroup.from_vector( <vector> )
 
@@ -155,7 +155,7 @@ Once generated, the set of mapping vectors (symmetry operations) that make up a 
 
     sg.save_symmetry_operation_vectors_to( filename )
 
-[gpm]: https://en.wikipedia.org/wiki/Generalized_permutation_matrix
+[gpm]: https://en.wikipedia.org/wiki/Permutation_matrix
 
 ## Citing `bsym`
 
