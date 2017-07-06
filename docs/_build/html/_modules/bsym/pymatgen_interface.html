@@ -79,9 +79,11 @@
 <div class="viewcode-block" id="spacegroup_from_structure"><a class="viewcode-back" href="../../bsym.html#bsym.pymatgen_interface.spacegroup_from_structure">[docs]</a><span class="k">def</span> <span class="nf">spacegroup_from_structure</span><span class="p">(</span> <span class="n">structure</span><span class="p">,</span> <span class="n">subset</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generates a SpaceGroup object from a pymatgen Structure </span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        structure (pymatgen Structure): structure to be used to define the SpaceGroup.</span>
 <span class="sd">        subset    (Optional [list]):    list of atom indices to be used for generating the symmetry operations</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        a new SpaceGroup instance</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -89,10 +91,11 @@
     <span class="n">symmetry_operations</span> <span class="o">=</span> <span class="p">[</span> <span class="n">so</span><span class="o">.</span><span class="n">SymmetryOperation</span><span class="o">.</span><span class="n">from_vector</span><span class="p">(</span> <span class="n">m</span> <span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mappings</span> <span class="p">]</span>
     <span class="k">return</span> <span class="n">SpaceGroup</span><span class="p">(</span> <span class="n">symmetry_operations</span> <span class="o">=</span> <span class="n">symmetry_operations</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="poscar_from_sitelist"><a class="viewcode-back" href="../../bsym.html#bsym.pymatgen_interface.poscar_from_sitelist">[docs]</a><span class="k">def</span> <span class="nf">poscar_from_sitelist</span><span class="p">(</span> <span class="n">configs</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">sitelists</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">subset</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">):</span>
+<div class="viewcode-block" id="poscar_from_sitelist"><a class="viewcode-back" href="../../bsym.html#bsym.pymatgen_interface.poscar_from_sitelist">[docs]</a><span class="k">def</span> <span class="nf">poscar_from_sitelist</span><span class="p">(</span> <span class="n">configs</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">sitelists</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="kc">None</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Uses pymatgen Structure.to() method to generates POSCAR files for a set of </span>
+<span class="sd">    Uses pymatgen Structure.to() method to generate POSCAR files for a set of </span>
 <span class="sd">    configurations within a parent structure.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        configs   (list):               site configurations</span>
 <span class="sd">        labels    (list):               atom labels to output</span>
