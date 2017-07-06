@@ -15,7 +15,7 @@ def read(fname):
 VERSION = '0.1.3'
 
 config = {
-    'description': 'A Basic Symmetry Module'
+    'description': 'A Basic Symmetry Module',
     'long_description': read('README.md'),
     'author': 'Benjamin J. Morgan',
     'author_email': 'b.j.morgan@bath.ac.uk',
