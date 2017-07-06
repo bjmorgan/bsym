@@ -37,9 +37,11 @@ def unique_symmetry_operations_as_vectors_from_structure( structure, verbose=Tru
 def spacegroup_from_structure( structure, subset = None ):
     """
     Generates a SpaceGroup object from a pymatgen Structure 
+
     Args:
         structure (pymatgen Structure): structure to be used to define the SpaceGroup.
         subset    (Optional [list]):    list of atom indices to be used for generating the symmetry operations
+
     Returns:
         a new SpaceGroup instance
     """
@@ -47,10 +49,11 @@ def spacegroup_from_structure( structure, subset = None ):
     symmetry_operations = [ so.SymmetryOperation.from_vector( m ) for m in mappings ]
     return SpaceGroup( symmetry_operations = symmetry_operations )
 
-def poscar_from_sitelist( configs, labels, sitelists, structure, subset = None ):
+def poscar_from_sitelist( configs, labels, sitelists, structure, subset=None ):
     """
-    Uses pymatgen Structure.to() method to generates POSCAR files for a set of 
+    Uses pymatgen Structure.to() method to generate POSCAR files for a set of 
     configurations within a parent structure.
+
     Args:
         configs   (list):               site configurations
         labels    (list):               atom labels to output
@@ -58,17 +61,14 @@ def poscar_from_sitelist( configs, labels, sitelists, structure, subset = None )
         structure (pymatgen Structure): Parent structure
         subset    (Optional [list]):    list of atom indices to output 
     """
-
     if subset:
         species_clean = [ spec for i,spec in enumerate( structure.species ) if i not in subset ]
         species_config = [ spec for i,spec in enumerate( structure.species ) if i in subset ]
         frac_coords_clean = [ coord for i, coord in enumerate( structure.frac_coords ) if i not in subset ]
         clean_structure = Structure( structure.lattice, species_clean, frac_coords_clean )
-
     else:
         clean_structure = Structure( structure.lattice, [], [] )
         species_config = structure.species
-
     for idx, config in enumerate( configs, start=1 ):
        structure_config = clean_structure.copy()
        for label in labels:
