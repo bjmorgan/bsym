@@ -7,16 +7,16 @@ class SymmetryOperation:
 
     def __init__( self, matrix, label=None ):
         """
-        Initialise a SymmetryOperation object
+        Initialise a `SymmetryOperation` object
 
         Args:
-            matrix (numpy.matrix, numpy.ndarray, list): 1D vector as either a
-            numpy matrix, numpy ndarray, or list containing the site mappings
+            matrix (numpy.matrix|numpy.ndarray|list): 1D vector as either a
+            `numpy.matrix`, `numpy.ndarray`, or `list` containing the site mappings
             for this symmetry operation.
-            label (default=None) (str): optional string label for this SymmetryOperation
-            object. Useful for the SpaceGroup.by_label() method.
+            label (default=None) (str): optional string label for this `SymmetryOperation`
+            object. Useful for the `SpaceGroup.by_label()` method.
         Raises:
-            TypeError if matrix is not numpy.matrix, numpy.ndarray, or list.
+            TypeError: if matrix is not `numpy.matrix`, `numpy.ndarray`, or `list`.
 
         Returns:
             self
@@ -30,17 +30,17 @@ class SymmetryOperation:
         else:
             raise TypeError
         self.label = label
-#        return self
 
     def __mul__( self, other ):
         """
-        Multiply two SymmetryOperation matrices
+        Multiply this `SymmetryOperation` matrix with another `SymmetryOperation`.
 
         Args:
             other (SymmetryOperation, matrix): the other symmetry operation or matrix
             for the matrix multiplication self * other.
+
         Returns:
-            a new SymmetryOperation instance with the resultant matrix.
+            (SymmetryOperation): a new `SymmetryOperation` instance with the resultant matrix.
         """
         if isinstance( other, SymmetryOperation ):
             return( SymmetryOperation( self.matrix * other.matrix ) )
