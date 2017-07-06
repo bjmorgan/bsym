@@ -26,7 +26,7 @@ config = {
     'install_requires': [ 'numpy', 
 			  'pymatgen', 
                           'coverage',
-                          'codeclimate-test-reporter' ]
+                          'codeclimate-test-reporter' ],
     'license': 'MIT',
     'packages': [ 'bsym' ],
     'scripts': [],
