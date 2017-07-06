@@ -7,7 +7,7 @@ from bsym import symmetry_operation as so
 
 def unique_symmetry_operations_as_vectors_from_structure( structure, verbose=True, subset=None ):
     """
-    Uses pymatgen symmetry analysis to find the minimum complete set of symmetry operations for the space group of a structure.
+    Uses `pymatgen` symmetry analysis to find the minimum complete set of symmetry operations for the space group of a structure.
 
     Args:
         structure (pymatgen Structure): structure to be analysed.
@@ -36,7 +36,7 @@ def unique_symmetry_operations_as_vectors_from_structure( structure, verbose=Tru
 
 def spacegroup_from_structure( structure, subset = None ):
     """
-    Generates a SpaceGroup object from a pymatgen Structure 
+    Generates a `SpaceGroup` object from a `pymatgen` `Structure`. 
 
     Args:
         structure (pymatgen Structure): structure to be used to define the SpaceGroup.
@@ -51,7 +51,7 @@ def spacegroup_from_structure( structure, subset = None ):
 
 def poscar_from_sitelist( configs, labels, sitelists, structure, subset=None ):
     """
-    Uses pymatgen Structure.to() method to generate POSCAR files for a set of 
+    Uses `pymatgen` `Structure.to()` method to generate `VASP` `POSCAR` files for a set of 
     configurations within a parent structure.
 
     Args:

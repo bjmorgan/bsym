@@ -1,6 +1,10 @@
 import numpy as np
 
 class SymmetryOperation:
+    """
+    `SymmetryOperation` class.
+    """
+
     def __init__( self, matrix, label=None ):
         """
         Initialise a SymmetryOperation object
@@ -45,13 +49,13 @@ class SymmetryOperation:
 
     def invert( self ):
         """
-        Invert this SymmetryOperation object
+        Invert this `SymmetryOperation` object.
 
         Args:
             None
  
         Returns:
-            A new SymmetryOperation object corresponding to the inverse matrix operation
+            A new `SymmetryOperation` object corresponding to the inverse matrix operation.
         """
         return SymmetryOperation( np.linalg.inv( self.matrix ).astype( int ) )
 
@@ -104,7 +108,7 @@ class SymmetryOperation:
 
     def character( self ):
         """
-        Return the character of this symmetry operation (the trace of self.matrix)
+        Return the character of this symmetry operation (the trace of `self.matrix`).
 
         Args:
             none
