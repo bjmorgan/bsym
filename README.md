@@ -11,10 +11,6 @@ Its initial application was the enumeration of atom configurations on crystallin
 
 Source code is available as a git repository at [https://github.com/bjmorgan/bsym][github]
 
-Please direct any enquiries to b.j.morgan@bath.ac.uk.
-
-If you use this code in your research, please cite the repository [doi][doi] and cite [this paper][LTO surfaces paper].
-
 [LTO surfaces paper]: http://pubs.rsc.org/en/content/articlelanding/2016/TA/c6ta05980e#!divAbstract 
 [my site]: http://analysisandsynthesis.com
 [github]: https://github.com/bjmorgan/bsym
