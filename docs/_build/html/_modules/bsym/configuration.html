@@ -1,0 +1,191 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>bsym.configuration &#8212; bsym  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for bsym.configuration</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<div class="viewcode-block" id="Configuration"><a class="viewcode-back" href="../../bsym.html#bsym.configuration.Configuration">[docs]</a><span class="k">class</span> <span class="nc">Configuration</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="Configuration.matches"><a class="viewcode-back" href="../../bsym.html#bsym.configuration.Configuration.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">test_configuration</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test whether this configuration is equal to another configuration.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            test_configuration (bsym.Configuration): The configuration to compare against.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            (bool): True | False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">test_configuration</span> <span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Configuration.is_equivalent_to"><a class="viewcode-back" href="../../bsym.html#bsym.configuration.Configuration.is_equivalent_to">[docs]</a>    <span class="k">def</span> <span class="nf">is_equivalent_to</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">test_configuration</span><span class="p">,</span> <span class="n">symmetry_operations</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test whether this configuration is equivalent to another configuration</span>
+<span class="sd">        under one or more of a set of symmetry operations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            test_configuration (bsym.Configuration): The configuration to compare against.</span>
+<span class="sd">            symmetry_operations (list(bsym.SymmetryOperation): A list of SymmetryOperation objects.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            (bool): True | False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">symmetry_operation</span> <span class="ow">in</span> <span class="n">symmetry_operations</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="n">symmetry_operation</span><span class="o">.</span><span class="n">operate_on</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span><span class="o">.</span><span class="n">matches</span><span class="p">(</span> <span class="n">test_configuration</span> <span class="p">)</span> <span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span> 
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Configuration.is_in_list"><a class="viewcode-back" href="../../bsym.html#bsym.configuration.Configuration.is_in_list">[docs]</a>    <span class="k">def</span> <span class="nf">is_in_list</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">list</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test whether this configuration is in a list of configurations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            list (list(bsym.Comfiguration)): A list of Configuration instances.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            (bool): True | False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matches</span><span class="p">(</span> <span class="n">config</span> <span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Configuration.has_equivalent_in_list"><a class="viewcode-back" href="../../bsym.html#bsym.configuration.Configuration.has_equivalent_in_list">[docs]</a>    <span class="k">def</span> <span class="nf">has_equivalent_in_list</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">symmetry_operations</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test whether this configuration is equivalent by symmetry to one or more</span>
+<span class="sd">        in a list of configurations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            list (list(bsym.Configuration)): A list of Configuration instances.</span>
+<span class="sd">            symmetry_operations (list(bsym.SymmetryOperation)): A list of SymmetryOperation objects.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            (bool): True | False </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span> <span class="n">config</span><span class="o">.</span><span class="n">as_number</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_number</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_equivalent_to</span><span class="p">(</span> <span class="n">config</span><span class="p">,</span> <span class="n">symmetry_operations</span> <span class="p">)</span> <span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Configuration.set_lowest_numeric_representation"><a class="viewcode-back" href="../../bsym.html#bsym.configuration.Configuration.set_lowest_numeric_representation">[docs]</a>    <span class="k">def</span> <span class="nf">set_lowest_numeric_representation</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">symmetry_operations</span> <span class="p">):</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">lowest_numeric_representation</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span> <span class="p">[</span> <span class="n">symmetry_operation</span><span class="o">.</span><span class="n">operate_on</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span><span class="o">.</span><span class="n">as_number</span> <span class="k">for</span> <span class="n">symmetry_operation</span> <span class="ow">in</span> <span class="n">symmetry_operations</span> <span class="p">]</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Configuration.numeric_equivalents"><a class="viewcode-back" href="../../bsym.html#bsym.configuration.Configuration.numeric_equivalents">[docs]</a>    <span class="k">def</span> <span class="nf">numeric_equivalents</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">symmetry_operations</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span> <span class="n">symmetry_operation</span><span class="o">.</span><span class="n">operate_on</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span><span class="o">.</span><span class="n">as_number</span> <span class="k">for</span> <span class="n">symmetry_operation</span> <span class="ow">in</span> <span class="n">symmetry_operations</span> <span class="p">]</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">as_number</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="p">)</span> <span class="p">)</span>
+
+<div class="viewcode-block" id="Configuration.from_tuple"><a class="viewcode-back" href="../../bsym.html#bsym.configuration.Configuration.from_tuple">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_tuple</span><span class="p">(</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">this_tuple</span> <span class="p">):</span>
+        <span class="k">return</span><span class="p">(</span> <span class="bp">cls</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span> <span class="n">this_tuple</span> <span class="p">)</span> <span class="p">)</span><span class="o">.</span><span class="n">T</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Configuration.tolist"><a class="viewcode-back" href="../../bsym.html#bsym.configuration.Configuration.tolist">[docs]</a>    <span class="k">def</span> <span class="nf">tolist</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="p">]</span></div>
+
+<div class="viewcode-block" id="Configuration.pprint"><a class="viewcode-back" href="../../bsym.html#bsym.configuration.Configuration.pprint">[docs]</a>    <span class="k">def</span> <span class="nf">pprint</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="p">[</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="p">]</span> <span class="p">)</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Configuration.position"><a class="viewcode-back" href="../../bsym.html#bsym.configuration.Configuration.position">[docs]</a>    <span class="k">def</span> <span class="nf">position</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">label</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="n">label</span> <span class="p">]</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">bsym</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../bsym.html">bsym package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Author.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

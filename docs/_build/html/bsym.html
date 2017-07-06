@@ -1,0 +1,578 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>bsym package &#8212; bsym  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to bsym’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="bsym-package">
+<h1>bsym package<a class="headerlink" href="#bsym-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-bsym.bsym">
+<span id="bsym-bsym-module"></span><h2>bsym.bsym module<a class="headerlink" href="#module-bsym.bsym" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-bsym.configuration">
+<span id="bsym-configuration-module"></span><h2>bsym.configuration module<a class="headerlink" href="#module-bsym.configuration" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="bsym.configuration.Configuration">
+<em class="property">class </em><code class="descclassname">bsym.configuration.</code><code class="descname">Configuration</code><a class="reference internal" href="_modules/bsym/configuration.html#Configuration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.configuration.Configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">numpy.matrixlib.defmatrix.matrix</span></code></p>
+<dl class="attribute">
+<dt id="bsym.configuration.Configuration.as_number">
+<code class="descname">as_number</code><a class="headerlink" href="#bsym.configuration.Configuration.as_number" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="bsym.configuration.Configuration.from_tuple">
+<em class="property">classmethod </em><code class="descname">from_tuple</code><span class="sig-paren">(</span><em>this_tuple</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/configuration.html#Configuration.from_tuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.configuration.Configuration.from_tuple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bsym.configuration.Configuration.has_equivalent_in_list">
+<code class="descname">has_equivalent_in_list</code><span class="sig-paren">(</span><em>list</em>, <em>symmetry_operations</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/configuration.html#Configuration.has_equivalent_in_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.configuration.Configuration.has_equivalent_in_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test whether this configuration is equivalent by symmetry to one or more
+in a list of configurations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>list</strong> (<em>list</em><em>(</em><em>bsym.Configuration</em><em>)</em>) – A list of Configuration instances.</li>
+<li><strong>symmetry_operations</strong> (<em>list</em><em>(</em><em>bsym.SymmetryOperation</em><em>)</em>) – A list of SymmetryOperation objects.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True | False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(bool)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bsym.configuration.Configuration.is_equivalent_to">
+<code class="descname">is_equivalent_to</code><span class="sig-paren">(</span><em>test_configuration</em>, <em>symmetry_operations</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/configuration.html#Configuration.is_equivalent_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.configuration.Configuration.is_equivalent_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test whether this configuration is equivalent to another configuration
+under one or more of a set of symmetry operations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>test_configuration</strong> (<em>bsym.Configuration</em>) – The configuration to compare against.</li>
+<li><strong>symmetry_operations</strong> (<em>list</em><em>(</em><em>bsym.SymmetryOperation</em>) – A list of SymmetryOperation objects.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True | False</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(bool)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bsym.configuration.Configuration.is_in_list">
+<code class="descname">is_in_list</code><span class="sig-paren">(</span><em>list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/configuration.html#Configuration.is_in_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.configuration.Configuration.is_in_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test whether this configuration is in a list of configurations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>list</strong> (<em>list</em><em>(</em><em>bsym.Comfiguration</em><em>)</em>) – A list of Configuration instances.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True | False</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(bool)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bsym.configuration.Configuration.matches">
+<code class="descname">matches</code><span class="sig-paren">(</span><em>test_configuration</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/configuration.html#Configuration.matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.configuration.Configuration.matches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test whether this configuration is equal to another configuration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>test_configuration</strong> (<em>bsym.Configuration</em>) – The configuration to compare against.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True | False.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(bool)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bsym.configuration.Configuration.numeric_equivalents">
+<code class="descname">numeric_equivalents</code><span class="sig-paren">(</span><em>symmetry_operations</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/configuration.html#Configuration.numeric_equivalents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.configuration.Configuration.numeric_equivalents" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bsym.configuration.Configuration.position">
+<code class="descname">position</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/configuration.html#Configuration.position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.configuration.Configuration.position" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bsym.configuration.Configuration.pprint">
+<code class="descname">pprint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/configuration.html#Configuration.pprint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.configuration.Configuration.pprint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bsym.configuration.Configuration.set_lowest_numeric_representation">
+<code class="descname">set_lowest_numeric_representation</code><span class="sig-paren">(</span><em>symmetry_operations</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/configuration.html#Configuration.set_lowest_numeric_representation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.configuration.Configuration.set_lowest_numeric_representation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bsym.configuration.Configuration.tolist">
+<code class="descname">tolist</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/configuration.html#Configuration.tolist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.configuration.Configuration.tolist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-bsym.permutations">
+<span id="bsym-permutations-module"></span><h2>bsym.permutations module<a class="headerlink" href="#module-bsym.permutations" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="bsym.permutations.flatten_list">
+<code class="descclassname">bsym.permutations.</code><code class="descname">flatten_list</code><span class="sig-paren">(</span><em>this_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/permutations.html#flatten_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.permutations.flatten_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bsym.permutations.unique_permutations">
+<code class="descclassname">bsym.permutations.</code><code class="descname">unique_permutations</code><span class="sig-paren">(</span><em>seq</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/permutations.html#unique_permutations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.permutations.unique_permutations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Yield only unique permutations of seq in an efficient way.</p>
+<p>A python implementation of Knuth’s “Algorithm L”, also known from the
+std::next_permutation function of C++, and as the permutation algorithm
+of Narayana Pandita.</p>
+<p>see <a class="reference external" href="http://stackoverflow.com/questions/12836385/how-can-i-interleave-or-create-unique-permutations-of-two-stings-without-recurs/12837695">http://stackoverflow.com/questions/12836385/how-can-i-interleave-or-create-unique-permutations-of-two-stings-without-recurs/12837695</a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-bsym.process">
+<span id="bsym-process-module"></span><h2>bsym.process module<a class="headerlink" href="#module-bsym.process" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="bsym.process.coordinate_list_from_sitelists">
+<code class="descclassname">bsym.process.</code><code class="descname">coordinate_list_from_sitelists</code><span class="sig-paren">(</span><em>configs</em>, <em>labels</em>, <em>sitelists</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/process.html#coordinate_list_from_sitelists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.process.coordinate_list_from_sitelists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bsym.process.list_of_coordinates_from_sitelists">
+<code class="descclassname">bsym.process.</code><code class="descname">list_of_coordinates_from_sitelists</code><span class="sig-paren">(</span><em>configs</em>, <em>labels</em>, <em>sitelists</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/process.html#list_of_coordinates_from_sitelists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.process.list_of_coordinates_from_sitelists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="bsym.process.unique_configurations_from_sites">
+<code class="descclassname">bsym.process.</code><code class="descname">unique_configurations_from_sites</code><span class="sig-paren">(</span><em>site_distribution</em>, <em>spacegroup</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/process.html#unique_configurations_from_sites"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.process.unique_configurations_from_sites" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-bsym.pymatgen_interface">
+<span id="bsym-pymatgen-interface-module"></span><h2>bsym.pymatgen_interface module<a class="headerlink" href="#module-bsym.pymatgen_interface" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="bsym.pymatgen_interface.poscar_from_sitelist">
+<code class="descclassname">bsym.pymatgen_interface.</code><code class="descname">poscar_from_sitelist</code><span class="sig-paren">(</span><em>configs</em>, <em>labels</em>, <em>sitelists</em>, <em>structure</em>, <em>subset=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/pymatgen_interface.html#poscar_from_sitelist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.pymatgen_interface.poscar_from_sitelist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses pymatgen Structure.to() method to generates POSCAR files for a set of
+configurations within a parent structure.
+:param configs: site configurations
+:type configs: list
+:param labels: atom labels to output
+:type labels: list
+:param sitelist: list of sites in fractional coords
+:type sitelist: list
+:param structure: Parent structure
+:type structure: pymatgen Structure
+:param subset: list of atom indices to output
+:type subset: Optional [list]</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bsym.pymatgen_interface.spacegroup_from_structure">
+<code class="descclassname">bsym.pymatgen_interface.</code><code class="descname">spacegroup_from_structure</code><span class="sig-paren">(</span><em>structure</em>, <em>subset=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/pymatgen_interface.html#spacegroup_from_structure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.pymatgen_interface.spacegroup_from_structure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a SpaceGroup object from a pymatgen Structure
+:param structure: structure to be used to define the SpaceGroup.
+:type structure: pymatgen Structure
+:param subset: list of atom indices to be used for generating the symmetry operations
+:type subset: Optional [list]</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a new SpaceGroup instance</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bsym.pymatgen_interface.unique_symmetry_operations_as_vectors_from_structure">
+<code class="descclassname">bsym.pymatgen_interface.</code><code class="descname">unique_symmetry_operations_as_vectors_from_structure</code><span class="sig-paren">(</span><em>structure</em>, <em>verbose=True</em>, <em>subset=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/pymatgen_interface.html#unique_symmetry_operations_as_vectors_from_structure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.pymatgen_interface.unique_symmetry_operations_as_vectors_from_structure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses pymatgen symmetry analysis to find the minimum complete set of symmetry operations for the space group of a structure.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>structure</strong> (<em>pymatgen Structure</em>) – structure to be analysed.</li>
+<li><strong>subset</strong> (<em>Optional</em><em> [</em><em>list</em><em>]</em>) – list of atom indices to be used for generating the symmetry operations</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a list of lists, containing the symmetry operations as vector mappings.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-bsym.sitelist">
+<span id="bsym-sitelist-module"></span><h2>bsym.sitelist module<a class="headerlink" href="#module-bsym.sitelist" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="bsym.sitelist.SiteList">
+<em class="property">class </em><code class="descclassname">bsym.sitelist.</code><code class="descname">SiteList</code><a class="reference internal" href="_modules/bsym/sitelist.html#SiteList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.sitelist.SiteList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">list</span></code></p>
+<dl class="method">
+<dt id="bsym.sitelist.SiteList.print_site">
+<code class="descname">print_site</code><span class="sig-paren">(</span><em>index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/sitelist.html#SiteList.print_site"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.sitelist.SiteList.print_site" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print coordinates of a single site: x1, y1, z1.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>index</strong> (<em>Int</em>) – index for the site coordinates to print</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="bsym.sitelist.SiteList.read_from_file">
+<em class="property">classmethod </em><code class="descname">read_from_file</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/sitelist.html#SiteList.read_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.sitelist.SiteList.read_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a SiteList instance by reading a set of coordinates x1, y1, z1, etc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<em>str</em>) – name of the file to be read.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a new SiteList instance</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-bsym.spacegroup">
+<span id="bsym-spacegroup-module"></span><h2>bsym.spacegroup module<a class="headerlink" href="#module-bsym.spacegroup" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="bsym.spacegroup.SpaceGroup">
+<em class="property">class </em><code class="descclassname">bsym.spacegroup.</code><code class="descname">SpaceGroup</code><span class="sig-paren">(</span><em>symmetry_operations=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/spacegroup.html#SpaceGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.spacegroup.SpaceGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="bsym.spacegroup.SpaceGroup.append">
+<code class="descname">append</code><span class="sig-paren">(</span><em>symmetry_operation</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/spacegroup.html#SpaceGroup.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.spacegroup.SpaceGroup.append" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bsym.spacegroup.SpaceGroup.by_label">
+<code class="descname">by_label</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/spacegroup.html#SpaceGroup.by_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.spacegroup.SpaceGroup.by_label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bsym.spacegroup.SpaceGroup.extend">
+<code class="descname">extend</code><span class="sig-paren">(</span><em>symmetry_operations_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/spacegroup.html#SpaceGroup.extend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.spacegroup.SpaceGroup.extend" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bsym.spacegroup.SpaceGroup.labels">
+<code class="descname">labels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/spacegroup.html#SpaceGroup.labels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.spacegroup.SpaceGroup.labels" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="bsym.spacegroup.SpaceGroup.read_from_file">
+<em class="property">classmethod </em><code class="descname">read_from_file</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/spacegroup.html#SpaceGroup.read_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.spacegroup.SpaceGroup.read_from_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="bsym.spacegroup.SpaceGroup.read_from_file_with_labels">
+<em class="property">classmethod </em><code class="descname">read_from_file_with_labels</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/spacegroup.html#SpaceGroup.read_from_file_with_labels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.spacegroup.SpaceGroup.read_from_file_with_labels" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bsym.spacegroup.SpaceGroup.save_symmetry_operation_vectors_to">
+<code class="descname">save_symmetry_operation_vectors_to</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/spacegroup.html#SpaceGroup.save_symmetry_operation_vectors_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.spacegroup.SpaceGroup.save_symmetry_operation_vectors_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-bsym.symmetry_operation">
+<span id="bsym-symmetry-operation-module"></span><h2>bsym.symmetry_operation module<a class="headerlink" href="#module-bsym.symmetry_operation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="bsym.symmetry_operation.SymmetryOperation">
+<em class="property">class </em><code class="descclassname">bsym.symmetry_operation.</code><code class="descname">SymmetryOperation</code><span class="sig-paren">(</span><em>matrix</em>, <em>label=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/symmetry_operation.html#SymmetryOperation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.symmetry_operation.SymmetryOperation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="bsym.symmetry_operation.SymmetryOperation.as_vector">
+<code class="descname">as_vector</code><span class="sig-paren">(</span><em>count_from_zero=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/symmetry_operation.html#SymmetryOperation.as_vector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.symmetry_operation.SymmetryOperation.as_vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a vector representation of this symmetry operation</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>count_from_zero</strong> (<em>default = False</em><em>) </em><em>(</em><em>bool</em>) – set to True if the vector representation counts from zero</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a vector representation of this symmetry operation (as a list)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bsym.symmetry_operation.SymmetryOperation.character">
+<code class="descname">character</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/symmetry_operation.html#SymmetryOperation.character"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.symmetry_operation.SymmetryOperation.character" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the character of this symmetry operation (the trace of self.matrix)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">np.trace( self.matrix )</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="bsym.symmetry_operation.SymmetryOperation.from_vector">
+<em class="property">classmethod </em><code class="descname">from_vector</code><span class="sig-paren">(</span><em>vector</em>, <em>count_from_zero=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/symmetry_operation.html#SymmetryOperation.from_vector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.symmetry_operation.SymmetryOperation.from_vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialise a SymmetryOperation object from a vector of site mappings</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>vector</strong> (<em>list</em>) – vector of integers defining a symmetry operation mapping</li>
+<li><strong>count_from_zero</strong> (<em>default = False</em><em>) </em><em>(</em><em>bool</em>) – set to True if the site index counts from zero</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a new SymmetryOperation object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bsym.symmetry_operation.SymmetryOperation.invert">
+<code class="descname">invert</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/symmetry_operation.html#SymmetryOperation.invert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.symmetry_operation.SymmetryOperation.invert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invert this SymmetryOperation object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new SymmetryOperation object corresponding to the inverse matrix operation</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bsym.symmetry_operation.SymmetryOperation.operate_on">
+<code class="descname">operate_on</code><span class="sig-paren">(</span><em>configuration</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/symmetry_operation.html#SymmetryOperation.operate_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.symmetry_operation.SymmetryOperation.operate_on" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the site occupation vector generated by appliying this symmetry operation</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>configuration</strong> (<a class="reference internal" href="#bsym.configuration.Configuration" title="bsym.configuration.Configuration"><em>Configuration</em></a>) – the configuration / occupation vector to operate on</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the new configuration obtained by operating on configuration with this symmetry operation.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bsym.symmetry_operation.SymmetryOperation.pprint">
+<code class="descname">pprint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/symmetry_operation.html#SymmetryOperation.pprint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.symmetry_operation.SymmetryOperation.pprint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pretty print for this symmetry operation</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bsym.symmetry_operation.SymmetryOperation.set_label">
+<code class="descname">set_label</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/symmetry_operation.html#SymmetryOperation.set_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.symmetry_operation.SymmetryOperation.set_label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the label for this symmetry operation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>label</strong> – label to set for this symmetry operation</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">self</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bsym.symmetry_operation.SymmetryOperation.similarity_transform">
+<code class="descname">similarity_transform</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/symmetry_operation.html#SymmetryOperation.similarity_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.symmetry_operation.SymmetryOperation.similarity_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the SymmetryOperation produced by a similarity transform S^{-1}.M.S</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> – the symmetry operation or matrix S.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the SymmetryOperation produced by the similarity transform</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-bsym">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bsym" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">bsym</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">bsym package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-bsym.bsym">bsym.bsym module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-bsym.configuration">bsym.configuration module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-bsym.permutations">bsym.permutations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-bsym.process">bsym.process module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-bsym.pymatgen_interface">bsym.pymatgen_interface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-bsym.sitelist">bsym.sitelist module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-bsym.spacegroup">bsym.spacegroup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-bsym.symmetry_operation">bsym.symmetry_operation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-bsym">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to bsym’s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Author.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/bsym.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
