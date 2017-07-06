@@ -1,13 +1,16 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
     <title>bsym package &#8212; bsym 0.1.3 documentation</title>
+    
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
@@ -21,7 +24,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
    
@@ -31,7 +34,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body>
+  <body role="document">
   
 
     <div class="document">
@@ -73,8 +76,8 @@ in a list of configurations.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>list</strong> (<em>list</em><em>(</em><em>bsym.Configuration</em><em>)</em>) – A list of Configuration instances.</li>
-<li><strong>symmetry_operations</strong> (<em>list</em><em>(</em><em>bsym.SymmetryOperation</em><em>)</em>) – A list of SymmetryOperation objects.</li>
+<li><strong>list</strong> (<em>list</em><em>(</em><em>bsym.Configuration</em><em>)</em><em></em>) &#8211; A list of Configuration instances.</li>
+<li><strong>symmetry_operations</strong> (<em>list</em><em>(</em><em>bsym.SymmetryOperation</em><em>)</em><em></em>) &#8211; A list of SymmetryOperation objects.</li>
 </ul>
 </td>
 </tr>
@@ -98,8 +101,8 @@ under one or more of a set of symmetry operations.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>test_configuration</strong> (<em>bsym.Configuration</em>) – The configuration to compare against.</li>
-<li><strong>symmetry_operations</strong> (<em>list</em><em>(</em><em>bsym.SymmetryOperation</em>) – A list of SymmetryOperation objects.</li>
+<li><strong>test_configuration</strong> (<em>bsym.Configuration</em>) &#8211; The configuration to compare against.</li>
+<li><strong>symmetry_operations</strong> (<em>list</em><em>(</em><em>bsym.SymmetryOperation</em>) &#8211; A list of SymmetryOperation objects.</li>
 </ul>
 </td>
 </tr>
@@ -121,7 +124,7 @@ under one or more of a set of symmetry operations.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>list</strong> (<em>list</em><em>(</em><em>bsym.Comfiguration</em><em>)</em>) – A list of Configuration instances.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>list</strong> (<em>list</em><em>(</em><em>bsym.Comfiguration</em><em>)</em><em></em>) &#8211; A list of Configuration instances.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True | False</td>
 </tr>
@@ -139,7 +142,7 @@ under one or more of a set of symmetry operations.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>test_configuration</strong> (<em>bsym.Configuration</em>) – The configuration to compare against.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>test_configuration</strong> (<em>bsym.Configuration</em>) &#8211; The configuration to compare against.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True | False.</td>
 </tr>
@@ -188,7 +191,7 @@ under one or more of a set of symmetry operations.</p>
 <dt id="bsym.permutations.unique_permutations">
 <code class="descclassname">bsym.permutations.</code><code class="descname">unique_permutations</code><span class="sig-paren">(</span><em>seq</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bsym/permutations.html#unique_permutations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bsym.permutations.unique_permutations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Yield only unique permutations of seq in an efficient way.</p>
-<p>A python implementation of Knuth’s “Algorithm L”, also known from the
+<p>A python implementation of Knuth&#8217;s &#8220;Algorithm L&#8221;, also known from the
 std::next_permutation function of C++, and as the permutation algorithm
 of Narayana Pandita.</p>
 <p>see <a class="reference external" href="http://stackoverflow.com/questions/12836385/how-can-i-interleave-or-create-unique-permutations-of-two-stings-without-recurs/12837695">http://stackoverflow.com/questions/12836385/how-can-i-interleave-or-create-unique-permutations-of-two-stings-without-recurs/12837695</a></p>
@@ -225,11 +228,11 @@ configurations within a parent structure.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>configs</strong> (<em>list</em>) – site configurations</li>
-<li><strong>labels</strong> (<em>list</em>) – atom labels to output</li>
-<li><strong>sitelist</strong> (<em>list</em>) – list of sites in fractional coords</li>
-<li><strong>structure</strong> (<em>pymatgen Structure</em>) – Parent structure</li>
-<li><strong>subset</strong> (<em>Optional</em><em> [</em><em>list</em><em>]</em>) – list of atom indices to output</li>
+<li><strong>configs</strong> (<em>list</em>) &#8211; site configurations</li>
+<li><strong>labels</strong> (<em>list</em>) &#8211; atom labels to output</li>
+<li><strong>sitelist</strong> (<em>list</em>) &#8211; list of sites in fractional coords</li>
+<li><strong>structure</strong> (<em>pymatgen Structure</em>) &#8211; Parent structure</li>
+<li><strong>subset</strong> (<em>Optional</em><em> [</em><em>list</em><em>]</em><em></em>) &#8211; list of atom indices to output</li>
 </ul>
 </td>
 </tr>
@@ -246,8 +249,8 @@ configurations within a parent structure.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>structure</strong> (<em>pymatgen Structure</em>) – structure to be used to define the SpaceGroup.</li>
-<li><strong>subset</strong> (<em>Optional</em><em> [</em><em>list</em><em>]</em>) – list of atom indices to be used for generating the symmetry operations</li>
+<li><strong>structure</strong> (<em>pymatgen Structure</em>) &#8211; structure to be used to define the SpaceGroup.</li>
+<li><strong>subset</strong> (<em>Optional</em><em> [</em><em>list</em><em>]</em><em></em>) &#8211; list of atom indices to be used for generating the symmetry operations</li>
 </ul>
 </td>
 </tr>
@@ -267,8 +270,8 @@ configurations within a parent structure.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>structure</strong> (<em>pymatgen Structure</em>) – structure to be analysed.</li>
-<li><strong>subset</strong> (<em>Optional</em><em> [</em><em>list</em><em>]</em>) – list of atom indices to be used for generating the symmetry operations</li>
+<li><strong>structure</strong> (<em>pymatgen Structure</em>) &#8211; structure to be analysed.</li>
+<li><strong>subset</strong> (<em>Optional</em><em> [</em><em>list</em><em>]</em><em></em>) &#8211; list of atom indices to be used for generating the symmetry operations</li>
 </ul>
 </td>
 </tr>
@@ -294,7 +297,7 @@ configurations within a parent structure.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>index</strong> (<em>Int</em>) – index for the site coordinates to print</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>index</strong> (<em>Int</em>) &#8211; index for the site coordinates to print</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -310,7 +313,7 @@ configurations within a parent structure.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<em>str</em>) – name of the file to be read.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<em>str</em>) &#8211; name of the file to be read.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a new SiteList instance</td>
 </tr>
@@ -379,7 +382,7 @@ configurations within a parent structure.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>count_from_zero</strong> (<em>default = False</em><em>) </em><em>(</em><em>bool</em>) – set to True if the vector representation counts from zero</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>count_from_zero</strong> (<em>default = False</em><em>) </em><em></em><em>(</em><em>bool</em>) &#8211; set to True if the vector representation counts from zero</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a vector representation of this symmetry operation (as a list)</td>
 </tr>
@@ -395,7 +398,7 @@ configurations within a parent structure.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>none</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">np.trace( self.matrix )</td>
 </tr>
@@ -412,8 +415,8 @@ configurations within a parent structure.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>vector</strong> (<em>list</em>) – vector of integers defining a symmetry operation mapping</li>
-<li><strong>count_from_zero</strong> (<em>default = False</em><em>) </em><em>(</em><em>bool</em>) – set to True if the site index counts from zero</li>
+<li><strong>vector</strong> (<em>list</em>) &#8211; vector of integers defining a symmetry operation mapping</li>
+<li><strong>count_from_zero</strong> (<em>default = False</em><em>) </em><em></em><em>(</em><em>bool</em>) &#8211; set to True if the site index counts from zero</li>
 </ul>
 </td>
 </tr>
@@ -432,7 +435,7 @@ configurations within a parent structure.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new SymmetryOperation object corresponding to the inverse matrix operation</td>
 </tr>
@@ -448,7 +451,7 @@ configurations within a parent structure.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>configuration</strong> (<a class="reference internal" href="#bsym.configuration.Configuration" title="bsym.configuration.Configuration"><em>Configuration</em></a>) – the configuration / occupation vector to operate on</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>configuration</strong> (<a class="reference internal" href="#bsym.configuration.Configuration" title="bsym.configuration.Configuration"><em>Configuration</em></a>) &#8211; the configuration / occupation vector to operate on</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the new configuration obtained by operating on configuration with this symmetry operation.</td>
 </tr>
@@ -464,7 +467,7 @@ configurations within a parent structure.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -480,7 +483,7 @@ configurations within a parent structure.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>label</strong> – label to set for this symmetry operation</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>label</strong> &#8211; label to set for this symmetry operation</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">self</td>
 </tr>
@@ -496,7 +499,7 @@ configurations within a parent structure.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> – the symmetry operation or matrix S.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; the symmetry operation or matrix S.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the SymmetryOperation produced by the similarity transform</td>
 </tr>
@@ -554,7 +557,7 @@ configurations within a parent structure.</p>
       &copy;2017, Benjamin J. Morgan.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
       |
