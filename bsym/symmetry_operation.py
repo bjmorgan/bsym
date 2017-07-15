@@ -62,11 +62,11 @@ class SymmetryOperation:
     @classmethod
     def from_vector( cls, vector, count_from_zero = False ):
         """
-        Initialise a SymmetryOperation object from a vector of site mappings
+        Initialise a SymmetryOperation object from a vector of site mappings.
 
         Args:
-            vector (list): vector of integers defining a symmetry operation mapping
-            count_from_zero (default = False) (bool): set to True if the site index counts from zero
+            vector (list): vector of integers defining a symmetry operation mapping.
+            count_from_zero (default = False) (bool): set to True if the site index counts from zero.
    
         Returns:
             a new SymmetryOperation object
