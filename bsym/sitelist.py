@@ -1,6 +1,11 @@
 import numpy as np
 
 class SiteList( list ):
+    """
+    A :any:`SiteList` object is a list of coordinates (these can be Cartesian or fractional)
+    that describe some set of sites. This can be used with a particular :any:`Configuration`
+    to generate the coordinates of a particular arrangement of atoms.
+    """
 
     @classmethod
     def read_from_file( cls, filename ):
