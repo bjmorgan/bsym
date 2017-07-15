@@ -1,15 +1,36 @@
 import numpy as np
 
-#def strip_first_col( fname, delimiter=None ):
-#    with open( fname, 'r' ) as fin:
-#        for line in fin:
-#            try:
-#               yield( line.split(delimiter, 1)[1] )
-#            except IndexError:
-#               continue
-
 class SpaceGroup:
+    """
+    :any:`SpaceGroup` class.
+
+    A :any:`SpaceGroup` object contains a set of :any:`SymmetryOperation` objects.
+
+    e.g.::
+
+        SpaceGroup( symmetry_operations=[ s1, s2, s3 ] )
+
+    where `s1`, `s2`, and `s3` are :any:`SymmetryOperation` objects.
+
+    :any:`SpaceGroup` objects can also be created from files using the class methods::
+
+        SpaceGroup.read_from_file( filename )
+
+    and::
+
+        SpaceGroup.read_from_file_with_labels( filename )
+    """
+
     def __init__( self, symmetry_operations = [] ):
+        """
+        Create a :any:`SpaceGroup` object.
+
+        Args:
+            symmetry_operation (list): A list of :any:`SymmetryOperation` objects.
+
+        Returns:
+            None
+        """
         self.symmetry_operations = symmetry_operations
 
     @classmethod

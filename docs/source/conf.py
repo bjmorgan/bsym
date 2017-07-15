@@ -173,4 +173,11 @@ texinfo_documents = [
 ]
 
 
+# -- Patch skip function to document __init__ methods
+def skip( app, what, name, obj, skip, options ):
+    if name == "__init__":
+        return False
+    return skip
 
+def setup( app ):
+    app.connect("autodoc-skip-member", skip)
