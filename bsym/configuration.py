@@ -1,6 +1,12 @@
 import numpy as np
 
 class Configuration( np.matrix ):
+    """
+    A :any:`Configuration` describes a specific arrangement of objects in the vector space of possible positions.
+    Objects are represented by integers, with indistinguishable objects denoted by identical integers.
+    This class subclasses `numpy.matrix <https://docs.scipy.org/doc/numpy/reference/generated/numpy.matrix.html>`_. 
+    Each configuration in the vector space of positions is represented as a column vector.
+    """ 
 
     def matches( self, test_configuration ):
         """
@@ -92,13 +98,43 @@ class Configuration( np.matrix ):
 
     @classmethod
     def from_tuple( cls, this_tuple ):
+        """
+        Construct a :any:`Configuration` from a `tuple`,
+        e.g.::
+     
+            Configuration.from_tuple( ( 1, 1, 0 ) )
+ 
+        Args:
+            this_tuple (tuple): The tuple used to construct this :any:`Configuration`.
+
+        Returns:
+            (:any:`Configuration`): The new :any:`Configuration`.
+        """
         return( cls( np.asarray( this_tuple ) ).T )
 
     def tolist( self ):
+        """
+        Returns the configuration data as a list.
+        
+        Args:
+            None
+
+        Returns:
+            (List)
+        """
         return [ e[0] for e in super().tolist() ]
 
     def pprint( self ):
         print( ' '.join( [ str(e) for e in self.tolist() ] ) )
 
     def position( self, label ):
+        """
+        Returns the vector indices where elements are equal to `label`.
+
+        Args:
+            label (int): The label used to select the vector positions.
+
+        Returns:
+            (list): A list of all positions that match `label`.
+        """
         return [ i for i,x in enumerate( self.tolist() ) if x == label ]
