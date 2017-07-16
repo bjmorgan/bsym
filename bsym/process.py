@@ -50,6 +50,22 @@ def coordinate_list_from_sitelists( configs, labels, sitelists ):
                     sitelist.print_site( pos )
 
 def list_of_coordinates_from_sitelists( configs, labels, sitelists ):
+    """
+    Using
+    1. A list of :any:`Configuration` objects,
+    2. A list of labels,
+    3. A list of :any:`SiteList` objects,
+    for every :any:`Configuration`, select the positions by each label, in turn,
+    and collect the corresponding coordinates from each :any:`SiteList`.
+    
+    Args:
+        configs   (list): A list of :any:`Configuation` objects.
+        labels    (list): A list of labels, e.g. [ 1, 2, 3 ].
+        sitelists (list): A lsit of :any:`SiteList` objects.
+
+    Returns:
+        (np.array): A numpy array of coordinates.
+    """ 
     all_coords = []
     for config in configs:
         coords = [] 

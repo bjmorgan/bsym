@@ -4,6 +4,8 @@ from bsym import process
 from bsym.spacegroup import SpaceGroup
 from bsym.symmetry_operation import SymmetryOperation
 from bsym.configuration import Configuration
+from bsym.sitelist import SiteList
+import numpy as np
 
 class TestProcess( unittest.TestCase ):
 
@@ -52,6 +54,13 @@ class TestProcess( unittest.TestCase ):
         self.assertEqual( len( configs ), 2 )
         self.assertEqual( c1 in configs, True )
         self.assertEqual( c2 in configs, True )
+
+    def test_cordinate_list_from_sitelists( self ):
+        sitelist = SiteList( [ [ 1.0, 0.0, 0.0 ], [ 0.0, 1.0, 0.0 ], [ 0.0, 0.0, 1.0 ] ] )
+        labels = [ 1, 2, 3 ]
+        configs = [ Configuration( [[3], [2], [1] ] ) ]
+        coords = process.list_of_coordinates_from_sitelists( configs, labels, [ sitelist ] )
+        np.testing.assert_array_equal( coords[0], np.array( [ [ 0.0, 0.0, 1.0 ], [ 0.0, 1.0, 0.0 ], [ 1.0, 0.0, 0.0 ] ] ) )
 
 if __name__ == '__main__':
     unittest.main() 
