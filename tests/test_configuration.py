@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 from bsym.configuration import Configuration
 from bsym.symmetry_operation import SymmetryOperation
 
@@ -37,5 +37,43 @@ class TestConfiguration( unittest.TestCase ):
         self.configuration.matches = Mock( return_value=False )
         self.assertEqual( self.configuration.is_in_list( configuration_list ), False )
 
+    def test_has_equivalent_in_list( self ):
+        configuration_list = [ Configuration( [ 0, 1, 0 ] ), Configuration( [ 1, 0, 0 ] ) ]
+        symmetry_operations = [ Mock( spec=SymmetryOperation ) ]
+        self.configuration.is_equivalent_to = Mock( return_value=True )
+        self.assertEqual( self.configuration.has_equivalent_in_list( configuration_list, symmetry_operations ), True )
+
+    def test_has_equivalent_in_list_fails( self ):
+        configuration_list = [ Configuration( [ 0, 1, 0 ] ), Configuration( [ 1, 0, 0 ] ) ]
+        symmetry_operations = [ Mock( spec=SymmetryOperation ) ]
+        self.configuration.is_equivalent_to = Mock( return_value=False )
+        self.assertEqual( self.configuration.has_equivalent_in_list( configuration_list, symmetry_operations ), False )
+
+    def test_set_lowest_numeric_representation( self ):
+        symmetry_operations = [ Mock( spec=SymmetryOperation ), Mock( spec=SymmetryOperation ) ]
+        c1, c2 = Mock( spec=Configuration ), Mock( spec=Configuration )
+        c1.as_number = 4
+        c2.as_number = 2
+        symmetry_operations[0].operate_on = Mock( return_value = c1 )
+        symmetry_operations[1].operate_on = Mock( return_value = c2 )
+        self.configuration.set_lowest_numeric_representation( symmetry_operations )
+        self.assertEqual( self.configuration.lowest_numeric_representation, 2 )
+
+    def test_numeric_equivalents( self ):
+        symmetry_operations = [ Mock( spec=SymmetryOperation ), Mock( spec=SymmetryOperation ) ]
+        c1, c2 = Mock( spec=Configuration ), Mock( spec=Configuration )
+        c1.as_number = 4
+        c2.as_number = 2
+        symmetry_operations[0].operate_on = Mock( return_value = c1 )
+        symmetry_operations[1].operate_on = Mock( return_value = c2 )
+        self.assertEqual( self.configuration.numeric_equivalents( symmetry_operations ), [ 4, 2 ] )
+
+    def test_as_number( self ):
+        with patch( 'bsym.configuration.Configuration.tolist' ) as mock_tolist:
+            mock_tolist.side_effect = [ [ 1, 0, 0 ], [ 0, 1, 0 ], [ 0, 0, 1 ] ]
+            self.assertEqual( Configuration( [ 1, 0, 0 ] ).as_number, 100 )
+            self.assertEqual( Configuration( [ 0, 1, 0 ] ).as_number, 10 )
+            self.assertEqual( Configuration( [ 0, 0, 1 ] ).as_number, 1 )
+ 
 if __name__ == '__main__':
     unittest.main()
