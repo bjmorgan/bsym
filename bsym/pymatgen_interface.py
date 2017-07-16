@@ -47,7 +47,7 @@ def spacegroup_from_structure( structure, subset = None ):
     """
     mappings = unique_symmetry_operations_as_vectors_from_structure( structure, subset )
     symmetry_operations = [ so.SymmetryOperation.from_vector( m ) for m in mappings ]
-    return SpaceGroup( symmetry_operations = symmetry_operations )
+    return SpaceGroup( symmetry_operations=symmetry_operations )
 
 def poscar_from_sitelist( configs, labels, sitelists, structure, subset=None ):
     """
