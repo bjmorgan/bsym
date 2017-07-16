@@ -7,14 +7,18 @@ from bsym import symmetry_operation as so
 
 def unique_symmetry_operations_as_vectors_from_structure( structure, verbose=True, subset=None ):
     """
-    Uses `pymatgen` symmetry analysis to find the minimum complete set of symmetry operations for the space group of a structure.
+    Uses `pymatgen`_ symmetry analysis to find the minimum complete set of symmetry operations for the space group of a structure.
 
     Args:
-        structure (pymatgen Structure): structure to be analysed.
-        subset    (Optional [list]):    list of atom indices to be used for generating the symmetry operations
+        structure (pymatgen ``Structure``): structure to be analysed.
+        subset    (Optional [list]):        list of atom indices to be used for generating the symmetry operations.
 
     Returns:
-        a list of lists, containing the symmetry operations as vector mappings.
+        (list[list]): a list of lists, containing the symmetry operations as vector mappings.
+
+    .. _pymatgen:
+        http://pymatgen.org
+
     """
     symmetry_analyzer = SpacegroupAnalyzer( structure )
     if verbose:
@@ -36,14 +40,14 @@ def unique_symmetry_operations_as_vectors_from_structure( structure, verbose=Tru
 
 def spacegroup_from_structure( structure, subset = None ):
     """
-    Generates a `SpaceGroup` object from a `pymatgen` `Structure`. 
+    Generates a ``SpaceGroup`` object from a `pymatgen` ``Structure``. 
 
     Args:
-        structure (pymatgen Structure): structure to be used to define the SpaceGroup.
-        subset    (Optional [list]):    list of atom indices to be used for generating the symmetry operations
+        structure (pymatgen ``Structure``): structure to be used to define the :any:`SpaceGroup`.
+        subset    (Optional [list]):        list of atom indices to be used for generating the symmetry operations.
 
     Returns:
-        a new SpaceGroup instance
+        a new :any:`SpaceGroup` instance
     """
     mappings = unique_symmetry_operations_as_vectors_from_structure( structure, subset )
     symmetry_operations = [ so.SymmetryOperation.from_vector( m ) for m in mappings ]
@@ -51,15 +55,18 @@ def spacegroup_from_structure( structure, subset = None ):
 
 def poscar_from_sitelist( configs, labels, sitelists, structure, subset=None ):
     """
-    Uses `pymatgen` `Structure.to()` method to generate `VASP` `POSCAR` files for a set of 
+    Uses `pymatgen` ``Structure.to()`` method to generate `VASP` `POSCAR` files for a set of 
     configurations within a parent structure.
 
     Args:
-        configs   (list):               site configurations
-        labels    (list):               atom labels to output
-        sitelist  (list):               list of sites in fractional coords
-        structure (pymatgen Structure): Parent structure
-        subset    (Optional [list]):    list of atom indices to output 
+        configs   (list [:any:`Configuration`]): list of :any:`configurations`.
+        labels    (list [int]):                  labels defining order of sites in output.
+        sitelists (list [:any;`SiteList`]):      list of :any:`SiteList` objects.
+        structure (pymatgen ``Structure``):      parent structure.
+        subset    (Optional [list]):             list of atom indices to output. 
+
+    Returns:
+        None
     """
     if subset:
         species_clean = [ spec for i,spec in enumerate( structure.species ) if i not in subset ]
@@ -76,3 +83,5 @@ def poscar_from_sitelist( configs, labels, sitelists, structure, subset=None ):
                for sitelist in sitelists:
                    structure_config.append( species_config[ pos ], sitelist[ pos ] )
        structure_config.to( filename="POSCAR_{}.vasp".format( idx ) )
+
+
