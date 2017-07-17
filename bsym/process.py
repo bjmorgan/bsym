@@ -59,7 +59,7 @@ def list_of_coordinates_from_sitelists( configs, labels, sitelists ):
     and collect the corresponding coordinates from each :any:`SiteList`.
     
     Args:
-        configs   (list): A list of :any:`Configuation` objects.
+        configs   (list): A list of :any:`Configuration` objects.
         labels    (list): A list of labels, e.g. [ 1, 2, 3 ].
         sitelists (list): A lsit of :any:`SiteList` objects.
 

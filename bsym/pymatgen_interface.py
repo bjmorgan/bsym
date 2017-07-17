@@ -63,7 +63,7 @@ def poscar_from_sitelist( configs, labels, sitelists, structure, subset=None ):
         labels    (list [int]):                  labels defining order of sites in output.
         sitelists (list [:any;`SiteList`]):      list of :any:`SiteList` objects.
         structure (pymatgen ``Structure``):      parent structure.
-        subset    (Optional [list]):             list of atom indices to output. 
+        subset    (Optional [list]):             list of atom indices to include from the parent structure. 
 
     Returns:
         None
@@ -83,5 +83,4 @@ def poscar_from_sitelist( configs, labels, sitelists, structure, subset=None ):
                for sitelist in sitelists:
                    structure_config.append( species_config[ pos ], sitelist[ pos ] )
        structure_config.to( filename="POSCAR_{}.vasp".format( idx ) )
-
 
