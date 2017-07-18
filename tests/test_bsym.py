@@ -23,5 +23,14 @@ class TestBsymTopLevelClasses( unittest.TestCase ):
     def test_bsym_imports_SymmetryOperation( self ):
         from bsym import SymmetryOperation
 
+    def test_bsym_imports_Group( self ):
+        from bsym import Group
+
+    def test_bsym_imports_SpaceGroup( self ):
+        from bsym import SpaceGroup
+
+    def test_bsym_imports_PointGroup( self ):
+        from bsym import PointGroup
+
 if __name__ == '__main__':
     unittest.main()
