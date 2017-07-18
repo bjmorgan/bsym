@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock, patch
 from bsym import process
 from bsym.spacegroup import SpaceGroup
-from bsym.symmetry_operation import SymmetryOperation
+from bsym import SymmetryOperation
 from bsym.configuration import Configuration
 from bsym.sitelist import SiteList
 import numpy as np

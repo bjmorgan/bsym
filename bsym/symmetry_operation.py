@@ -155,3 +155,11 @@ class SymmetryOperation:
         label = self.label if self.label else '---'
         print( label + ' : ' + ' '.join( [ str(e) for e in self.as_vector() ] ) )
         
+    def __repr__( self ):
+        label = self.label if self.label else '---'
+        return 'SymmetryOperation\nlabel(' + label + ")\n" + self.matrix.__repr__()
+
+    def _repr_html( self ):
+        return self.matrix._repr_html_()
+    
+        

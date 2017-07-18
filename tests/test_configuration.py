@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock, patch
 from bsym.configuration import Configuration
-from bsym.symmetry_operation import SymmetryOperation
+from bsym import SymmetryOperation
 import numpy as np
 
 def column_vector( l ):

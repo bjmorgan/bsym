@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from bsym.symmetry_operation import SymmetryOperation
+from bsym import SymmetryOperation
 from bsym.configuration import Configuration
 from unittest.mock import patch
 import io
