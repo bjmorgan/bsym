@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 from bsym import SymmetryOperation
-from bsym.configuration import Configuration
+from bsym import Configuration
 from unittest.mock import patch
 import io
 
@@ -47,6 +47,13 @@ class SymmetryOperationTestCase( unittest.TestCase ):
         so = SymmetryOperation( matrix_a )
         np.testing.assert_array_equal( ( so * array_b ).matrix, np.matrix( [ [ 2, 0 ], [ 0, 0 ] ] ) )
 
+    def test_mul_with_configuration( self ):
+        so = SymmetryOperation.from_vector( [ 2, 3, 1 ] )
+        conf = Configuration.from_tuple( ( 1, 2, 3 ) )
+        new_conf = so * conf
+        self.assertEqual( type( new_conf ), Configuration )
+        self.assertEqual( new_conf.matches( Configuration.from_tuple( ( 3, 1, 2 ) ) ), True )
+
     def test_invert( self ):
         matrix_a = np.matrix( [ [ 0, 1, 0 ], [ 0, 0, 1 ], [ 1, 0, 0 ] ] )
         matrix_b = np.matrix( [ [ 0, 0, 1 ], [ 1, 0, 0 ], [ 0, 1, 0 ] ] )
@@ -61,13 +68,13 @@ class SymmetryOperationTestCase( unittest.TestCase ):
     def test_from_vector( self ):
         vector = [ 2, 3, 1 ]
         so = SymmetryOperation.from_vector( vector )
-        np.testing.assert_array_equal( so.matrix, np.matrix( [ [ 0, 1, 0 ], [ 0, 0, 1 ], [ 1, 0, 0 ] ] ) )    
+        np.testing.assert_array_equal( so.matrix, np.matrix( [ [ 0, 0, 1 ], [ 1, 0, 0 ], [ 0, 1, 0 ] ] ) )    
 
     def test_from_vector_with_label( self ):
         vector = [ 2, 3, 1 ]
         label = 'A'
         so = SymmetryOperation.from_vector( vector, label=label )
-        np.testing.assert_array_equal( so.matrix, np.matrix( [ [ 0, 1, 0 ], [ 0, 0, 1 ], [ 1, 0, 0 ] ] ) )
+        np.testing.assert_array_equal( so.matrix, np.matrix( [ [ 0, 0, 1 ], [ 1, 0, 0 ], [ 0, 1, 0 ] ] ) )
         self.assertEqual( so.label, label )
 
     def test_symmetry_operation_is_initialised_with_label( self ):
@@ -79,7 +86,7 @@ class SymmetryOperationTestCase( unittest.TestCase ):
     def test_from_vector_counting_from_zero( self ):
         vector = [ 1, 2, 0 ]
         so = SymmetryOperation.from_vector( vector, count_from_zero=True )
-        np.testing.assert_array_equal( so.matrix, np.matrix( [ [ 0, 1, 0 ], [ 0, 0, 1 ], [ 1, 0, 0 ] ] ) )    
+        np.testing.assert_array_equal( so.matrix, np.matrix( [ [ 0, 0, 1 ], [ 1, 0, 0 ], [ 0, 1, 0 ] ] ) )    
 
     def test_similarity_transform( self ):
         matrix_a = np.matrix( [ [ 0, 1, 0 ], [ 0, 0, 1 ], [ 1, 0, 0 ] ] )
@@ -93,10 +100,11 @@ class SymmetryOperationTestCase( unittest.TestCase ):
         matrix = np.matrix( [ [ 0, 1, 0 ], [ 0, 0, 1 ], [ 1, 0, 0 ] ] )
         so = SymmetryOperation( matrix )
         configuration = np.matrix( [ [ 1, 1, 0 ] ] ).T
-        with patch( 'bsym.configuration.Configuration' ) as mock_configuration:
+        with patch( 'bsym.symmetry_operation.Configuration' ) as mock_configuration:
             mock_configuration.return_value = 'foo'
             so.operate_on( configuration )
             self.assertEqual( mock_configuration.call_args[0][0], ( so.matrix * configuration ).tolist() )
+
     def test_character( self ):
         matrix = np.matrix( [ [ 1, 0 ], [ 0, 1 ] ] )
         so = SymmetryOperation( matrix )
