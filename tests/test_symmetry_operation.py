@@ -52,6 +52,11 @@ class SymmetryOperationTestCase( unittest.TestCase ):
         matrix_b = np.matrix( [ [ 0, 0, 1 ], [ 1, 0, 0 ], [ 0, 1, 0 ] ] )
         so = SymmetryOperation( matrix_a )
         np.testing.assert_array_equal( so.invert().matrix, matrix_b )
+
+    def test_invert_sets_label( self ):
+        matrix_a = np.matrix( [ [ 0, 1, 0 ], [ 0, 0, 1 ], [ 1, 0, 0 ] ] )
+        so = SymmetryOperation( matrix_a ).invert( label='A' )
+        self.assertEqual( so.label, 'A' )
     
     def test_from_vector( self ):
         vector = [ 2, 3, 1 ]
@@ -126,6 +131,13 @@ class SymmetryOperationTestCase( unittest.TestCase ):
         with patch( 'sys.stdout', new=io.StringIO() ) as mock_stdout:
             so.pprint()
             self.assertEqual( mock_stdout.getvalue(), 'L : 1 2\n' ) 
+
+    def test_repr( self ):
+        matrix = np.matrix( [ [ 1, 0 ], [ 0, 1 ] ] )
+        so = SymmetryOperation( matrix, label='L' )
+        this_repr = so.__repr__()
+        self.assertNotEqual( this_repr.find( 'L' ), 0 )
+        self.assertNotEqual( this_repr.find( "[[1, 0],\n[0, 1]]" ), 0 )
 
 if __name__ == '__main__':
     unittest.main()
