@@ -58,6 +58,19 @@ class SymmetryOperationTestCase( unittest.TestCase ):
         so = SymmetryOperation.from_vector( vector )
         np.testing.assert_array_equal( so.matrix, np.matrix( [ [ 0, 1, 0 ], [ 0, 0, 1 ], [ 1, 0, 0 ] ] ) )    
 
+    def test_from_vector_with_label( self ):
+        vector = [ 2, 3, 1 ]
+        label = 'A'
+        so = SymmetryOperation.from_vector( vector, label=label )
+        np.testing.assert_array_equal( so.matrix, np.matrix( [ [ 0, 1, 0 ], [ 0, 0, 1 ], [ 1, 0, 0 ] ] ) )
+        self.assertEqual( so.label, label )
+
+    def test_symmetry_operation_is_initialised_with_label( self ):
+        matrix = np.matrix( [ [ 1, 0 ], [ 0, 1 ] ] )
+        label = 'E'
+        so = SymmetryOperation( matrix, label=label )
+        self.assertEqual( so.label, label )
+
     def test_from_vector_counting_from_zero( self ):
         vector = [ 1, 2, 0 ]
         so = SymmetryOperation.from_vector( vector, count_from_zero=True )

@@ -13,8 +13,7 @@ class SymmetryOperation:
             matrix (numpy.matrix|numpy.ndarray|list): 1D vector as either a
             `numpy.matrix`, `numpy.ndarray`, or `list` containing the site mappings
             for this symmetry operation.
-            label (default=None) (str): optional string label for this `SymmetryOperation`
-            object. Useful for the `SpaceGroup.by_label()` method.
+            label (default=None) (str): optional string label for this `SymmetryOperation` object.
         Raises:
             TypeError: if matrix is not `numpy.matrix`, `numpy.ndarray`, or `list`.
 
@@ -60,13 +59,14 @@ class SymmetryOperation:
         return SymmetryOperation( np.linalg.inv( self.matrix ).astype( int ) )
 
     @classmethod
-    def from_vector( cls, vector, count_from_zero = False ):
+    def from_vector( cls, vector, count_from_zero=False, label=None ):
         """
         Initialise a SymmetryOperation object from a vector of site mappings.
 
         Args:
             vector (list): vector of integers defining a symmetry operation mapping.
             count_from_zero (default = False) (bool): set to True if the site index counts from zero.
+            label (default=None) (str): optional string label for this `SymmetryOperation` object.
    
         Returns:
             a new SymmetryOperation object
@@ -74,7 +74,7 @@ class SymmetryOperation:
         if not count_from_zero:
             vector = [ x - 1 for x in vector ]
         dim = len( vector )
-        new_symmetry_operation = cls( np.zeros( ( dim, dim ), dtype=int ) )
+        new_symmetry_operation = cls( np.zeros( ( dim, dim ), dtype=int ), label=label )
         for index, element in enumerate( vector ):
             new_symmetry_operation.matrix[ index, element ] = 1
         return new_symmetry_operation
@@ -118,7 +118,7 @@ class SymmetryOperation:
         """
         return np.trace( self.matrix )
 
-    def as_vector( self, count_from_zero = False ):
+    def as_vector( self, count_from_zero=False ):
         """
         Return a vector representation of this symmetry operation
 
