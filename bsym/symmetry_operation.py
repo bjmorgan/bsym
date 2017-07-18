@@ -46,7 +46,7 @@ class SymmetryOperation:
         else:
             return( SymmetryOperation( self.matrix * other ) )
 
-    def invert( self ):
+    def invert( self, label=None ):
         """
         Invert this `SymmetryOperation` object.
 
@@ -56,7 +56,7 @@ class SymmetryOperation:
         Returns:
             A new `SymmetryOperation` object corresponding to the inverse matrix operation.
         """
-        return SymmetryOperation( np.linalg.inv( self.matrix ).astype( int ) )
+        return SymmetryOperation( np.linalg.inv( self.matrix ).astype( int ), label=label )
 
     @classmethod
     def from_vector( cls, vector, count_from_zero=False, label=None ):
@@ -159,7 +159,3 @@ class SymmetryOperation:
         label = self.label if self.label else '---'
         return 'SymmetryOperation\nlabel(' + label + ")\n" + self.matrix.__repr__()
 
-    def _repr_html( self ):
-        return self.matrix._repr_html_()
-    
-        
