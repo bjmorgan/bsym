@@ -138,3 +138,9 @@ class Configuration( np.matrix ):
             (list): A list of all positions that match `label`.
         """
         return [ i for i,x in enumerate( self.tolist() ) if x == label ]
+
+    def __repr__( self ):
+        to_return = "Configuration\n"
+        for i in self.tolist():
+            to_return += f"|{i}|\n"
+        return to_return

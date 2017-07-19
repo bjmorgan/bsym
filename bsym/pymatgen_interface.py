@@ -2,8 +2,8 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer, SpacegroupOperations
 from pymatgen.util.coord_utils import coord_list_mapping_pbc
 from pymatgen import Lattice, Structure
 
-from bsym.spacegroup import SpaceGroup
-from bsym import symmetry_operation as so
+from bsym import SpaceGroup
+from bsym import SymmetryOperation
 
 def unique_symmetry_operations_as_vectors_from_structure( structure, verbose=True, subset=None ):
     """
@@ -50,7 +50,7 @@ def spacegroup_from_structure( structure, subset = None ):
         a new :any:`SpaceGroup` instance
     """
     mappings = unique_symmetry_operations_as_vectors_from_structure( structure, subset )
-    symmetry_operations = [ so.SymmetryOperation.from_vector( m ) for m in mappings ]
+    symmetry_operations = [ SymmetryOperation.from_vector( m ) for m in mappings ]
     return SpaceGroup( symmetry_operations=symmetry_operations )
 
 def poscar_from_sitelist( configs, labels, sitelists, structure, subset=None ):

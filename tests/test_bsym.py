@@ -23,8 +23,8 @@ class TestBsymTopLevelClasses( unittest.TestCase ):
     def test_bsym_imports_SymmetryOperation( self ):
         from bsym import SymmetryOperation
 
-    def test_bsym_imports_Group( self ):
-        from bsym import Group
+    def test_bsym_imports_SymmetryGroup( self ):
+        from bsym import SymmetryGroup
 
     def test_bsym_imports_SpaceGroup( self ):
         from bsym import SpaceGroup

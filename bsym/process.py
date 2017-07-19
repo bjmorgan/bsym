@@ -1,5 +1,5 @@
 from bsym.permutations  import flatten_list, unique_permutations
-from bsym.configuration import Configuration
+from bsym import Configuration
 import numpy as np
 
 def unique_configurations_from_sites( site_distribution, spacegroup, verbose=False ):

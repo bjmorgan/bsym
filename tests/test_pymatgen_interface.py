@@ -4,10 +4,8 @@ import numpy as np
 from pymatgen import Lattice, Structure
 from bsym.pymatgen_interface import unique_symmetry_operations_as_vectors_from_structure, spacegroup_from_structure, poscar_from_sitelist
 from itertools import permutations
-from bsym import SymmetryOperation
-from bsym.configuration import Configuration
+from bsym import SymmetryOperation, Configuration, SpaceGroup
 from bsym.sitelist import SiteList
-from bsym.spacegroup import SpaceGroup
 from pymatgen import Structure
 
 class TestPymatgenInterface( unittest.TestCase ):
