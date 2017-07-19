@@ -4,6 +4,7 @@ from bsym import SymmetryOperation
 from bsym import Configuration
 from unittest.mock import patch
 import io
+from bsym.symmetry_operation import is_square
 
 class SymmetryOperationTestCase( unittest.TestCase ):
     """Tests for symmetry operation functions"""
@@ -28,6 +29,11 @@ class SymmetryOperationTestCase( unittest.TestCase ):
         for o in objects:
             with self.assertRaises( TypeError ):
                 SymmetryOperation( o )
+
+    def test_symmetry_operation_raises_valueerror_for_nonsquare_matrix( self ):
+        array = np.array( [ [ 1, 0, 0 ], [ 0, 0, 1 ] ] )
+        with self.assertRaises( ValueError ):
+            SymmetryOperation( array )
 
     def test_symmetry_operation_is_initialised_with_label( self ):
         matrix = np.matrix( [ [ 1, 0 ], [ 0, 1 ] ] )
@@ -147,5 +153,16 @@ class SymmetryOperationTestCase( unittest.TestCase ):
         self.assertNotEqual( this_repr.find( 'L' ), 0 )
         self.assertNotEqual( this_repr.find( "[[1, 0],\n[0, 1]]" ), 0 )
 
+class SymmetryOperationModuleFunctionsTestCase( unittest.TestCase ):
+
+    def test_is_square_returns_true_if_matrix_is_square( self ):
+        matrix = np.matrix( [ [ 1, 0 ], [ 0, 1 ] ] )
+        self.assertEqual( is_square( matrix ), True )
+
+    def test_is_square_returns_false_if_matrix_is_not_square( self ):
+        matrix = np.matrix( [ [ 1, 0 ], [ 0, 1, 1 ] ] )
+        self.assertEqual( is_square( matrix ), False )
+
+    
 if __name__ == '__main__':
     unittest.main()

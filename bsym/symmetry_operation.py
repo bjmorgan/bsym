@@ -1,6 +1,18 @@
 import numpy as np
 from bsym.configuration import Configuration
 
+def is_square( m ):
+    """
+    Test whether a numpy matrix is square.
+
+    Args:
+        m (np.matrix): The matrix.
+
+    Returns:
+        (bool): True | False.
+    """
+    return m.shape[0] == m.shape[1]
+
 class SymmetryOperation:
     """
     `SymmetryOperation` class.
@@ -29,6 +41,8 @@ class SymmetryOperation:
             self.matrix = np.matrix( matrix )
         else:
             raise TypeError
+        if not is_square( self.matrix ):
+            raise ValueError
         self.label = label
 
     def __mul__( self, other ):
