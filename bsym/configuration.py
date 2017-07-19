@@ -140,7 +140,5 @@ class Configuration( np.matrix ):
         return [ i for i,x in enumerate( self.tolist() ) if x == label ]
 
     def __repr__( self ):
-        to_return = "Configuration\n"
-        for i in self.tolist():
-            to_return += f"|{i}|\n"
+        to_return = "Configuration({})\n".format(self.tolist())
         return to_return

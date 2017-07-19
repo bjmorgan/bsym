@@ -32,5 +32,8 @@ class TestBsymTopLevelClasses( unittest.TestCase ):
     def test_bsym_imports_PointGroup( self ):
         from bsym import PointGroup
 
+    def test_bsym_imports_ConfigurationSpace( self ):
+        from bsym import ConfigurationSpace
+
 if __name__ == '__main__':
     unittest.main()
