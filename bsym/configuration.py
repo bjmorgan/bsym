@@ -142,3 +142,20 @@ class Configuration( np.matrix ):
     def __repr__( self ):
         to_return = "Configuration({})\n".format(self.tolist())
         return to_return
+
+    def map_objects( self, objects ):
+        """
+        Returns a dict of objects sorted according to this configuration.
+
+        Args:
+            objects [list]: A list of objects.
+
+        Returns:
+            sorted_objects [dict]: A dictionary of sorted objects.
+        """
+        if len( objects ) != len( self ):
+            raise ValueError
+        sorted_objects = {}
+        for key in set( self.tolist() ):
+            sorted_objects[key] = [ o for k, o in zip( self.tolist(), objects ) if k is key ]
+        return sorted_objects 

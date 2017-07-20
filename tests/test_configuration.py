@@ -93,5 +93,12 @@ class TestConfiguration( unittest.TestCase ):
     def test_position( self ):
         self.assertEqual( self.configuration.position( 0 ), [ 1, 2 ] )
 
+    def test_map_objects( self ):
+        self.tolist = Mock( return_value=[1, 0, 0 ] )
+        self.assertEqual( self.configuration.map_objects( [ 'A', 'B', 'C' ] ), { 1: [ 'A' ], 0: [ 'B', 'C' ] } )  
+    def test_map_objects_with_incompatible_object_list_raises_ValueError( self ):
+        with self.assertRaises( ValueError ):
+            self.configuration.map_objects( [ 'A', 'B' ] )
+
 if __name__ == '__main__':
     unittest.main()
