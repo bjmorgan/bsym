@@ -2,11 +2,10 @@ import unittest
 from unittest.mock import Mock, MagicMock, patch, call
 import numpy as np
 from pymatgen import Lattice, Structure
-from bsym.pymatgen_interface import unique_symmetry_operations_as_vectors_from_structure, spacegroup_from_structure, poscar_from_sitelist
+from bsym.interface.pymatgen import unique_symmetry_operations_as_vectors_from_structure, spacegroup_from_structure, poscar_from_sitelist
 from itertools import permutations
 from bsym import SymmetryOperation, Configuration, SpaceGroup
 from bsym.sitelist import SiteList
-from pymatgen import Structure
 
 class TestPymatgenInterface( unittest.TestCase ):
 
@@ -28,9 +27,9 @@ class TestPymatgenInterface( unittest.TestCase ):
         for l in permutations( [ 1, 2, 3, 4 ], 4 ):
             self.assertEqual( list(l) in mappings, True )
 
-    @patch( 'bsym.pymatgen_interface.unique_symmetry_operations_as_vectors_from_structure' )
+    @patch( 'bsym.interface.pymatgen.unique_symmetry_operations_as_vectors_from_structure' )
     @patch( 'bsym.symmetry_operation.SymmetryOperation.from_vector' )
-    @patch( 'bsym.pymatgen_interface.SpaceGroup' )
+    @patch( 'bsym.interface.pymatgen.SpaceGroup' )
     def test_spacegroup_from_structure( self, mock_SpaceGroup, mock_symmetry_operation_from_vector, mock_symmetry_operations_from_structure ):
         mock_symmetry_operations_from_structure.return_value=[ [ 1, 2 ], [ 2, 1 ] ]
         mock_symmetry_operation_from_vector.side_effect = [ Mock( spec=SymmetryOperation ), Mock( spec=SymmetryOperation) ]
@@ -39,7 +38,7 @@ class TestPymatgenInterface( unittest.TestCase ):
         self.assertEqual( spacegroup, mock_SpaceGroup.return_value )
         self.assertEqual( mock_symmetry_operation_from_vector.call_args_list, [call([1, 2]), call([2, 1])] )
 
-    @patch( 'bsym.pymatgen_interface.Structure' )
+    @patch( 'bsym.interface.pymatgen.Structure' )
     def test_poscar_from_sitelist( self, mock_Structure ):
         struct1 = Mock( spec=Structure )
         struct2 = Mock( spec=Structure )
