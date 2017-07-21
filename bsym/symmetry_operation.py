@@ -146,7 +146,7 @@ class SymmetryOperation:
             a vector representation of this symmetry operation (as a list)
         """
         offset = 0 if count_from_zero else 1
-        return( [ row.index( 1 ) + offset for row in self.matrix.tolist() ] )
+        return( [ row.index( 1 ) + offset for row in self.matrix.T.tolist() ] )
 
     def set_label( self, label ):
         """
