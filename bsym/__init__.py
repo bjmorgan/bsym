@@ -5,3 +5,6 @@ from .point_group import PointGroup
 from .configuration import Configuration
 from .configuration_space import ConfigurationSpace
 from .coordinate_config_space import CoordinateConfigSpace
+
+__version__ = '0.9.0'
+
