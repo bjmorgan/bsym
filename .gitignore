@@ -4,3 +4,5 @@ tests/.coverage
 tests/*pyc
 tests/__pycache__
 .coverage
+.DS_Store
+coverage.xml
