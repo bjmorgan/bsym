@@ -1,4 +1,5 @@
 import os
+from bsym import __version__
 
 try:
     from setuptools import setup
@@ -12,17 +13,15 @@ except ImportError:
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-VERSION = '0.9.0'
-
 config = {
     'description': 'A Basic Symmetry Module',
     'long_description': read('README.md'),
     'author': 'Benjamin J. Morgan',
     'author_email': 'b.j.morgan@bath.ac.uk',
     'url': 'https://github.com/bjmorgan/bsym',
-    'download_url': "https://github.com/bjmorgan/bsym/archive/%s.tar.gz" % (VERSION),
+    'download_url': "https://github.com/bjmorgan/bsym/archive/%s.tar.gz" % (__version__),
     'author_email': 'b.j.morgan@bath.ac.uk',
-    'version': VERSION,
+    'version': __version__,
     'install_requires': [ 'numpy', 
 			  'pymatgen', 
                           'coverage',
