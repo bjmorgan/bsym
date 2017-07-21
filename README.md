@@ -10,9 +10,6 @@ API documentation is [here](http://bsym.readthedocs.io).
 Examples are provided in a Jupyter notebook [here][example_notebook]  
 Source code is available as a git repository at [https://github.com/bjmorgan/bsym][github]
 
-[github]: https://github.com/bjmorgan/bsym
-[doi]: https://zenodo.org/badge/latestdoi/19279643
-[example_notebook]: http://nbviewer.jupyter.org/github/bjmorgan/bsym/blob/master/examples/bsym_examples.ipynb
 
 ## Installation
 
@@ -37,9 +34,8 @@ pythin setup.py install
 ```
 
 ## Documentation
-An overview of the capabilities of `bsym` along with example code is contained in a [Jupyter notebook](http://jupyter-notebook.readthedocs.io/en/latest/#) in the repository `examples` directory [examples/bsym_examples.ipynb][examples_notebook].
+An overview of the capabilities of `bsym` along with example code is contained in a [Jupyter notebook](http://jupyter-notebook.readthedocs.io/en/latest/#) in the repository `examples` directory [examples/bsym_examples.ipynb][example_notebook].
 
-[example_notebook]:http://nbviewer.jupyter.org/github/bjmorgan/bsym/blob/master/examples/bsym_examples.ipynb
 
 API documentation is available [here](http://bsym.readthedocs.io).
 
@@ -73,3 +69,6 @@ Morgan, Benjamin J. (2017, July 5). *bsym - a Basic Symmetry Module*. Zenodo. ht
 }
 ```
 
+[example_notebook]:http://nbviewer.jupyter.org/github/bjmorgan/bsym/blob/master/examples/bsym_examples.ipynb
+[github]: https://github.com/bjmorgan/bsym
+[doi]: https://zenodo.org/badge/latestdoi/19279643
