@@ -7,8 +7,8 @@
 `bsym` is a basic Python symmetry module. It consists of some core classes that describe configuration vector spaces, their symmetry operations, and specific configurations of objects withing these spaces. The module also contains an interface for working with [`pymatgen`](http://pymatgen.org) `Structure` objects, to allow simple generation of disordered symmetry-inequivalent structures from a symmetric parent crystal structure.
 
 API documentation is [here](http://bsym.readthedocs.io).  
-Examples are provided in a Jupyter notebook [here][example_notebook]  
-Source code is available as a git repository at [https://github.com/bjmorgan/bsym][github]
+Examples are provided in a Jupyter notebook [here][example_notebook].
+Source code is available as a git repository at [https://github.com/bjmorgan/bsym][github].
 
 
 ## Installation
@@ -33,12 +33,6 @@ cd bsym
 pythin setup.py install 
 ```
 
-## Documentation
-An overview of the capabilities of `bsym` along with example code is contained in a [Jupyter notebook](http://jupyter-notebook.readthedocs.io/en/latest/#) in the repository `examples` directory [examples/bsym_examples.ipynb][example_notebook].
-
-
-API documentation is available [here](http://bsym.readthedocs.io).
-
 ## Tests
 
 Automated testing of the latest commit happens [here](https://travis-ci.org/bjmorgan/bsym).
@@ -49,6 +43,15 @@ python -m unittest discover
 ```
 
 The code has been tested with Python versions 3.5 and above.
+
+## Documentation
+An overview of the capabilities of `bsym` along with example code is contained in a [Jupyter notebook](http://jupyter-notebook.readthedocs.io/en/latest/#) in the repository `examples` directory [examples/bsym_examples.ipynb][example_notebook].
+
+API documentation is available [here](http://bsym.readthedocs.io).
+
+## I want to generate a set of symmetry-inequivalent crystal structures.
+This is covered in the [example notebook](example_notebook).  
+Also refer to the [`bsym.interface.pymatgen.unique_structure_substitutions`](TODO) documentation.
 
 ## Citing `bsym`
 
