@@ -5,7 +5,6 @@ from pymatgen import Lattice, Structure
 from bsym.interface.pymatgen import unique_symmetry_operations_as_vectors_from_structure, spacegroup_from_structure, parse_site_distribution, unique_structure_substitutions
 from itertools import permutations
 from bsym import SymmetryOperation, Configuration, SpaceGroup, ConfigurationSpace
-from bsym.sitelist import SiteList
 
 class TestPymatgenInterface( unittest.TestCase ):
 
