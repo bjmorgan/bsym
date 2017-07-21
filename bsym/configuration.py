@@ -112,6 +112,22 @@ class Configuration( np.matrix ):
         """
         return( cls( np.asarray( this_tuple ) ).T )
 
+    @classmethod
+    def from_vector( cls, this_vector ):
+        """
+        Construct a :any:`Configuration` from a `vector`,
+        e.g.::
+
+            Configuration.from_vector( [ 1, 1, 0 ] )
+
+        Args:
+            this_vector (list): the vector used to construct this :any:`Configuration`.
+
+        Returns:
+            (:any:`Configuration`): The new :any:`Configuration`.
+        """
+        return( cls( np.asarray( this_vector ) ).T )
+
     def tolist( self ):
         """
         Returns the configuration data as a list.
