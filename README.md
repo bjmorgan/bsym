@@ -7,11 +7,12 @@
 `bsym` is a basic Python symmetry module. It consists of some core classes that describe configuration vector spaces, their symmetry operations, and specific configurations of objects withing these spaces. The module also contains an interface for working with [`pymatgen`](http://pymatgen.org) `Structure` objects, to allow simple generation of disordered symmetry-inequivalent structures from a symmetric parent crystal structure.
 
 API documentation is [here](http://bsym.readthedocs.io).  
-Examples are provided in a Jupyter notebook [here](https://github.com/bjmorgan/bsym/blob/master/examples/bsym_examples.ipynb)  
+Examples are provided in a Jupyter notebook [here][example_notebook]  
 Source code is available as a git repository at [https://github.com/bjmorgan/bsym][github]
 
 [github]: https://github.com/bjmorgan/bsym
 [doi]: https://zenodo.org/badge/latestdoi/19279643
+[example_notebook]: http://nbviewer.jupyter.org/github/bjmorgan/bsym/blob/master/examples/bsym_examples.ipynb
 
 ## Installation
 
@@ -36,7 +37,9 @@ pythin setup.py install
 ```
 
 ## Documentation
-An overview of the capabilities of `bsym` along with example code is contained in a [Jupyter notebook](http://jupyter-notebook.readthedocs.io/en/latest/#) in the repository `examples` directory [examples/bsym_examples.ipynb](examples/bsym_examples.ipynb).
+An overview of the capabilities of `bsym` along with example code is contained in a [Jupyter notebook](http://jupyter-notebook.readthedocs.io/en/latest/#) in the repository `examples` directory [examples/bsym_examples.ipynb][examples_notebook].
+
+[example_notebook]:http://nbviewer.jupyter.org/github/bjmorgan/bsym/blob/master/examples/bsym_examples.ipynb
 
 API documentation is available [here](http://bsym.readthedocs.io).
 
