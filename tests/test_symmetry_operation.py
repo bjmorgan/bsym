@@ -117,9 +117,9 @@ class SymmetryOperationTestCase( unittest.TestCase ):
         self.assertEqual( so.character(), 2 )
 
     def test_as_vector( self ):
-        matrix = np.matrix( [ [ 1, 0 ], [ 0, 1 ] ] )
+        matrix = np.matrix( [ [ 0, 0, 1 ], [ 1, 0, 0 ], [ 0, 1, 0 ] ] )
         so = SymmetryOperation( matrix )
-        self.assertEqual( so.as_vector(), [ 1, 2 ] )
+        self.assertEqual( so.as_vector(), [ 2, 3, 1 ] )
   
     def test_as_vector_counting_from_zero( self ):
         matrix = np.matrix( [ [ 1, 0 ], [ 0, 1 ] ] )
