@@ -22,6 +22,8 @@ class SymmetryGroup:
         SymmetryGroup.read_from_file_with_labels( filename )
     """
 
+    class_str = 'SymmetryGroup'
+
     def __init__( self, symmetry_operations=[] ):
         """
         Create a :any:`SymmetryGroup` object.
@@ -150,7 +152,7 @@ class SymmetryGroup:
         return [ so.label for so in self.symmetry_operations ] 
 
     def __repr__( self ):
-        to_return = 'SymmetryGroup\n'
+        to_return = '{}\n'.format( self.__class__.class_str )
         for so in self.symmetry_operations:
             to_return += f"{so.label}\t{so.as_vector()}\n"
         return to_return
@@ -158,6 +160,4 @@ class SymmetryGroup:
     @property
     def size( self ):
         return len( self.symmetry_operations )
-
-    
 
