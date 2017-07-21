@@ -2,9 +2,9 @@ import unittest
 from unittest.mock import Mock, MagicMock, patch, call
 import numpy as np
 from pymatgen import Lattice, Structure
-from bsym.interface.pymatgen import unique_symmetry_operations_as_vectors_from_structure, spacegroup_from_structure, poscar_from_sitelist, parse_site_distribution
+from bsym.interface.pymatgen import unique_symmetry_operations_as_vectors_from_structure, spacegroup_from_structure, parse_site_distribution, unique_structure_substitutions
 from itertools import permutations
-from bsym import SymmetryOperation, Configuration, SpaceGroup
+from bsym import SymmetryOperation, Configuration, SpaceGroup, ConfigurationSpace
 from bsym.sitelist import SiteList
 
 class TestPymatgenInterface( unittest.TestCase ):
@@ -49,28 +49,34 @@ class TestPymatgenInterface( unittest.TestCase ):
         spacegroup = spacegroup_from_structure( self.structure, subset=subset )
         mock_symmetry_operations_from_structure.assert_called_once_with( self.structure, subset=subset )
   
-    @patch( 'bsym.interface.pymatgen.Structure' )
-    def test_poscar_from_sitelist( self, mock_Structure ):
-        struct1 = Mock( spec=Structure )
-        struct2 = Mock( spec=Structure )
-        struct2.to = Mock()
-        struct2.append = Mock()
-        struct1.copy = Mock( return_value=struct2 )
-        mock_Structure.side_effect = [ struct1 ]
-        config = Mock( spec=Configuration )
-        config.position.side_effect = [ [ 1 ], [ 0 ] ]
-        configs = [ config ]
-        labels = [ 2, 1 ]
-        sitelist = MagicMock( spec=SiteList )
-        sitelist.__getitem__ = Mock( side_effect=[ [ 1.0, 0.0, 0.0 ], [ 0.0, 0.0, 1.0 ] ] )
-        sitelists = [ sitelist ]
-        structure = Mock( spec=Structure )
-        structure.lattice = Mock( spec=Lattice )
-        structure.species = [ 'A', 'B' ]
-        poscar_from_sitelist( configs=configs, labels=labels, sitelists=sitelists, structure=structure )
-        struct2.to.assert_has_calls( [ call(filename='POSCAR_1.vasp') ] )
-        struct2.append.assert_has_calls( [ call('B', [1.0, 0.0, 0.0]), call('A', [0.0, 0.0, 1.0]) ] )
-    
+    def test_unique_structure_substitutions( self ):
+        # integration test
+        # Create a pymatgen structure with 16 sites in a 4x4 square grid
+        coords = np.array( [ [ 0.0, 0.0, 0.0 ],
+                             [ 0.25, 0.0, 0.0 ],
+                             [ 0.5, 0., 0.0 ],
+                             [ 0.75, 0.0, 0.0 ],
+                             [ 0.0, 0.25, 0.0 ],
+                             [ 0.25, 0.25, 0.0 ],
+                             [ 0.5, 0.25, 0.0 ],
+                             [ 0.75, 0.25, 0.0 ],
+                             [ 0.0, 0.5, 0.0 ],
+                             [ 0.25, 0.5, 0.0 ],
+                             [ 0.5, 0.5, 0.0 ],
+                             [ 0.75, 0.5, 0.0 ],
+                             [ 0.0, 0.75, 0.0 ],
+                             [ 0.25, 0.75, 0.0 ],
+                             [ 0.5, 0.75, 0.0 ],
+                             [ 0.75, 0.75, 0.0 ] ] )
+        atom_list = [ 'Li' ] * len( coords )
+        lattice = Lattice.from_parameters( a = 3.0, b=3.0, c=3.0, alpha=90, beta=90, gamma=90 )
+        parent_structure = Structure( lattice, atom_list, coords )
+        parent_structure.replace( 0, 'O' ) # substitute one site with 'O'
+        ns = unique_structure_substitutions( parent_structure, 'Li', { 'Na':1, 'Li':14 } )
+        self.assertEqual( len( ns ), 5 )
+        distances = np.array( sorted( [ s.get_distance( s.indices_from_symbol('O')[0], s.indices_from_symbol('Na')[0] ) for s in ns ] ) )
+        np.testing.assert_array_almost_equal( distances, np.array( [ 0.75    ,  1.06066 ,  1.5     ,  1.677051,  2.12132 ] ) )
+  
     def test_parse_site_distribution( self ):
         sd = { 'Li': 2, 'Mg': 4 }
         sd_numeric, sd_mapping = parse_site_distribution( sd )    

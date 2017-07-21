@@ -52,37 +52,6 @@ def spacegroup_from_structure( structure, subset=None ):
     symmetry_operations = [ SymmetryOperation.from_vector( m ) for m in mappings ]
     return SpaceGroup( symmetry_operations=symmetry_operations )
 
-def poscar_from_sitelist( configs, labels, sitelists, structure, subset=None ):
-    """
-    Uses `pymatgen` ``Structure.to()`` method to generate `VASP` `POSCAR` files for a set of 
-    configurations within a parent structure.
-
-    Args:
-        configs   (list [:any:`Configuration`]): list of :any:`configurations`.
-        labels    (list [int]):                  labels defining order of sites in output.
-        sitelists (list [:any;`SiteList`]):      list of :any:`SiteList` objects.
-        structure (pymatgen ``Structure``):      parent structure.
-        subset    (Optional [list]):             list of atom indices to include from the parent structure. 
-
-    Returns:
-        None
-    """
-    if subset:
-        species_clean = [ spec for i,spec in enumerate( structure.species ) if i not in subset ]
-        species_config = [ spec for i,spec in enumerate( structure.species ) if i in subset ]
-        frac_coords_clean = [ coord for i, coord in enumerate( structure.frac_coords ) if i not in subset ]
-        clean_structure = Structure( structure.lattice, species_clean, frac_coords_clean )
-    else:
-        clean_structure = Structure( structure.lattice, [], [] )
-        species_config = structure.species
-    for idx, config in enumerate( configs, start=1 ):
-       structure_config = clean_structure.copy()
-       for label in labels:
-           for pos in config.position( label ):
-               for sitelist in sitelists:
-                   structure_config.append( species_config[ pos ], sitelist[ pos ] )
-       structure_config.to( filename="POSCAR_{}.vasp".format( idx ) )
-
 def unique_structure_substitutions( structure, to_substitute, site_distribution ):
     """
     Generate all symmetry-unique structures formed by substituting a set of sites in a structure.
