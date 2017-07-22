@@ -18,9 +18,9 @@ bibliography: paper.bib
 
 # Summary
 
-`bsym` is a basic Python symmetry module. It consists of core classes that describe configuration vector spaces, their symmetry operations, and specific configurations of objects withing these spaces. The module also contains an interface for working with [`pymatgen`](http://pymatgen.org) `Structure` objects, to allow simple generation of disordered symmetry-inequivalent structures from a symmetric parent crystal structure.
+`bsym`[@bsym_version_1] is a Python module for performing basic symmetry operations on arbitrary configuration vector spaces. It consists of core classes that describe configuration vector spaces, their symmetry operations, and specific configurations of objects within these spaces. The module also contains functions for performing symmetry analyses on configurations of objects. Key functionality includes enumerating symmetry-inequivalent configurations arranged over a configuration vector space.
 
-The primary intended use-case for `bsym` is for generating molecular or crystalline structures with fractional site occupancy, for use in modelling by chemists and solid state physicists. The code contains an efficient implementation of the algorithm described by Grau-Crespo _et al._ [@Grau-CrespoEtAl_JPhysCondensMatter2007] for enumerating the symmetry-inequivalent configurations in a disordered atomic or crystalline structure, and an interface with [pymatgen](http://pymatgen.org) [@pymatgen] for direct symmetry analysis of pymatgen `Structure` objects.
+The primary intended use-case for `bsym` is for generating molecular or crystalline structures with fractional site occupancy, for use in modelling by chemists and solid state physicists. The code contains an efficient implementation of the algorithm described by Grau-Crespo _et al._ [@Grau-CrespoEtAl_JPhysCondensMatter2007] for enumerating the symmetry-inequivalent configurations in a disordered atomic structure. The code also includes an interface with [pymatgen](http://pymatgen.org) [@pymatgen] for performing direct symmetry analysis of crystal structures represented by pymatgen `Structure` objects.
 
 # Acknowledgements
 
