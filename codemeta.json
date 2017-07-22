@@ -1,0 +1,23 @@
+{
+  "@context": "https://raw.githubusercontent.com/codemeta/codemeta/master/codemeta.jsonld",
+  "@type": "Code",
+  "author": [
+    {
+      "@id": "http://orcid.org/0000-0002-3056-8233",
+      "@type": "Person",
+      "email": "b.j.morgan@bath.ac.uk",
+      "name": "Benjamin Morgan",
+      "affiliation": "Department of Chemistry, University of Bath, Bath, BA2 7AY, United Kingdom."
+    }
+  ],
+  "identifier": "",
+  "codeRepository": "https://github.com/bjmorgan/bsym",
+  "datePublished": "2017-07-22",
+  "dateModified": "2017-07-22",
+  "dateCreated": "2017-07-22",
+  "description": "bsym - A basic symmetry module",
+  "keywords": "symmetry, configurations, disorder",
+  "license": "MIT",
+  "title": "bsym",
+  "version": "1.0.b1"
+}
