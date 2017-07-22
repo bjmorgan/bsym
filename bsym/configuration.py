@@ -16,7 +16,7 @@ class Configuration( np.matrix ):
         self.lowest_numeric_representation = None
         super().__init__()
 
-    def __arrary_finalize__( self, obj ):
+    def __array_finalize__( self, obj ):
         pass
 
     def matches( self, test_configuration ):
