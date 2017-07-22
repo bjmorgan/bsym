@@ -6,6 +6,26 @@ class Configuration( np.matrix ):
     Objects are represented by integers, with indistinguishable objects denoted by identical integers.
     This class subclasses `numpy.matrix <https://docs.scipy.org/doc/numpy/reference/generated/numpy.matrix.html>`_. 
     Each configuration in the vector space of positions is represented as a column vector.
+
+    Attributes:
+        count (int): If symmetry-inequivalent configurations have been generated for a `configuration space`,
+                     this records the number of configurations equivalent to this one. 
+                     Value at initialisation is  ``None``.
+        lowest_numeric_representation (int): If the numeric representations for the set of equivalent 
+                     configurations are calculated, this can be used to store the lowest valued numeric 
+                     representation, for use as a simple hash.
+    
+    Examples:
+
+        >>> Configuration( [[1],[1],[0]] )
+        Configuration([1, 1, 0])
+
+        >>> Configuration.from_tuple( ( 1, 1, 0 ) )
+        Configuration([1, 1, 0])
+  
+        >>> Configuration.from_vector( [ 1, 1, 0 ] )
+        Configuration([1, 1, 0])
+
     """ 
 
     def __new__( cls, *args, **kwargs ):
@@ -24,7 +44,7 @@ class Configuration( np.matrix ):
         Test whether this configuration is equal to another configuration.
 
         Args:
-            test_configuration (bsym.Configuration): The configuration to compare against.
+            test_configuration (:any:`Configuration`): The configuration to compare against.
 
         Returns:
             (bool): True | False.
@@ -37,8 +57,8 @@ class Configuration( np.matrix ):
         under one or more of a set of symmetry operations.
 
         Args:
-            test_configuration (bsym.Configuration): The configuration to compare against.
-            symmetry_operations (list(bsym.SymmetryOperation): A list of SymmetryOperation objects.
+            test_configuration (Configuration): The configuration to compare against.
+            symmetry_operations (list(SymmetryOperation): A list of SymmetryOperation objects.
 
         Returns:
             (bool): True | False
@@ -104,6 +124,12 @@ class Configuration( np.matrix ):
     def as_number( self ):
         """
         A numeric representation of this configuration.
+
+        Examples:
+            >>> c = Configuration.from_vector( [ 1, 2, 0 ] )
+            >>> c.as_number
+            120
+
         """
         return int( ''.join( str(e) for e in self.tolist() ) )
 
