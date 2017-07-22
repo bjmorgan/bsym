@@ -87,6 +87,10 @@ class TestConfiguration( unittest.TestCase ):
         np.testing.assert_array_equal( Configuration.from_tuple( ( 1, 1, 0 ) ), 
                                        Configuration( [ [ 1 ], [ 1 ], [ 0 ] ] ) )
 
+    def test_from_vector( self ):
+        np.testing.assert_array_equal( Configuration.from_vector( [ 1, 1, 0 ] ), 
+                                       Configuration( [ [ 1 ], [ 1 ], [ 0 ] ] ) )
+
     def test_tolist( self ):
         self.assertEqual( self.configuration.tolist(), [ 1, 0, 0 ] )
 

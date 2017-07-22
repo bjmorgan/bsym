@@ -137,7 +137,7 @@ class Configuration( np.matrix ):
         Returns:
             (:any:`Configuration`): The new :any:`Configuration`.
         """
-        return( cls( np.asarray( this_vector ) ) )
+        return( cls( np.asarray( this_vector ) ).T )
 
     def tolist( self ):
         """
