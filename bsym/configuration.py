@@ -17,7 +17,7 @@ class Configuration( np.matrix ):
         super().__init__()
 
     def __array_finalize__( self, obj ):
-        pass
+        super().__array_finalize__( obj )
 
     def matches( self, test_configuration ):
         """
@@ -137,7 +137,7 @@ class Configuration( np.matrix ):
         Returns:
             (:any:`Configuration`): The new :any:`Configuration`.
         """
-        return( cls( np.asarray( this_vector ) ).T )
+        return( cls( np.asarray( this_vector ) ) )
 
     def tolist( self ):
         """
