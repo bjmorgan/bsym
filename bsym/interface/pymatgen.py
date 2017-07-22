@@ -54,10 +54,10 @@ def spacegroup_from_structure( structure, subset=None ):
 
 def unique_structure_substitutions( structure, to_substitute, site_distribution ):
     """
-    Generate all symmetry-unique structures formed by substituting a set of sites in a structure.
+    Generate all symmetry-unique structures formed by substituting a set of sites in a `pymatgen` structure.
 
     Args:
-        structure (Structure): The parent structure.
+        structure (pymatgen.Structure): The parent structure.
         to_substitute (str): atom label for the sites to be substituted.
         site_distribution (dict): A dictionary that defines the number of each substituting element.
 
