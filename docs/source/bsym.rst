@@ -68,7 +68,7 @@ bsym\.symmetry\_operation module
     :undoc-members:
     :show-inheritance:
 
-bsym\interface\.pymatgen module
+bsym\.interface\.pymatgen module
 -------------------------------
 
 .. automodule:: bsym.interface.pymatgen
