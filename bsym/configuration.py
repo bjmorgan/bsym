@@ -8,6 +8,17 @@ class Configuration( np.matrix ):
     Each configuration in the vector space of positions is represented as a column vector.
     """ 
 
+    def __new__( cls, *args, **kwargs ):
+        return super().__new__( cls, *args, **kwargs )
+
+    def __init__( self, *args, **kwargs ):
+        self.count = None
+        self.lowest_numeric_representation = None
+        super().__init__()
+
+    def __arrary_finalize__( self, obj ):
+        pass
+
     def matches( self, test_configuration ):
         """
         Test whether this configuration is equal to another configuration.

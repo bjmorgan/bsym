@@ -60,8 +60,11 @@ class ConfigurationSpace:
         s = flatten_list( [ [ key ] * site_distribution[ key ] for key in site_distribution ] )
         for new_permutation in unique_permutations( s ):
             config = Configuration.from_tuple( new_permutation )
+            config.set_lowest_numeric_representation( self.symmetry_group.symmetry_operations )
             if config.as_number not in seen:
-                [ seen.add( i ) for i in config.numeric_equivalents( self.symmetry_group.symmetry_operations ) ]
+                numeric_equivalents = set( config.numeric_equivalents( self.symmetry_group.symmetry_operations ) )
+                config.count = len( numeric_equivalents )
+                [ seen.add( i ) for i in numeric_equivalents ]
                 unique_configurations.append( config )
                 if verbose:
                     print( "found {:d}, screened {:d}".format( len( unique_configurations ), len( seen ) ) )

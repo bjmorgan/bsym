@@ -64,6 +64,7 @@ def unique_structure_substitutions( structure, to_substitute, site_distribution 
     Returns:
         (list[Structure]): A list of Structure objects for each unique substitution.
     """
+    #TODO shoukd check that Structure object does not have a number_of_equivalent_configurations attribute
     site_substitution_index = list( structure.indices_from_symbol( to_substitute ) )
     if len( site_substitution_index ) != sum( site_distribution.values() ):
         raise ValueError( "Number of sites from index does not match number from site distribution" )
@@ -76,6 +77,7 @@ def unique_structure_substitutions( structure, to_substitute, site_distribution 
         s = structure.copy()
         for j, k in enumerate( c.tolist() ):
             s.replace( site_substitution_index[j], numeric_site_mapping[k] )
+        s.number_of_equivalent_configurations = c.count
         substituted_structures.append( s )
     return substituted_structures
 

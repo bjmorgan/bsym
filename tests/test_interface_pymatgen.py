@@ -75,12 +75,17 @@ class TestPymatgenInterface( unittest.TestCase ):
         self.assertEqual( len( ns ), 5 )
         distances = np.array( sorted( [ s.get_distance( s.indices_from_symbol('O')[0], s.indices_from_symbol('Na')[0] ) for s in ns ] ) )
         np.testing.assert_array_almost_equal( distances, np.array( [ 0.75    ,  1.06066 ,  1.5     ,  1.677051,  2.12132 ] ) )
-  
+        np.testing.assert_array_equal( np.array( sorted( [ s.number_of_equivalent_configurations for s in ns ] ) ), np.array( [ 1, 2, 4, 4, 4 ] ) )
+ 
     def test_parse_site_distribution( self ):
         sd = { 'Li': 2, 'Mg': 4 }
         sd_numeric, sd_mapping = parse_site_distribution( sd )    
         for k, v in sd_numeric.items():
             self.assertEqual( sd[ sd_mapping[ k ] ], v )
-         
+    
+    def test_pymatgen_structure_can_be_patched( self ):
+        with self.assertRaises( AttributeError ):
+            self.structure.number_of_equivalent_configurations
+     
 if __name__ == '__main__':
     unittest.main()

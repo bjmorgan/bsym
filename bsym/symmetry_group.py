@@ -154,7 +154,7 @@ class SymmetryGroup:
     def __repr__( self ):
         to_return = '{}\n'.format( self.__class__.class_str )
         for so in self.symmetry_operations:
-            to_return += "{}\t{so.as_vector()}\n".format( so.label )
+            to_return += "{}\t{}\n".format( so.label, so.as_vector() )
         return to_return
 
     @property
