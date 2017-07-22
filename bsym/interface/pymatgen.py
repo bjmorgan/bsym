@@ -63,8 +63,10 @@ def unique_structure_substitutions( structure, to_substitute, site_distribution 
 
     Returns:
         (list[Structure]): A list of Structure objects for each unique substitution.
+    
+    Notes:
+        The number of symmetry-equivalent configurations for each structure is stored in `Structure.number_of_equivalent_configurations`.
     """
-    #TODO shoukd check that Structure object does not have a number_of_equivalent_configurations attribute
     site_substitution_index = list( structure.indices_from_symbol( to_substitute ) )
     if len( site_substitution_index ) != sum( site_distribution.values() ):
         raise ValueError( "Number of sites from index does not match number from site distribution" )
