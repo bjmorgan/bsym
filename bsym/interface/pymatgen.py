@@ -1,8 +1,9 @@
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer, SpacegroupOperations
 from pymatgen.util.coord_utils import coord_list_mapping_pbc
-from pymatgen import Lattice, Structure
-
+from pymatgen import Lattice, Structure, Composition
+from pymatgen.core.periodic_table import get_el_sp
 from bsym import SpaceGroup, SymmetryOperation, ConfigurationSpace
+from copy import copy
 
 def unique_symmetry_operations_as_vectors_from_structure( structure, verbose=False, subset=None ):
     """
@@ -67,6 +68,7 @@ def unique_structure_substitutions( structure, to_substitute, site_distribution 
     Notes:
         The number of symmetry-equivalent configurations for each structure 
         is stored in the number_of_equivalent_configurations attribute.
+        See ``new_structure_from_substitution()``.
     """
     site_substitution_index = list( structure.indices_from_symbol( to_substitute ) )
     if len( site_substitution_index ) != sum( site_distribution.values() ):
@@ -75,14 +77,10 @@ def unique_structure_substitutions( structure, to_substitute, site_distribution 
     config_space = ConfigurationSpace( objects=site_substitution_index, symmetry_group=space_group )
     numeric_site_distribution, numeric_site_mapping = parse_site_distribution( site_distribution )
     unique_configurations = config_space.unique_configurations( numeric_site_distribution )
-    substituted_structures = []
-    for c in unique_configurations:
-        s = structure.copy()
-        for j, k in enumerate( c.tolist() ):
-            s.replace( site_substitution_index[j], numeric_site_mapping[k] )
+    new_structures = [ new_structure_from_substitution( structure, site_substitution_index, [ numeric_site_mapping[k] for k in c.tolist() ] ) for c in unique_configurations ]
+    for s, c in zip( new_structures, unique_configurations ):
         s.number_of_equivalent_configurations = c.count
-        substituted_structures.append( s )
-    return substituted_structures
+    return new_structures
 
 def parse_site_distribution( site_distribution ):
     """
@@ -101,4 +99,23 @@ def parse_site_distribution( site_distribution ):
         numeric_site_distribution[i] = site_distribution[k]
         numeric_site_mapping[i] = k
     return numeric_site_distribution, numeric_site_mapping
+   
+def new_structure_from_substitution( parent_structure, site_substitution_index, new_species_list ):
+    """
+    Generate a new pymatgen Structure from site substitution parameters.
+
+    Args:
+        parent_structure (Structure):        The parent pymatgen ``Struture`` object.
+        site_substitution_index (list[int]): The list of site indices to be substituted.
+        new_species_list (list[str]):        A list of the replacement atomic species.
     
+    Returns:
+        (Structure): The new pymatgen Structure.
+    """
+    if len( site_substitution_index ) != len( new_species_list ):
+        raise ValueError
+    s = parent_structure.copy()
+    for i, spec in zip( site_substitution_index, new_species_list ):
+        s[i] = spec
+    return s
+

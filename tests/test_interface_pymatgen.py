@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock, MagicMock, patch, call
 import numpy as np
 from pymatgen import Lattice, Structure
-from bsym.interface.pymatgen import unique_symmetry_operations_as_vectors_from_structure, spacegroup_from_structure, parse_site_distribution, unique_structure_substitutions
+from bsym.interface.pymatgen import unique_symmetry_operations_as_vectors_from_structure, spacegroup_from_structure, parse_site_distribution, unique_structure_substitutions, new_structure_from_substitution
 from itertools import permutations
 from bsym import SymmetryOperation, Configuration, SpaceGroup, ConfigurationSpace
 
@@ -92,6 +92,13 @@ class TestPymatgenInterface( unittest.TestCase ):
     def test_pymatgen_structure_can_be_patched( self ):
         with self.assertRaises( AttributeError ):
             self.structure.number_of_equivalent_configurations
-     
+    
+    def test_new_structure_from_substitution( self ):
+        substitution_index = [ 2,3 ]
+        new_species_list = [ 'Mg', 'Fe' ] 
+        s_new = new_structure_from_substitution( self.structure, substitution_index, new_species_list ) 
+        self.assertEqual( s_new[2].species_string, 'Mg' )
+        self.assertEqual( s_new[3].species_string, 'Fe' )
+
 if __name__ == '__main__':
     unittest.main()
