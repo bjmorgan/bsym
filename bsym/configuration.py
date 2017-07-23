@@ -18,13 +18,13 @@ class Configuration( np.matrix ):
     Examples:
 
         >>> Configuration( [[1],[1],[0]] )
-        Configuration([1, 1, 0])
+        Configuration([[1, 1, 0]].T)
 
         >>> Configuration.from_tuple( ( 1, 1, 0 ) )
-        Configuration([1, 1, 0])
+        Configuration([[1, 1, 0]].T)
   
         >>> Configuration.from_vector( [ 1, 1, 0 ] )
-        Configuration([1, 1, 0])
+        Configuration([[1, 1, 0]].T)
 
     """ 
 
@@ -193,7 +193,7 @@ class Configuration( np.matrix ):
         return [ i for i,x in enumerate( self.tolist() ) if x == label ]
 
     def __repr__( self ):
-        to_return = "Configuration({})\n".format(self.tolist())
+        to_return = "Configuration([{}].T)\n".format(self.tolist())
         return to_return
 
     def map_objects( self, objects ):
