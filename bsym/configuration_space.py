@@ -59,7 +59,7 @@ class ConfigurationSpace:
         unique_configurations = []
         s = flatten_list( [ [ key ] * site_distribution[ key ] for key in site_distribution ] )
         for new_permutation in unique_permutations( s ):
-            if config.as_number not in seen:
+            if permutation_as_config_number( new_permutation) not in seen:
                 config = Configuration.from_tuple( new_permutation )
                 numeric_equivalents = set( config.numeric_equivalents( self.symmetry_group.symmetry_operations ) )
                 config.count = len( numeric_equivalents )

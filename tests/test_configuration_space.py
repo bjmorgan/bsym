@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import Mock
 from bsym import ConfigurationSpace, SymmetryGroup, SymmetryOperation
+from bsym.configuration_space import permutation_as_config_number
 import numpy as np
 
 class ConfigurationSpaceTestCase( unittest.TestCase ):
@@ -37,6 +38,11 @@ class ConfigurationSpaceTestCase( unittest.TestCase ):
         object_list = [ 'A', 'B' ]
         configuration_space = ConfigurationSpace( objects=object_list )
         self.assertEqual( issubclass( configuration_space.symmetry_group.symmetry_operations[0].matrix.dtype.type, np.integer ), True )
+
+class ConfigurationSpaceModuleFunctionsTestCase( unittest.TestCase ):
+      
+    def test_permutation_as_config_number( self ):
+        self.assertEqual( permutation_as_config_number( [ 1, 1, 0, 0, 1 ] ), 11001 )
 
 if __name__ == '__main__':
     unittest.main()
