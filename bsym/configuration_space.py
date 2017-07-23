@@ -59,9 +59,8 @@ class ConfigurationSpace:
         unique_configurations = []
         s = flatten_list( [ [ key ] * site_distribution[ key ] for key in site_distribution ] )
         for new_permutation in unique_permutations( s ):
-            config = Configuration.from_tuple( new_permutation )
-            config.set_lowest_numeric_representation( self.symmetry_group.symmetry_operations )
             if config.as_number not in seen:
+                config = Configuration.from_tuple( new_permutation )
                 numeric_equivalents = set( config.numeric_equivalents( self.symmetry_group.symmetry_operations ) )
                 config.count = len( numeric_equivalents )
                 [ seen.add( i ) for i in numeric_equivalents ]
@@ -71,3 +70,13 @@ class ConfigurationSpace:
         if verbose:
             print( 'unique configurations: ' + str( len( unique_configurations ) ) )
         return( unique_configurations )
+
+def permutation_as_config_number( p ):
+    """
+    A numeric representation of a numeric list.
+
+    Example:
+        >>> permutation_as_config_number( [ 1, 1, 0, 0, 1 ] )
+        11001
+    """
+    return int( ''.join( str(e) for e in p ) )
