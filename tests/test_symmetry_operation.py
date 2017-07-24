@@ -109,7 +109,8 @@ class SymmetryOperationTestCase( unittest.TestCase ):
         with patch( 'bsym.symmetry_operation.Configuration' ) as mock_configuration:
             mock_configuration.return_value = 'foo'
             so.operate_on( configuration )
-            self.assertEqual( mock_configuration.call_args[0][0], ( so.matrix * configuration ).tolist() )
+            np.testing.assert_array_equal( mock_configuration.call_args[0][0], ( so.matrix * configuration ).tolist() )
+            #self.assertEqual( mock_configuration.call_args[0][0], ( so.matrix * configuration ).tolist() )
 
     def test_character( self ):
         matrix = np.matrix( [ [ 1, 0 ], [ 0, 1 ] ] )
