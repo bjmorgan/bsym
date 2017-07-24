@@ -1,5 +1,5 @@
 import numpy as np
-from numba import njit
+from numba import jit
 
 class Configuration:
     """
@@ -38,7 +38,8 @@ class Configuration:
         Returns:
             (bool): True | False.
         """
-        # TODO should check test_configuration is a Configuration
+        if not isinstance( test_configuration, Configuration ):
+            raise TypeError
         return ( self.vector == test_configuration.vector ).all()
 
     def is_equivalent_to( self, test_configuration, symmetry_operations ):
@@ -188,7 +189,7 @@ class Configuration:
             sorted_objects[key] = [ o for k, o in zip( self.vector, objects ) if k == key ]
         return sorted_objects 
 
-@njit
+@jit
 def jit_as_number(a):
     tot = 0
     for num in a:
