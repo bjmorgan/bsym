@@ -1,6 +1,5 @@
 import numpy as np
 from bsym.configuration import Configuration
-from numba import njit
 
 def is_square( m ):
     """

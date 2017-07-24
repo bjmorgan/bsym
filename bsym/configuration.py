@@ -1,5 +1,4 @@
 import numpy as np
-from numba import jit
 
 class Configuration:
     """
@@ -188,15 +187,6 @@ class Configuration:
         for key in set( self.vector ):
             sorted_objects[key] = [ o for k, o in zip( self.vector, objects ) if k == key ]
         return sorted_objects 
-
-@jit
-def jit_as_number(a):
-    tot = 0
-    for num in a:
-        tot *= 10
-        tot += int( num )
-    return tot
-
 
 def as_number( a ):
     tot = 0
