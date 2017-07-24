@@ -17,7 +17,8 @@ def unique_permutations( seq ):
     # The algorithm specifies to start with a sorted version
     seq = sorted(seq)
     while True:
-        yield seq
+        #yield list( seq )
+        yield list( seq )
         # Working backwards from the last-but-one index,           k
         # we find the index of the first decrease in value.  0 0 1 0 1 1 1 0
         for k in k_indices:
