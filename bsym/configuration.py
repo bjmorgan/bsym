@@ -1,6 +1,6 @@
 import numpy as np
 
-class Configuration( np.matrix ):
+class Configuration:
     """
     A :any:`Configuration` describes a specific arrangement of objects in the vector space of possible positions.
     Objects are represented by integers, with indistinguishable objects denoted by identical integers.
@@ -28,16 +28,10 @@ class Configuration( np.matrix ):
 
     """ 
 
-    def __new__( cls, *args, **kwargs ):
-        return super().__new__( cls, *args, **kwargs )
-
-    def __init__( self, *args, **kwargs ):
+    def __init__( self, vector ):
         self.count = None
         self.lowest_numeric_representation = None
-        super().__init__()
-
-    def __array_finalize__( self, obj ):
-        super().__array_finalize__( obj )
+        self.vector = np.array( vector )
 
     def matches( self, test_configuration ):
         """
@@ -49,7 +43,8 @@ class Configuration( np.matrix ):
         Returns:
             (bool): True | False.
         """
-        return ( self == test_configuration ).all()
+        # TODO should check test_configuration is a Configuration
+        return ( self.vector == test_configuration.vector ).all()
 
     def is_equivalent_to( self, test_configuration, symmetry_operations ):
         """
@@ -131,7 +126,7 @@ class Configuration( np.matrix ):
             120
 
         """
-        return int( ''.join( str(e) for e in self.tolist() ) )
+        return int( ''.join( str(e) for e in self.vector.tolist() ) )
 
     @classmethod
     def from_tuple( cls, this_tuple ):
@@ -147,23 +142,7 @@ class Configuration( np.matrix ):
         Returns:
             (:any:`Configuration`): The new :any:`Configuration`.
         """
-        return( cls( np.asarray( this_tuple ) ).T )
-
-    @classmethod
-    def from_vector( cls, this_vector ):
-        """
-        Construct a :any:`Configuration` from a `vector`,
-        e.g.::
-
-            Configuration.from_vector( [ 1, 1, 0 ] )
-
-        Args:
-            this_vector (list): the vector used to construct this :any:`Configuration`.
-
-        Returns:
-            (:any:`Configuration`): The new :any:`Configuration`.
-        """
-        return( cls( np.asarray( this_vector ) ).T )
+        return( cls( this_tuple ) )
 
     def tolist( self ):
         """
@@ -175,7 +154,7 @@ class Configuration( np.matrix ):
         Returns:
             (List)
         """
-        return [ e[0] for e in super().tolist() ]
+        return list( self.vector )
 
     def pprint( self ):
         print( ' '.join( [ str(e) for e in self.tolist() ] ) )
@@ -193,7 +172,7 @@ class Configuration( np.matrix ):
         return [ i for i,x in enumerate( self.tolist() ) if x == label ]
 
     def __repr__( self ):
-        to_return = "Configuration([{}].T)\n".format(self.tolist())
+        to_return = "Configuration({})\n".format(self.vector)
         return to_return
 
     def map_objects( self, objects ):
@@ -206,9 +185,9 @@ class Configuration( np.matrix ):
         Returns:
             sorted_objects [dict]: A dictionary of sorted objects.
         """
-        if len( objects ) != len( self ):
+        if len( objects ) != len( self.vector ):
             raise ValueError
         sorted_objects = {}
-        for key in set( self.tolist() ):
-            sorted_objects[key] = [ o for k, o in zip( self.tolist(), objects ) if k is key ]
+        for key in set( self.vector ):
+            sorted_objects[key] = [ o for k, o in zip( self.vector, objects ) if k == key ]
         return sorted_objects 

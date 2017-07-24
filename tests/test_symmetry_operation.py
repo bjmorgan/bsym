@@ -1,7 +1,6 @@
 import unittest
 import numpy as np
-from bsym import SymmetryOperation
-from bsym import Configuration
+from bsym import SymmetryOperation, Configuration
 from unittest.mock import patch
 import io
 from bsym.symmetry_operation import is_square
@@ -55,10 +54,10 @@ class SymmetryOperationTestCase( unittest.TestCase ):
 
     def test_mul_with_configuration( self ):
         so = SymmetryOperation.from_vector( [ 2, 3, 1 ] )
-        conf = Configuration.from_tuple( ( 1, 2, 3 ) )
+        conf = Configuration( [ 1, 2, 3 ] )
         new_conf = so * conf
         self.assertEqual( type( new_conf ), Configuration )
-        self.assertEqual( new_conf.matches( Configuration.from_tuple( ( 3, 1, 2 ) ) ), True )
+        self.assertEqual( new_conf.matches( Configuration( [ 3, 1, 2 ] ) ), True )
 
     def test_invert( self ):
         matrix_a = np.matrix( [ [ 0, 1, 0 ], [ 0, 0, 1 ], [ 1, 0, 0 ] ] )
@@ -105,12 +104,9 @@ class SymmetryOperationTestCase( unittest.TestCase ):
     def test_operate_on( self ):
         matrix = np.matrix( [ [ 0, 1, 0 ], [ 0, 0, 1 ], [ 1, 0, 0 ] ] )
         so = SymmetryOperation( matrix )
-        configuration = np.matrix( [ [ 1, 1, 0 ] ] ).T
-        with patch( 'bsym.symmetry_operation.Configuration' ) as mock_configuration:
-            mock_configuration.return_value = 'foo'
-            so.operate_on( configuration )
-            np.testing.assert_array_equal( mock_configuration.call_args[0][0], ( so.matrix * configuration ).tolist() )
-            #self.assertEqual( mock_configuration.call_args[0][0], ( so.matrix * configuration ).tolist() )
+        configuration = Configuration( [ 1, 2, 3 ] )
+        so.operate_on( configuration )
+        np.testing.assert_array_equal( so.operate_on( configuration ).vector, np.array( [ 2, 3, 1 ] ) )  
 
     def test_character( self ):
         matrix = np.matrix( [ [ 1, 0 ], [ 0, 1 ] ] )
