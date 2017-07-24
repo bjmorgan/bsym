@@ -59,7 +59,7 @@ class Configuration:
         else:
             return False
 
-    def is_in_list( self, list ):
+    def is_in_list( self, the_list ):
         """
         Test whether this configuration is in a list of configurations.
 
@@ -69,9 +69,9 @@ class Configuration:
         Returns:
             (bool): True | False
         """
-        return next( ( True for c in list if self.matches( c ) ), False )
+        return next( ( True for c in the_list if self.matches( c ) ), False )
 
-    def has_equivalent_in_list( self, list, symmetry_operations ):
+    def has_equivalent_in_list( self, the_list, symmetry_operations ):
         """
         Test whether this configuration is equivalent by symmetry to one or more
         in a list of configurations.
@@ -83,7 +83,7 @@ class Configuration:
         Returns:
             (bool): True | False 
         """
-        return next( ( True for c in list if self.is_equivalent_to( c, symmetry_operations ) ), False )
+        return next( ( True for c in the_list if self.is_equivalent_to( c, symmetry_operations ) ), False )
 
     def set_lowest_numeric_representation( self, symmetry_operations ):
        """
