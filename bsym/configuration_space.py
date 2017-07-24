@@ -79,4 +79,8 @@ def permutation_as_config_number( p ):
         >>> permutation_as_config_number( [ 1, 1, 0, 0, 1 ] )
         11001
     """
-    return int( ''.join( str(e) for e in p ) )
+    tot = 0
+    for num in p:
+        tot *= 10
+        tot += num
+    return tot

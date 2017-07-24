@@ -1,6 +1,6 @@
 import numpy as np
 from bsym.configuration import Configuration
-#from bsym import Configuration
+from numba import njit
 
 def is_square( m ):
     """
@@ -35,11 +35,11 @@ class SymmetryOperation:
             self
         """
         if isinstance( matrix, np.matrix ):
-            self.matrix = matrix
+            self.matrix = np.array( matrix )
         elif isinstance( matrix, np.ndarray ):
-            self.matrix = np.matrix( matrix )
+            self.matrix = np.array( matrix )
         elif isinstance( matrix, list):
-            self.matrix = np.matrix( matrix )
+            self.matrix = np.array( matrix )
         else:
             raise TypeError
         if not is_square( self.matrix ):
@@ -51,7 +51,7 @@ class SymmetryOperation:
         Multiply this `SymmetryOperation` matrix with another `SymmetryOperation`.
 
         Args:
-            other (SymmetryOperation, Configuration, matrix): the other symmetry operation or configuration or matrix
+            other (SymmetryOperation, Configuration): the other symmetry operation or configuration or matrix
             for the matrix multiplication self * other.
 
         Returns:
@@ -59,11 +59,11 @@ class SymmetryOperation:
             (Configuration): if `other` is a `Configuration`.
         """
         if isinstance( other, SymmetryOperation ):
-            return( SymmetryOperation( self.matrix * other.matrix ) )
+            return( SymmetryOperation( self.matrix.dot( other.matrix ) ) )
         elif isinstance( other, Configuration ):
             return( self.operate_on( other ) )
         else:
-            return( SymmetryOperation( self.matrix * other ) )
+            raise TypeError
 
     def invert( self, label=None ):
         """
@@ -122,7 +122,10 @@ class SymmetryOperation:
         """
         if not isinstance( configuration, Configuration ):
             raise TypeError
-        return Configuration( np.array( self.matrix ).dot( configuration.vector ) )
+        return Configuration( self.matrix.dot( configuration.vector ) )
+
+    def operate_on_and_return_numeric_representation( self, configuration ):
+        return new_dot( self.matrix, configuration.vector )
 
     def character( self ):
         """
@@ -177,3 +180,12 @@ class SymmetryOperation:
         label = self.label if self.label else '---'
         return 'SymmetryOperation\nlabel(' + label + ")\n" + self.matrix.__repr__()
 
+@njit
+def new_dot( a, v ):
+    m = a.shape[0]
+    result = 0
+    for i in range(m):
+        result *= 10
+        for j in range(m):
+            result += int( a[i,j] * v[j] )
+    return result

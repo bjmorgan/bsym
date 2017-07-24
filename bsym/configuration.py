@@ -1,4 +1,5 @@
 import numpy as np
+from numba import njit
 
 class Configuration:
     """
@@ -15,16 +16,10 @@ class Configuration:
                      configurations are calculated, this can be used to store the lowest valued numeric 
                      representation, for use as a simple hash.
     
-    Examples:
+    Example:
 
-        >>> Configuration( [[1],[1],[0]] )
-        Configuration([[1, 1, 0]].T)
-
-        >>> Configuration.from_tuple( ( 1, 1, 0 ) )
-        Configuration([[1, 1, 0]].T)
-  
-        >>> Configuration.from_vector( [ 1, 1, 0 ] )
-        Configuration([[1, 1, 0]].T)
+        >>> Configuration( [1, 1, 0] )
+        Configuration([1, 1, 0])
 
     """ 
 
@@ -114,6 +109,7 @@ class Configuration:
             (list(int)): A list of numbers representing each equivalent configuration.
         """
         return [ symmetry_operation.operate_on( self ).as_number for symmetry_operation in symmetry_operations ]
+        #return [ as_number( symmetry_operation.operate_on( self, config=False ) ) for symmetry_operation in symmetry_operations ]
 
     @property
     def as_number( self ):
@@ -121,12 +117,12 @@ class Configuration:
         A numeric representation of this configuration.
 
         Examples:
-            >>> c = Configuration.from_vector( [ 1, 2, 0 ] )
+            >>> c = Configuration( [ 1, 2, 0 ] )
             >>> c.as_number
             120
 
         """
-        return int( ''.join( str(e) for e in self.vector.tolist() ) )
+        return as_number( self.vector )
 
     @classmethod
     def from_tuple( cls, this_tuple ):
@@ -191,3 +187,19 @@ class Configuration:
         for key in set( self.vector ):
             sorted_objects[key] = [ o for k, o in zip( self.vector, objects ) if k == key ]
         return sorted_objects 
+
+@njit
+def jit_as_number(a):
+    tot = 0
+    for num in a:
+        tot *= 10
+        tot += int( num )
+    return tot
+
+
+def as_number( a ):
+    tot = 0
+    for num in a:
+        tot *= 10
+        tot += int( num )
+    return tot

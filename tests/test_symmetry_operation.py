@@ -41,16 +41,11 @@ class SymmetryOperationTestCase( unittest.TestCase ):
         self.assertEqual( so.label, label )
 
     def test_mul( self ):
-        matrix_a = np.matrix( [ [ 1, 1 ], [ 0, 0 ] ] )
-        matrix_b = np.matrix( [ [ 1, 0 ], [ 1, 0 ] ] )
-        so = SymmetryOperation( matrix_a )
-        np.testing.assert_array_equal( ( so * matrix_b ).matrix , np.matrix( [ [ 2, 0 ], [ 0, 0 ] ] ) )
-
-    def test_mul_with_non_matrix( self ):
-        matrix_a = np.matrix( [ [ 1, 1 ], [ 0, 0 ] ] )
-        array_b	= np.array( [ [ 1, 0 ], [ 1, 0 ] ] )
-        so = SymmetryOperation( matrix_a )
-        np.testing.assert_array_equal( ( so * array_b ).matrix, np.matrix( [ [ 2, 0 ], [ 0, 0 ] ] ) )
+        matrix_a = np.array( [ [ 1, 1 ], [ 0, 0 ] ] )
+        matrix_b = np.array( [ [ 1, 0 ], [ 1, 0 ] ] )
+        so_a = SymmetryOperation( matrix_a )
+        so_b = SymmetryOperation( matrix_b )
+        np.testing.assert_array_equal( ( so_a * so_b ).matrix , np.array( [ [ 2, 0 ], [ 0, 0 ] ] ) )
 
     def test_mul_with_configuration( self ):
         so = SymmetryOperation.from_vector( [ 2, 3, 1 ] )
