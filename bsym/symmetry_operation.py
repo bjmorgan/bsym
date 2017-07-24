@@ -123,9 +123,6 @@ class SymmetryOperation:
             raise TypeError
         return Configuration( self.matrix.dot( configuration.vector ) )
 
-    def operate_on_and_return_numeric_representation( self, configuration ):
-        return new_dot( self.matrix, configuration.vector )
-
     def character( self ):
         """
         Return the character of this symmetry operation (the trace of `self.matrix`).
@@ -178,13 +175,3 @@ class SymmetryOperation:
     def __repr__( self ):
         label = self.label if self.label else '---'
         return 'SymmetryOperation\nlabel(' + label + ")\n" + self.matrix.__repr__()
-
-@njit
-def new_dot( a, v ):
-    m = a.shape[0]
-    result = 0
-    for i in range(m):
-        result *= 10
-        for j in range(m):
-            result += int( a[i,j] * v[j] )
-    return result
