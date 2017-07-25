@@ -25,7 +25,7 @@ In this approach, the overall computational cost can be greatly reduced by consi
 
 # `bsym`
 
-`bsym` is a Python module for performing symmetry-based manipulations on arbitrary configuration vector spaces. 
+`bsym` [@bsym_version_1] is a Python module for performing symmetry-based manipulations on arbitrary configuration vector spaces. 
 The code includes an efficient implementation of the algorithm described by Grau-Crespo *et al.*, for enumerating symmetry inequivalent configurations [@Grau-CrespoEtAl_JPhysCondensMatter2007].
 For treating the specific case of site-disorder in crystals, `bsym` includes an interface for working with `pymatgen` `Structure` objects [OngEtAl_CompMaterSci2013], which allows simple construction of sets of symmetry operations for crystal structures, and conversion to and from a range of standard file formats for recording crystal structures and for inputs for a range of atomistic modelling codes. 
 The core classes describe objects corresponding to an abstracted matrix representation of configurational vector spaces and their symmetry properties. This means `bsym` can be readily used for analysis in other classes of problems, including molecular point groups, crystal surface symmetries (2D space groups), and graph theoretical colouring problems.
