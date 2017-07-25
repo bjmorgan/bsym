@@ -194,3 +194,4 @@ def as_number( a ):
         tot *= 10
         tot += int( num )
     return tot
+
