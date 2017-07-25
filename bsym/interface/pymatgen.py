@@ -55,7 +55,7 @@ def spacegroup_from_structure( structure, subset=None ):
     symmetry_operations = [ SymmetryOperation.from_vector( m ) for m in mappings ]
     return SpaceGroup( symmetry_operations=symmetry_operations )
 
-def unique_structure_substitutions( structure, to_substitute, site_distribution ):
+def unique_structure_substitutions( structure, to_substitute, site_distribution, verbose=False ):
     """
     Generate all symmetry-unique structures formed by substituting a set of sites in a `pymatgen` structure.
 
@@ -63,6 +63,7 @@ def unique_structure_substitutions( structure, to_substitute, site_distribution 
         structure (pymatgen.Structure): The parent structure.
         to_substitute (str): atom label for the sites to be substituted.
         site_distribution (dict): A dictionary that defines the number of each substituting element.
+        verbose (bool): verbose output.
 
     Returns:
         (list[Structure]): A list of Structure objects for each unique substitution.
@@ -78,7 +79,7 @@ def unique_structure_substitutions( structure, to_substitute, site_distribution 
     space_group = spacegroup_from_structure( structure, subset=site_substitution_index )
     config_space = ConfigurationSpace( objects=site_substitution_index, symmetry_group=space_group )
     numeric_site_distribution, numeric_site_mapping = parse_site_distribution( site_distribution )
-    unique_configurations = config_space.unique_configurations( numeric_site_distribution )
+    unique_configurations = config_space.unique_configurations( numeric_site_distribution, verbose=verbose )
     new_structures = [ new_structure_from_substitution( structure, site_substitution_index, [ numeric_site_mapping[k] for k in c.tolist() ] ) for c in unique_configurations ]
     for s, c in zip( new_structures, unique_configurations ):
         s.number_of_equivalent_configurations = c.count
