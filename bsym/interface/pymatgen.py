@@ -5,19 +5,21 @@ from pymatgen.core.periodic_table import get_el_sp
 from bsym import SpaceGroup, SymmetryOperation, ConfigurationSpace
 from copy import copy
 
-def unique_symmetry_operations_as_vectors_from_structure( structure, verbose=False, subset=None ):
+def unique_symmetry_operations_as_vectors_from_structure( structure, verbose=False, subset=None, atol=1e-5 ):
     """
     Uses `pymatgen`_ symmetry analysis to find the minimum complete set of symmetry operations for the space group of a structure.
 
     Args:
         structure (pymatgen ``Structure``): structure to be analysed.
         subset    (Optional [list]):        list of atom indices to be used for generating the symmetry operations.
-
+        atol      (Optional [float]):       tolerance factor for the ``pymatgen`` `coordinate mapping`_ under each symmetry operation.
     Returns:
         (list[list]): a list of lists, containing the symmetry operations as vector mappings.
 
     .. _pymatgen:
         http://pymatgen.org
+    .. _coordinate mapping:
+        http://pymatgen.org/pymatgen.util.coord_utils.html#pymatgen.util.coord_utils.coord_list_mapping_pbc
 
     """
     symmetry_analyzer = SpacegroupAnalyzer( structure )
@@ -33,7 +35,7 @@ def unique_symmetry_operations_as_vectors_from_structure( structure, verbose=Fal
         mapping_structure = structure
     for symmop in symmetry_operations:
         new_structure = Structure( mapping_structure.lattice, mapping_structure.species, symmop.operate_multi( mapping_structure.frac_coords ) )
-        new_mapping = [ x+1 for x in list( coord_list_mapping_pbc( new_structure.frac_coords, mapping_structure.frac_coords ) ) ]
+        new_mapping = [ x+1 for x in list( coord_list_mapping_pbc( new_structure.frac_coords, mapping_structure.frac_coords, atol=atol ) ) ]
         if new_mapping not in mappings:
             mappings.append( new_mapping )
     return mappings

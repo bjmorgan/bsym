@@ -16,7 +16,7 @@ class TestPymatgenInterface( unittest.TestCase ):
                              [ 0.0, 0.5, 0.5 ],
                              [ 0.5, 0.0, 0.5 ] ] )
         atom_list = [ 'Li' ] * len( coords )
-        lattice = Lattice.from_parameters( a = 3.0, b=3.0, c=3.0, alpha=90, beta=90, gamma=90 )
+        lattice = Lattice.from_parameters( a=3.0, b=3.0, c=3.0, alpha=90, beta=90, gamma=90 )
         self.structure = Structure( lattice, atom_list, coords )
 
     def test_unique_symmetry_operations_as_vectors_from_structure( self ):
@@ -25,6 +25,20 @@ class TestPymatgenInterface( unittest.TestCase ):
         self.assertEqual( len( mappings ), 24 )
         for l in permutations( [ 1, 2, 3, 4 ], 4 ):
             self.assertEqual( list(l) in mappings, True )
+
+    def test_unique_symmetry_operations_as_vectors_from_structure_hex( self ):
+        # integration test
+        coords = np.array( [ [ 0.666667, 0.333334, 0.498928 ],
+                             [ 0.333334, 0.666667, 0.998928 ],
+                             [ 0.666667, 0.333334, 0.876081 ],
+                             [ 0.333334, 0.666667, 0.376081 ] ] )
+        atom_list = [ 'Zn' ] * 2 + [ 'O' ] * 2
+        lattice = Lattice.from_parameters( a=2.0, b=2.0, c=3.265986324, alpha=90, beta=90, gamma=120 )
+        structure = Structure( lattice, atom_list, coords )
+        mappings = unique_symmetry_operations_as_vectors_from_structure( structure, verbose=False )
+        self.assertEqual( len( mappings ), 2 )
+        for l in [ [ 1, 2, 3, 4 ], [ 2, 1, 4, 3 ] ]:
+            self.assertEqual( l in mappings, True )
 
     @patch( 'bsym.interface.pymatgen.unique_symmetry_operations_as_vectors_from_structure' )
     @patch( 'bsym.symmetry_operation.SymmetryOperation.from_vector' )
@@ -83,12 +97,6 @@ class TestPymatgenInterface( unittest.TestCase ):
         with self.assertRaises( ValueError ):
             unique_structure_substitutions( mock_structure, 'Li', { 'A':1, 'B':1 } )
          
-    def test_parse_site_distribution( self ):
-        sd = { 'Li': 2, 'Mg': 4 }
-        sd_numeric, sd_mapping = parse_site_distribution( sd )    
-        for k, v in sd_numeric.items():
-            self.assertEqual( sd[ sd_mapping[ k ] ], v )
-    
     def test_pymatgen_structure_can_be_patched( self ):
         with self.assertRaises( AttributeError ):
             self.structure.number_of_equivalent_configurations
@@ -99,6 +107,14 @@ class TestPymatgenInterface( unittest.TestCase ):
         s_new = new_structure_from_substitution( self.structure, substitution_index, new_species_list ) 
         self.assertEqual( s_new[2].species_string, 'Mg' )
         self.assertEqual( s_new[3].species_string, 'Fe' )
+
+class TestPymatgenAPI( unittest.TestCase ):
+    
+    def test_parse_site_distribution( self ):
+        sd = { 'Li': 2, 'Mg': 4 }
+        sd_numeric, sd_mapping = parse_site_distribution( sd )    
+        for k, v in sd_numeric.items():
+            self.assertEqual( sd[ sd_mapping[ k ] ], v )
 
 if __name__ == '__main__':
     unittest.main()
