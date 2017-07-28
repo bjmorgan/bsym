@@ -4,7 +4,7 @@
 [![Documentation Status](https://readthedocs.org/projects/bsym/badge/?version=latest)](http://bsym.readthedocs.io/en/latest/?badge=latest)
 
 
-`bsym` is a basic Python symmetry module. It consists of core classes that describe configuration vector spaces, their symmetry operations, and specific configurations of objects withing these spaces. The module also contains an interface for working with [`pymatgen`](http://pymatgen.org) `Structure` objects, to allow simple generation of disordered symmetry-inequivalent structures from a symmetric parent crystal structure.
+`bsym` is a basic Python symmetry module. It consists of core classes that describe configuration vector spaces, their symmetry operations, and specific configurations of objects within these spaces. The module also contains an interface for working with [`pymatgen`](http://pymatgen.org) `Structure` objects, to allow simple generation of disordered symmetry-inequivalent structures from a symmetric parent crystal structure.
 
 Examples are provided in a Jupyter notebook [here][example_notebook].  
 API documentation is [here][API].  
