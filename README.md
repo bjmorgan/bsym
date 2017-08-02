@@ -1,3 +1,4 @@
+[![PyPI version](https://badge.fury.io/py/bsym.svg)](https://badge.fury.io/py/bsym)
 [![DOI](https://zenodo.org/badge/19279643.svg)](https://zenodo.org/badge/latestdoi/19279643)
 [![Build Status](https://travis-ci.org/bjmorgan/bsym.svg?branch=master)](https://travis-ci.org/bjmorgan/bsym)
 [![Test Coverage](https://codeclimate.com/github/bjmorgan/bsym/badges/coverage.svg)](https://codeclimate.com/github/bjmorgan/bsym/coverage)
@@ -14,7 +15,7 @@ Source code is available as a git repository at [https://github.com/bjmorgan/bsy
 ## Installation
 
 ```
-pip install git+https://github.com/bjmorgan/bsym.git
+pip install bsym
 ```
 
 Or download the latest release from [GitHub](httpsL//github.com/bjmorgan/bsym/releases), and install
