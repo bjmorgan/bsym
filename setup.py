@@ -30,3 +30,5 @@ config = {
     'scripts': [],
     'name': 'bsym'
 }
+
+setup(**config)
