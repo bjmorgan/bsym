@@ -6,3 +6,5 @@ tests/__pycache__
 .coverage
 .DS_Store
 coverage.xml
+dist/
+bsym.egg-info/
