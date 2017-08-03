@@ -31,7 +31,7 @@ git clone git@github.com:bjmorgan/bsym.git
 and install the same way.
 ```
 cd bsym
-pythin setup.py install 
+python setup.py install 
 ```
 
 ## Tests
