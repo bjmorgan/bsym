@@ -70,8 +70,14 @@ def unique_structure_substitutions( structure, to_substitute, site_distribution,
     
     Notes:
         The number of symmetry-equivalent configurations for each structure 
-        is stored in the number_of_equivalent_configurations attribute.
-        See ``new_structure_from_substitution()``.
+        is stored in the `number_of_equivalent_configurations` attribute. 
+     
+        If the parent structure was previously generated using this function
+        (as part of a sequence of substitutions) the full configuration
+        degeneracy of each symmetry inequivalent configuration is stored in
+        the `full_configuration_degeneracy` attribute. If the parent structure
+        is a standard Pymatgen Structure object, `number_of_equivalent_configurations`
+        and `full_configuration_degeneracy` will be equal.
     """
     site_substitution_index = list( structure.indices_from_symbol( to_substitute ) )
     if len( site_substitution_index ) != sum( site_distribution.values() ):
@@ -81,8 +87,14 @@ def unique_structure_substitutions( structure, to_substitute, site_distribution,
     numeric_site_distribution, numeric_site_mapping = parse_site_distribution( site_distribution )
     unique_configurations = config_space.unique_configurations( numeric_site_distribution, verbose=verbose )
     new_structures = [ new_structure_from_substitution( structure, site_substitution_index, [ numeric_site_mapping[k] for k in c.tolist() ] ) for c in unique_configurations ]
-    for s, c in zip( new_structures, unique_configurations ):
-        s.number_of_equivalent_configurations = c.count
+    if hasattr( structure, 'number_of_equivalent_configurations' ):
+        for s, c in zip( new_structures, unique_configurations ):
+            s.number_of_equivalent_configurations = c.count
+            s.full_configuration_degeneracy = c.count * structure.full_configuration_degeneracy
+    else:
+        for s, c in zip( new_structures, unique_configurations ):
+            s.number_of_equivalent_configurations = c.count
+            s.full_configuration_degeneracy = c.count
     return new_structures
 
 def parse_site_distribution( site_distribution ):
