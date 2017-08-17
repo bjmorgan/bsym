@@ -9,7 +9,7 @@ except ImportError:
 try:
     import pypandoc
     long_description = pypandoc.convert('README.md', 'rst')
-except ImportError:
+except ModuleNotFoundError:
     long_description = open('README.md').read()
 
 config = {
