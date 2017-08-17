@@ -26,7 +26,7 @@ config = {
                           'coverage',
                           'codeclimate-test-reporter' ],
     'license': 'MIT',
-    'packages': [ 'bsym' ],
+    'packages': [ 'bsym', 'bsym.interface' ],
     'scripts': [],
     'name': 'bsym'
 }
