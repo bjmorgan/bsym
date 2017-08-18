@@ -60,18 +60,22 @@ Also refer to the [`bsym.interface.pymatgen.unique_structure_substitutions`](htt
 
 This code can be cited as:
 
-Morgan, Benjamin J. (2017, July 5). *bsym - a Basic Symmetry Module*. Zenodo. http://doi.org/10.5281/zenodo.823127
+Morgan, Benjamin J. (2017). *bsym - a Basic Symmetry Module*. JOSS. http://doi.org/10.21105/joss.00370
 
 ### BibTeX
 
 ```
-@misc{morgan_benjamin_j_2017_823127,
-  author       = {Morgan, Benjamin J.},
-  title        = {bsym - a Basic Symmetry Module},
-  month        = jul,
-  year         = 2017,
-  doi          = {10.5281/zenodo.823127},
-  url          = {https://doi.org/10.5281/zenodo.823127}
+@article{Morgan_JOSS2017b,
+  doi = {10.21105/joss.00370},
+  url = {https://doi.org/10.21105/joss.00370},
+  year  = {2017},
+  month = {aug},
+  publisher = {The Open Journal},
+  volume = {2},
+  number = {16},
+  author = {Benjamin J. Morgan},
+  title = {bsym: A basic symmetry module},
+  journal = {The Journal of Open Source Software}
 }
 ```
 
