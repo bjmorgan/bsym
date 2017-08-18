@@ -16,5 +16,9 @@
   },{
       "code": "EP/N004302/1",
       "funder": "EPSRC"
+  }],
+  "related_identifiers": [{
+      "identifier": "doi:10.21105/joss.00370",
+      "relation": "isCitedBy"
   }]
 }
