@@ -6,5 +6,5 @@ from .configuration import Configuration
 from .configuration_space import ConfigurationSpace
 from .coordinate_config_space import CoordinateConfigSpace
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
