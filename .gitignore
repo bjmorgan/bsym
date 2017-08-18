@@ -9,3 +9,4 @@ coverage.xml
 dist/
 bsym.egg-info/
 build/
+examples/.nbgrader.log
