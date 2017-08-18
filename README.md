@@ -1,5 +1,6 @@
 [![PyPI version](https://badge.fury.io/py/bsym.svg)](https://badge.fury.io/py/bsym)
 [![DOI](https://zenodo.org/badge/19279643.svg)](https://zenodo.org/badge/latestdoi/19279643)
+[![status](http://joss.theoj.org/papers/6696543fc631bf66feb99a9cde808a39/status.svg)](http://joss.theoj.org/papers/6696543fc631bf66feb99a9cde808a39)
 [![Build Status](https://travis-ci.org/bjmorgan/bsym.svg?branch=master)](https://travis-ci.org/bjmorgan/bsym)
 [![Test Coverage](https://codeclimate.com/github/bjmorgan/bsym/badges/coverage.svg)](https://codeclimate.com/github/bjmorgan/bsym/coverage)
 [![Documentation Status](https://readthedocs.org/projects/bsym/badge/?version=latest)](http://bsym.readthedocs.io/en/latest/?badge=latest)
