@@ -54,6 +54,11 @@ class SymmetryOperationTestCase( unittest.TestCase ):
         self.assertEqual( type( new_conf ), Configuration )
         self.assertEqual( new_conf.matches( Configuration( [ 3, 1, 2 ] ) ), True )
 
+    def test_mul_raises_TypeError_with_invalid_type( self ):
+        so = SymmetryOperation.from_vector( [ 2, 3, 1 ] )
+        with self.assertRaises( TypeError ):
+            new_conf = so * 'foo'
+
     def test_invert( self ):
         matrix_a = np.matrix( [ [ 0, 1, 0 ], [ 0, 0, 1 ], [ 1, 0, 0 ] ] )
         matrix_b = np.matrix( [ [ 0, 0, 1 ], [ 1, 0, 0 ], [ 0, 1, 0 ] ] )
@@ -102,6 +107,12 @@ class SymmetryOperationTestCase( unittest.TestCase ):
         configuration = Configuration( [ 1, 2, 3 ] )
         so.operate_on( configuration )
         np.testing.assert_array_equal( so.operate_on( configuration ).vector, np.array( [ 2, 3, 1 ] ) )  
+
+    def test_operate_on_raises_TypeError_with_invalid_type( self ):
+        matrix = np.matrix( [ [ 0, 1, 0 ], [ 0, 0, 1 ], [ 1, 0, 0 ] ] )
+        so = SymmetryOperation( matrix )
+        with self.assertRaises( TypeError ):
+            so.operate_on( 'foo' )
 
     def test_character( self ):
         matrix = np.matrix( [ [ 1, 0 ], [ 0, 1 ] ] )
