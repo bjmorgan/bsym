@@ -61,7 +61,7 @@ class TestPymatgenInterface( unittest.TestCase ):
         config_space = configuration_space_from_structure( self.structure )
         self.assertEqual( config_space, mock_configspace )
         mock_space_group_from_structure.assert_called_with( self.structure, subset=None )
-        mock_ConfigurationSpace.assert_called_with( objects=None, symmetry_group=mock_space_group )
+        mock_ConfigurationSpace.assert_called_with( objects=[ 1, 2, 3, 4 ], symmetry_group=mock_space_group )
  
     @patch( 'bsym.interface.pymatgen.unique_symmetry_operations_as_vectors_from_structure' )
     @patch( 'bsym.symmetry_operation.SymmetryOperation.from_vector' )

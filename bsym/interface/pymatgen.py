@@ -81,6 +81,8 @@ def configuration_space_from_structure( structure, subset=None ):
         a new :any:`ConfigurationSpace` instance.
     """
     space_group = space_group_from_structure( structure, subset=subset )
+    if subset is None:
+        subset = list( range( 1, len( structure )+1 ) )
     config_space = ConfigurationSpace( objects=subset, symmetry_group=space_group )
     return config_space
  
