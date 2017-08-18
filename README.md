@@ -60,7 +60,7 @@ Also refer to the [`bsym.interface.pymatgen.unique_structure_substitutions`](htt
 
 This code can be cited as:
 
-Morgan, Benjamin J. (2017). *bsym - a Basic Symmetry Module*. JOSS. http://doi.org/10.21105/joss.00370
+Morgan, Benjamin J. (2017). *bsym - a Basic Symmetry Module*. The Journal of Open Source Software. http://doi.org/10.21105/joss.00370
 
 ### BibTeX
 
