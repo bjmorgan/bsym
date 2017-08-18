@@ -153,6 +153,18 @@ class TestPymatgenInterface( unittest.TestCase ):
         self.assertEqual( s_new[2].species_string, 'Mg' )
         self.assertEqual( s_new[3].species_string, 'Fe' )
 
+    def test_new_structure_from_substitution_raises_ValueError_with_oversize_index( self ):
+        substitution_index = [ 0, 1, 2, 3, 4 ]
+        new_species_list = [ 'Mg', 'Fe' ]
+        with self.assertRaises( ValueError ):
+            new_structure_from_substitution( self.structure, substitution_index, new_species_list )
+
+    def test_new_structure_from_substitution_raises_ValueError_with_invalid_index( self ):
+        substitution_index = [ 2, 4 ]
+        new_species_list = [ 'Mg', 'Fe' ]
+        with self.assertRaises( ValueError ):
+            new_structure_from_substitution( self.structure, substitution_index, new_species_list )
+
     def test_space_group_symbol_from_structure( self ):
         self.assertEqual( space_group_symbol_from_structure( self.structure ), 'Fm-3m' )
 

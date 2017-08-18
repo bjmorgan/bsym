@@ -159,6 +159,8 @@ def new_structure_from_substitution( parent_structure, site_substitution_index, 
     """
     if len( site_substitution_index ) != len( new_species_list ):
         raise ValueError
+    if any( i >= len( parent_structure ) for i in site_substitution_index ):
+        raise ValueError
     s = parent_structure.copy()
     for i, spec in zip( site_substitution_index, new_species_list ):
         s[i] = spec
