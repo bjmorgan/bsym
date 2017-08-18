@@ -55,6 +55,21 @@ def spacegroup_from_structure( structure, subset=None ):
     symmetry_operations = [ SymmetryOperation.from_vector( m ) for m in mappings ]
     return SpaceGroup( symmetry_operations=symmetry_operations )
 
+def configuration_space_from_structure( structure, subset=None ):
+    """
+    Generate a ```ConfigurationSpace`` object from a `pymatgen` ``Structure``.
+
+    Args:
+        structure (pymatgen ``Structure``): structure to be used to define the :any:`ConfigurationSpace`.
+        subset    (Optional [list]):        list of atom indices to be used for generating the configuration space.
+
+    Returns:
+        a new :any:`ConfigurationSpace` instance.
+    """
+    space_group = spacegroup_from_structure( structure, subset=subset )
+    config_space = ConfigurationSpace( objects=subset, symmetry_group=space_group )
+    return config_space
+ 
 def unique_structure_substitutions( structure, to_substitute, site_distribution, verbose=False ):
     """
     Generate all symmetry-unique structures formed by substituting a set of sites in a `pymatgen` structure.
@@ -82,8 +97,9 @@ def unique_structure_substitutions( structure, to_substitute, site_distribution,
     site_substitution_index = list( structure.indices_from_symbol( to_substitute ) )
     if len( site_substitution_index ) != sum( site_distribution.values() ):
         raise ValueError( "Number of sites from index does not match number from site distribution" )
-    space_group = spacegroup_from_structure( structure, subset=site_substitution_index )
-    config_space = ConfigurationSpace( objects=site_substitution_index, symmetry_group=space_group )
+#    space_group = spacegroup_from_structure( structure, subset=site_substitution_index )
+#    config_space = ConfigurationSpace( objects=site_substitution_index, symmetry_group=space_group )
+    config_space = configuration_space_from_structure( structure, subset=site_substitution_index )
     numeric_site_distribution, numeric_site_mapping = parse_site_distribution( site_distribution )
     unique_configurations = config_space.unique_configurations( numeric_site_distribution, verbose=verbose )
     new_structures = [ new_structure_from_substitution( structure, site_substitution_index, [ numeric_site_mapping[k] for k in c.tolist() ] ) for c in unique_configurations ]

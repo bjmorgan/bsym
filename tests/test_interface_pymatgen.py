@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock, MagicMock, patch, call
 import numpy as np
 from pymatgen import Lattice, Structure
-from bsym.interface.pymatgen import unique_symmetry_operations_as_vectors_from_structure, spacegroup_from_structure, parse_site_distribution, unique_structure_substitutions, new_structure_from_substitution
+from bsym.interface.pymatgen import unique_symmetry_operations_as_vectors_from_structure, spacegroup_from_structure, parse_site_distribution, unique_structure_substitutions, new_structure_from_substitution, configuration_space_from_structure
 from itertools import permutations
 from bsym import SymmetryOperation, Configuration, SpaceGroup, ConfigurationSpace
 
@@ -51,6 +51,18 @@ class TestPymatgenInterface( unittest.TestCase ):
         self.assertEqual( spacegroup, mock_SpaceGroup.return_value )
         self.assertEqual( mock_symmetry_operation_from_vector.call_args_list, [call([1, 2]), call([2, 1])] )
 
+    @patch( 'bsym.interface.pymatgen.spacegroup_from_structure' )
+    @patch( 'bsym.interface.pymatgen.ConfigurationSpace' )
+    def test_configuration_space_from_structure( self, mock_ConfigurationSpace, mock_spacegroup_from_structure ):
+        mock_spacegroup = Mock( spec=SpaceGroup )
+        mock_spacegroup_from_structure.return_value = mock_spacegroup
+        mock_configspace = Mock( spec=ConfigurationSpace )
+        mock_ConfigurationSpace.return_value = mock_configspace
+        config_space = configuration_space_from_structure( self.structure )
+        self.assertEqual( config_space, mock_configspace )
+        mock_spacegroup_from_structure.assert_called_with( self.structure, subset=None )
+        mock_ConfigurationSpace.assert_called_with( objects=None, symmetry_group=mock_spacegroup )
+ 
     @patch( 'bsym.interface.pymatgen.unique_symmetry_operations_as_vectors_from_structure' )
     @patch( 'bsym.symmetry_operation.SymmetryOperation.from_vector' )
     @patch( 'bsym.interface.pymatgen.SpaceGroup' )
