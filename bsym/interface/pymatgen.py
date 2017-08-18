@@ -24,7 +24,7 @@ def unique_symmetry_operations_as_vectors_from_structure( structure, verbose=Fal
     """
     symmetry_analyzer = SpacegroupAnalyzer( structure )
     if verbose:
-        print( "The spacegroup for this structure is {}".format( symmetry_analyzer.get_space_group_symbol()) )
+        print( "The space group for this structure is {}".format( symmetry_analyzer.get_space_group_symbol()) )
     symmetry_operations = symmetry_analyzer.get_symmetry_operations()
     mappings = []
     if subset:
@@ -42,7 +42,7 @@ def unique_symmetry_operations_as_vectors_from_structure( structure, verbose=Fal
 
 def space_group_symbol_from_structure( structure ):
     """
-    Returns the symbol for the spacegroup defined by this structure. 
+    Returns the symbol for the space group defined by this structure. 
 
     Args:
         structure (pymatgen ``Structure``): The input structure.
@@ -54,7 +54,7 @@ def space_group_symbol_from_structure( structure ):
     symbol = symmetry_analyzer.get_space_group_symbol()
     return symbol
 
-def spacegroup_from_structure( structure, subset=None ):
+def space_group_from_structure( structure, subset=None ):
     """
     Generates a ``SpaceGroup`` object from a `pymatgen` ``Structure``. 
 
@@ -80,7 +80,7 @@ def configuration_space_from_structure( structure, subset=None ):
     Returns:
         a new :any:`ConfigurationSpace` instance.
     """
-    space_group = spacegroup_from_structure( structure, subset=subset )
+    space_group = space_group_from_structure( structure, subset=subset )
     config_space = ConfigurationSpace( objects=subset, symmetry_group=space_group )
     return config_space
  
@@ -111,8 +111,6 @@ def unique_structure_substitutions( structure, to_substitute, site_distribution,
     site_substitution_index = list( structure.indices_from_symbol( to_substitute ) )
     if len( site_substitution_index ) != sum( site_distribution.values() ):
         raise ValueError( "Number of sites from index does not match number from site distribution" )
-#    space_group = spacegroup_from_structure( structure, subset=site_substitution_index )
-#    config_space = ConfigurationSpace( objects=site_substitution_index, symmetry_group=space_group )
     config_space = configuration_space_from_structure( structure, subset=site_substitution_index )
     numeric_site_distribution, numeric_site_mapping = parse_site_distribution( site_distribution )
     unique_configurations = config_space.unique_configurations( numeric_site_distribution, verbose=verbose )
