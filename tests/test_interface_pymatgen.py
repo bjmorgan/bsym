@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock, MagicMock, patch, call
 import numpy as np
 from pymatgen import Lattice, Structure
-from bsym.interface.pymatgen import unique_symmetry_operations_as_vectors_from_structure, spacegroup_from_structure, parse_site_distribution, unique_structure_substitutions, new_structure_from_substitution, configuration_space_from_structure
+from bsym.interface.pymatgen import unique_symmetry_operations_as_vectors_from_structure, spacegroup_from_structure, parse_site_distribution, unique_structure_substitutions, new_structure_from_substitution, configuration_space_from_structure, space_group_symbol_from_structure
 from itertools import permutations
 from bsym import SymmetryOperation, Configuration, SpaceGroup, ConfigurationSpace
 
@@ -152,6 +152,9 @@ class TestPymatgenInterface( unittest.TestCase ):
         s_new = new_structure_from_substitution( self.structure, substitution_index, new_species_list ) 
         self.assertEqual( s_new[2].species_string, 'Mg' )
         self.assertEqual( s_new[3].species_string, 'Fe' )
+
+    def test_space_group_symbol_from_structure( self ):
+        self.assertEqual( space_group_symbol_from_structure( self.structure ), 'Fm-3m' )
 
 class TestPymatgenAPI( unittest.TestCase ):
     

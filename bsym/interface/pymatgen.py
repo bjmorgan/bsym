@@ -40,6 +40,20 @@ def unique_symmetry_operations_as_vectors_from_structure( structure, verbose=Fal
             mappings.append( new_mapping )
     return mappings
 
+def space_group_symbol_from_structure( structure ):
+    """
+    Returns the symbol for the spacegroup defined by this structure. 
+
+    Args:
+        structure (pymatgen ``Structure``): The input structure.
+ 
+    Returns:
+        (str): The space group symbol.
+    """
+    symmetry_analyzer = SpacegroupAnalyzer( structure )
+    symbol = symmetry_analyzer.get_space_group_symbol()
+    return symbol
+
 def spacegroup_from_structure( structure, subset=None ):
     """
     Generates a ``SpaceGroup`` object from a `pymatgen` ``Structure``. 
