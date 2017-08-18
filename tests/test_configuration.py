@@ -16,6 +16,11 @@ class TestConfiguration( unittest.TestCase ):
         other_configuration = Configuration( [0, 0, 1] )
         self.assertEqual( self.configuration.matches( other_configuration ), False )
 
+    def test_matches_raises_TypeError_for_invalid_type( self ):
+        other_configuration = 'foo'
+        with self.assertRaises( TypeError ):
+            self.configuration.matches( other_configuration )
+
     def test_is_equivalent_to_if_equivalent( self ):
         test_configuration = Configuration( [0, 1, 0] )
         symmetry_operations = [ Mock( spec=SymmetryOperation ) ]
