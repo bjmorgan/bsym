@@ -35,7 +35,7 @@ class CoordinateConfigSpace( ConfigurationSpace ):
                                       e.g. for a structure with four sites, with two occupied (denoted `1`)
                                       and two unoccupied (denoted `0`)::
 
-                                          { 1 : 2, 2 : 1 }
+                                          { 1: 2, 0: 2 }
             verbose (opt:default=False): Print verbose output.
 
         Returns:
