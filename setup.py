@@ -25,6 +25,7 @@ config = {
 			  'pymatgen', 
                           'coverage',
                           'codeclimate-test-reporter' ],
+    'python_requires': '>=3.5',
     'license': 'MIT',
     'packages': [ 'bsym', 'bsym.interface' ],
     'scripts': [],
