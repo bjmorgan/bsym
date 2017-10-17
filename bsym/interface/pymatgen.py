@@ -13,6 +13,7 @@ def unique_symmetry_operations_as_vectors_from_structure( structure, verbose=Fal
         structure (pymatgen ``Structure``): structure to be analysed.
         subset    (Optional [list]):        list of atom indices to be used for generating the symmetry operations.
         atol      (Optional [float]):       tolerance factor for the ``pymatgen`` `coordinate mapping`_ under each symmetry operation.
+
     Returns:
         (list[list]): a list of lists, containing the symmetry operations as vector mappings.
 
@@ -54,39 +55,49 @@ def space_group_symbol_from_structure( structure ):
     symbol = symmetry_analyzer.get_space_group_symbol()
     return symbol
 
-def space_group_from_structure( structure, subset=None ):
+def space_group_from_structure( structure, subset=None, atol=1e-5 ):
     """
     Generates a ``SpaceGroup`` object from a `pymatgen` ``Structure``. 
 
     Args:
         structure (pymatgen ``Structure``): structure to be used to define the :any:`SpaceGroup`.
         subset    (Optional [list]):        list of atom indices to be used for generating the symmetry operations.
+        atol      (Optional [float]):       tolerance factor for the ``pymatgen`` `coordinate mapping`_ under each symmetry operation.
 
     Returns:
         a new :any:`SpaceGroup` instance
+
+    .. _coordinate mapping:
+        http://pymatgen.org/pymatgen.util.coord_utils.html#pymatgen.util.coord_utils.coord_list_mapping_pbc
+
     """
-    mappings = unique_symmetry_operations_as_vectors_from_structure( structure, subset=subset )
+    mappings = unique_symmetry_operations_as_vectors_from_structure( structure, subset=subset, atol=atol )
     symmetry_operations = [ SymmetryOperation.from_vector( m ) for m in mappings ]
     return SpaceGroup( symmetry_operations=symmetry_operations )
 
-def configuration_space_from_structure( structure, subset=None ):
+def configuration_space_from_structure( structure, subset=None, atol=1e-5 ):
     """
     Generate a ```ConfigurationSpace`` object from a `pymatgen` ``Structure``.
 
     Args:
         structure (pymatgen ``Structure``): structure to be used to define the :any:`ConfigurationSpace`.
         subset    (Optional [list]):        list of atom indices to be used for generating the configuration space.
-
+        atol      (Optional [float]):       tolerance factor for the ``pymatgen`` `coordinate mapping`_ under each symmetry operation.
+        
     Returns:
         a new :any:`ConfigurationSpace` instance.
+
+    .. _coordinate mapping:
+        http://pymatgen.org/pymatgen.util.coord_utils.html#pymatgen.util.coord_utils.coord_list_mapping_pbc
+
     """
-    space_group = space_group_from_structure( structure, subset=subset )
+    space_group = space_group_from_structure( structure, subset=subset, atol=atol )
     if subset is None:
         subset = list( range( 1, len( structure )+1 ) )
     config_space = ConfigurationSpace( objects=subset, symmetry_group=space_group )
     return config_space
  
-def unique_structure_substitutions( structure, to_substitute, site_distribution, verbose=False ):
+def unique_structure_substitutions( structure, to_substitute, site_distribution, verbose=False, atol=1e-5 ):
     """
     Generate all symmetry-unique structures formed by substituting a set of sites in a `pymatgen` structure.
 
@@ -95,6 +106,7 @@ def unique_structure_substitutions( structure, to_substitute, site_distribution,
         to_substitute (str): atom label for the sites to be substituted.
         site_distribution (dict): A dictionary that defines the number of each substituting element.
         verbose (bool): verbose output.
+        atol      (Optional [float]):       tolerance factor for the ``pymatgen`` `coordinate mapping`_ under each symmetry operation.
 
     Returns:
         (list[Structure]): A list of Structure objects for each unique substitution.
@@ -109,11 +121,15 @@ def unique_structure_substitutions( structure, to_substitute, site_distribution,
         the `full_configuration_degeneracy` attribute. If the parent structure
         is a standard Pymatgen Structure object, `number_of_equivalent_configurations`
         and `full_configuration_degeneracy` will be equal.
+
+    .. _coordinate mapping:
+        http://pymatgen.org/pymatgen.util.coord_utils.html#pymatgen.util.coord_utils.coord_list_mapping_pbc
+
     """
     site_substitution_index = list( structure.indices_from_symbol( to_substitute ) )
     if len( site_substitution_index ) != sum( site_distribution.values() ):
         raise ValueError( "Number of sites from index does not match number from site distribution" )
-    config_space = configuration_space_from_structure( structure, subset=site_substitution_index )
+    config_space = configuration_space_from_structure( structure, subset=site_substitution_index, atol=atol )
     numeric_site_distribution, numeric_site_mapping = parse_site_distribution( site_distribution )
     unique_configurations = config_space.unique_configurations( numeric_site_distribution, verbose=verbose )
     new_structures = [ new_structure_from_substitution( structure, site_substitution_index, [ numeric_site_mapping[k] for k in c.tolist() ] ) for c in unique_configurations ]

@@ -60,7 +60,7 @@ class TestPymatgenInterface( unittest.TestCase ):
         mock_ConfigurationSpace.return_value = mock_configspace
         config_space = configuration_space_from_structure( self.structure )
         self.assertEqual( config_space, mock_configspace )
-        mock_space_group_from_structure.assert_called_with( self.structure, subset=None )
+        mock_space_group_from_structure.assert_called_with( self.structure, subset=None, atol=1e-5 )
         mock_ConfigurationSpace.assert_called_with( objects=[ 1, 2, 3, 4 ], symmetry_group=mock_space_group )
  
     @patch( 'bsym.interface.pymatgen.unique_symmetry_operations_as_vectors_from_structure' )
@@ -71,8 +71,9 @@ class TestPymatgenInterface( unittest.TestCase ):
         mock_symmetry_operation_from_vector.side_effect = [ Mock( spec=SymmetryOperation ), Mock( spec=SymmetryOperation) ]
         mock_SpaceGroup.return_value = Mock( spec=SpaceGroup )
         subset = [ 0 ]
+        atol = 1e-5
         space_group = space_group_from_structure( self.structure, subset=subset )
-        mock_symmetry_operations_from_structure.assert_called_once_with( self.structure, subset=subset )
+        mock_symmetry_operations_from_structure.assert_called_once_with( self.structure, subset=subset, atol=atol )
   
     def test_unique_structure_substitutions( self ):
         # integration test
