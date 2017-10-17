@@ -1,5 +1,5 @@
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer, SpacegroupOperations
-from pymatgen.util.coord_utils import coord_list_mapping_pbc
+from pymatgen.util.coord import coord_list_mapping_pbc
 from pymatgen import Lattice, Structure, Composition
 from pymatgen.core.periodic_table import get_el_sp
 from bsym import SpaceGroup, SymmetryOperation, ConfigurationSpace
