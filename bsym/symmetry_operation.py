@@ -58,9 +58,9 @@ class SymmetryOperation:
             (Configuration): if `other` is a `Configuration`.
         """
         if isinstance( other, SymmetryOperation ):
-            return( SymmetryOperation( self.matrix.dot( other.matrix ) ) )
+            return SymmetryOperation( self.matrix.dot( other.matrix ) )
         elif isinstance( other, Configuration ):
-            return( self.operate_on( other ) )
+            return self.operate_on( other )
         else:
             raise TypeError
 
@@ -97,17 +97,21 @@ class SymmetryOperation:
             new_symmetry_operation.matrix[ element, index ] = 1
         return new_symmetry_operation
 
-    def similarity_transform( self, s ):
+    def similarity_transform( self, s, label=None ):
         """
         Generate the SymmetryOperation produced by a similarity transform S^{-1}.M.S
 
         Args:
             s: the symmetry operation or matrix S.
+            label (:obj:`str`, optional): the label to assign to the new SymmetryOperation. Defaults to None.
 
         Returns:
             the SymmetryOperation produced by the similarity transform
         """
-        return( s.invert() * self * s )
+        s_new = s.invert() * self * s
+        if label:
+            s_new.set_label( label )
+        return s_new
 
     def operate_on( self, configuration ):
         """
@@ -146,7 +150,7 @@ class SymmetryOperation:
             a vector representation of this symmetry operation (as a list)
         """
         offset = 0 if count_from_zero else 1
-        return( [ row.index( 1 ) + offset for row in self.matrix.T.tolist() ] )
+        return [ row.index( 1 ) + offset for row in self.matrix.T.tolist() ]
 
     def set_label( self, label ):
         """
@@ -158,7 +162,7 @@ class SymmetryOperation:
             self 
         """
         self.label = label
-        return( self )
+        return self
 
     def pprint( self ):
         """

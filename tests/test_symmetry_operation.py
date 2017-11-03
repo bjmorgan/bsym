@@ -101,6 +101,15 @@ class SymmetryOperationTestCase( unittest.TestCase ):
         so_b = SymmetryOperation( matrix_b )
         np.testing.assert_array_equal( so_a.similarity_transform( so_b ).matrix, matrix_c )
 
+    def test_similarity_transform_with_label( self ):
+        matrix_a = np.matrix( [ [ 0, 1, 0 ], [ 0, 0, 1 ], [ 1, 0, 0 ] ] )
+        matrix_b = np.matrix( [ [ 1, 0, 0 ], [ 0, 0, 1 ], [ 0, 1, 0 ] ] )
+        matrix_c = np.linalg.inv( matrix_a )
+        so_a = SymmetryOperation( matrix_a )
+        so_b = SymmetryOperation( matrix_b )
+        label = 'foo'
+        np.testing.assert_array_equal( so_a.similarity_transform( so_b, label=label ).label, label )
+
     def test_operate_on( self ):
         matrix = np.matrix( [ [ 0, 1, 0 ], [ 0, 0, 1 ], [ 1, 0, 0 ] ] )
         so = SymmetryOperation( matrix )
