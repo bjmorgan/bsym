@@ -90,7 +90,7 @@ def unique_symmetry_operations_as_vectors_from_structure( structure, verbose=Fal
         instantiate_structure = Molecule
         coord_mapping = molecule_cartesian_coordinates_mapping
         mapping_list = molecule_mapping_list
-        symmetry_analyzer = PointGroupAnalyzer( structure )
+        symmetry_analyzer = PointGroupAnalyzer( structure, tolerance=atol )
         # API for PointGroupAnalyzer in pymatgen version 2017.9.23 does not match SpacegroupAnalyzer
         symmetry_operations = symmetry_analyzer.get_pointgroup()[:]
         # with proposed change in https://github.com/materialsproject/pymatgen/pull/884
@@ -211,7 +211,7 @@ def configuration_space_from_molecule( molecule, subset=None, atol=1e-5 ):
     molecule = Molecule( molecule.species, molecule.cart_coords - molecule.center_of_mass )
     point_group = point_group_from_molecule( molecule, subset=subset, atol=atol )
     if subset is None:
-        subset = list( range( 1, len( structure )+1 ) )
+        subset = list( range( 1, len( molecule )+1 ) )
     config_space = ConfigurationSpace( objects=subset, symmetry_group=point_group )
     return config_space
  
