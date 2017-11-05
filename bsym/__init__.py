@@ -7,5 +7,5 @@ from .configuration_space import ConfigurationSpace
 from .coordinate_config_space import CoordinateConfigSpace
 from .colour_operation import ColourOperation
 
-__version__ = '1.0.1'
+__version__ = '1.1.0'
 
