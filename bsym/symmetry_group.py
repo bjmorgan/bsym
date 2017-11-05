@@ -161,3 +161,8 @@ class SymmetryGroup:
     def size( self ):
         return len( self.symmetry_operations )
 
+    def __mul__( self, other ):
+        """
+        Direct product.
+        """
+        return SymmetryGroup( [ s1 * s2 for s1, s2 in product( self.symmetry_operations, other.symmetry_operations ) ] )
