@@ -1,5 +1,6 @@
 import numpy as np
 from bsym import SymmetryOperation 
+from itertools import product
 
 class SymmetryGroup:
     """
