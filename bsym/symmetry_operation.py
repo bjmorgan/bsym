@@ -108,7 +108,7 @@ class SymmetryOperation:
         Returns:
             the SymmetryOperation produced by the similarity transform
         """
-        s_new = s.invert() * self * s
+        s_new = s.invert() * ( self * s )
         if label:
             s_new.set_label( label )
         return s_new
