@@ -1,6 +1,8 @@
 from bsym.permutations import flatten_list, unique_permutations
 from bsym import Configuration, SymmetryGroup, SymmetryOperation
 import numpy as np
+from itertools import combinations_with_replacement
+from collections import Counter
 
 class ConfigurationSpace:
 
@@ -16,15 +18,15 @@ class ConfigurationSpace:
             None
         """
         # Check that all properties have compatible dimensions
-        dim = len( objects )
+        self.dim = len( objects )
         self.objects = objects
         if symmetry_group:
             for so in symmetry_group.symmetry_operations:
-                if so.matrix.shape[0] != dim:
+                if so.matrix.shape[0] != self.dim:
                     raise ValueError
             self.symmetry_group = symmetry_group
         else:
-            self.symmetry_group = SymmetryGroup( symmetry_operations=[ SymmetryOperation( np.identity( dim, dtype=int ), label='E' ) ] )
+            self.symmetry_group = SymmetryGroup( symmetry_operations=[ SymmetryOperation( np.identity( self.dim, dtype=int ), label='E' ) ] )
 
     def __repr__( self ):
         to_return = "ConfigurationSpace\n"
@@ -59,7 +61,7 @@ class ConfigurationSpace:
         unique_configurations = []
         s = flatten_list( [ [ key ] * site_distribution[ key ] for key in site_distribution ] )
         for new_permutation in unique_permutations( s ):
-            if permutation_as_config_number( new_permutation) not in seen:
+            if permutation_as_config_number( new_permutation ) not in seen:
                 config = Configuration.from_tuple( new_permutation )
                 numeric_equivalents = set( config.numeric_equivalents( self.symmetry_group.symmetry_operations ) )
                 config.count = len( numeric_equivalents )
@@ -71,6 +73,38 @@ class ConfigurationSpace:
             print( 'unique configurations: ' + str( len( unique_configurations ) ) )
         return( unique_configurations )
 
+    def unique_colourings( self, colours, verbose=False ):
+        """
+        Find the symmetry inequivalent colourings for a given number of 'colours'.
+
+        Args:
+            colours (list): A list of each object that may be arranged zero or more times in this system.
+            verbose (opt:default=False): Print verbose output.
+
+        Returns:
+            unique_colours (list): A list of :any:`Configuration` objects, for each symmetry
+                                   inequivalent colouring.
+        """
+        permutations = []
+        working = True
+        seen = set()
+        unique_configurations = []
+        for s in combinations_with_replacement( colours, self.dim ):
+            for new_permutation in unique_permutations( s ):
+                if permutation_as_config_number( new_permutation ) not in seen:
+                    config = Configuration.from_tuple( new_permutation )
+                    numeric_equivalents = set( config.numeric_equivalents( self.symmetry_group.symmetry_operations ) )
+                    config.count = len( numeric_equivalents )
+                    [ seen.add( i ) for i in numeric_equivalents ]
+                    unique_configurations.append( config )
+                    if verbose:
+                        print( "found {:d}, screened {:d}".format( len( unique_configurations ), len( seen ) ) )
+            if verbose:
+                print( 'unique configurations: ' + str( len( unique_configurations ) ) )
+        return( unique_configurations )
+
+
+        
 def permutation_as_config_number( p ):
     """
     A numeric representation of a numeric list.
