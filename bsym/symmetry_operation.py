@@ -31,7 +31,7 @@ class SymmetryOperation:
             TypeError: if matrix is not `numpy.matrix`, `numpy.ndarray`, or `list`.
 
         Returns:
-            self
+            None
         """
         if isinstance( matrix, np.matrix ):
             self.matrix = np.array( matrix )
