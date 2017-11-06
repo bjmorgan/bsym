@@ -19,6 +19,9 @@ class TestBsymTopLevelClasses( unittest.TestCase ):
     def test_bsym_imports_ConfigurationSpace( self ):
         from bsym import ConfigurationSpace
 
+    def test_bsym_imports_ColourOperation( self ):
+        from bsym import ColourOperation
+
 class TestOldBsymModule( unittest.TestCase ):
 
     def test_old_bsym_import_quits( self ):
