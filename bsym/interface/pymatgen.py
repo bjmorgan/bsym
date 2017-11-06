@@ -1,10 +1,8 @@
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer, SpacegroupOperations, PointGroupAnalyzer
 from pymatgen.util.coord import coord_list_mapping_pbc, coord_list_mapping
 from pymatgen import Lattice, Structure, Composition, Molecule
-from pymatgen.core.periodic_table import get_el_sp
 from bsym import SpaceGroup, SymmetryOperation, ConfigurationSpace, PointGroup
 from copy import copy
-from pymatgen.core.structure import SiteCollection
 from functools import partial
 import numpy as np
 
@@ -91,11 +89,10 @@ def unique_symmetry_operations_as_vectors_from_structure( structure, verbose=Fal
         coord_mapping = molecule_cartesian_coordinates_mapping
         mapping_list = molecule_mapping_list
         symmetry_analyzer = PointGroupAnalyzer( structure, tolerance=atol )
-        # API for PointGroupAnalyzer in pymatgen version 2017.9.23 does not match SpacegroupAnalyzer
-        symmetry_operations = symmetry_analyzer.get_pointgroup()[:]
-        # with proposed change in https://github.com/materialsproject/pymatgen/pull/884
-        # symmetry_operations = symmetry_analyzer.get_symmetry_operations()
-        # and can be moved outside this class logic
+        try: # pymatgen from GitHub
+            symmetry_operations = symmetry_analyzer.get_symmetry_operations()
+        except: # pymatgen v. 2017.9.23
+            symmetry_operations = symmetry_analyzer.get_pointgroup()[:]
         if verbose:
             print( "The point group for this structure is {}".format( symmetry_analyzer.get_pointgroup()) )
     else:
