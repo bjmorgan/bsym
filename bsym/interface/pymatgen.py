@@ -81,7 +81,6 @@ def unique_symmetry_operations_as_vectors_from_structure( structure, verbose=Fal
         coord_mapping = structure_cartesian_coordinates_mapping
         mapping_list = structure_mapping_list
         symmetry_analyzer = SpacegroupAnalyzer( structure )
-        symmetry_operations = symmetry_analyzer.get_symmetry_operations()
         if verbose:
             print( "The space group for this structure is {}".format( symmetry_analyzer.get_space_group_symbol()) )
     elif isinstance( structure, Molecule ):
@@ -89,14 +88,11 @@ def unique_symmetry_operations_as_vectors_from_structure( structure, verbose=Fal
         coord_mapping = molecule_cartesian_coordinates_mapping
         mapping_list = molecule_mapping_list
         symmetry_analyzer = PointGroupAnalyzer( structure, tolerance=atol )
-        try: # pymatgen from GitHub
-            symmetry_operations = symmetry_analyzer.get_symmetry_operations()
-        except: # pymatgen v. 2017.9.23
-            symmetry_operations = symmetry_analyzer.get_pointgroup()[:]
         if verbose:
             print( "The point group for this structure is {}".format( symmetry_analyzer.get_pointgroup()) )
     else:
         raise ValueError( 'structure argument should be a Structure or Molecule object' )
+    symmetry_operations = symmetry_analyzer.get_symmetry_operations()
     mappings = []
     if subset:
         species_subset = [ spec for i,spec in enumerate( structure.species ) if i in subset ]
