@@ -16,8 +16,14 @@ class TestBsymTopLevelClasses( unittest.TestCase ):
     def test_bsym_imports_PointGroup( self ):
         from bsym import PointGroup
 
+    def test_bsym_imports_Configuration( self ):
+        from bsym import Configuration
+
     def test_bsym_imports_ConfigurationSpace( self ):
         from bsym import ConfigurationSpace
+
+    def test_bsym_imports_CoordinateConfigSpace( self ):
+        from bsym import CoordinateConfigSpace
 
     def test_bsym_imports_ColourOperation( self ):
         from bsym import ColourOperation
