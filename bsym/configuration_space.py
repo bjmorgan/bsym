@@ -34,6 +34,37 @@ class ConfigurationSpace:
         to_return += "\n".join( self.symmetry_group.__repr__().split("\n")[1:] )
         return to_return
 
+    def enumerate_configurations( self, generator, verbose=False ):
+        """
+        Find all symmetry inequivalent configurations within the set produced by
+        `generator`.
+
+        Args:
+            generator (:obj:`generator`): Generator object, the yields the configurations
+                to search through.
+            verbose (opt:default=False): Print verbose output.
+   
+        Returns:
+            unique_configurations (list): A list of :any:`Configuration` objects, for each symmetry
+                                          inequivalent configuration. 
+        """
+        working = True
+        seen = set()
+        unique_configurations = []
+        for new_permutation in generator:
+            if permutation_as_config_number( new_permutation ) not in seen:
+                config = Configuration.from_tuple( new_permutation )
+                numeric_equivalents = set( config.numeric_equivalents( self.symmetry_group.symmetry_operations ) )
+                config.count = len( numeric_equivalents )
+                [ seen.add( i ) for i in numeric_equivalents ]
+                unique_configurations.append( config )
+                if verbose:
+                    print( "found {:d}, screened {:d}".format( len( unique_configurations ), len( seen ) ) )
+        if verbose:
+            print( 'unique configurations: ' + str( len( unique_configurations ) ) )
+            print( 'screened: ' + len( seen ) )
+        return( unique_configurations )
+
     def unique_configurations( self, site_distribution, verbose=False ):
         """
         Find the symmetry inequivalent configurations for a given population of objects.
@@ -45,7 +76,7 @@ class ConfigurationSpace:
                                       e.g. for a system with four sites, with two occupied (denoted `1`)
                                       and two unoccupied (denoted `0`)::
 
-                                          { 1 : 2, 2 : 1 }
+                                          { 1: 2, 0: 2 }
             verbose (opt:default=False): Print verbose output.
 
         Returns:
@@ -55,23 +86,9 @@ class ConfigurationSpace:
         if verbose:
             print( 'total number of sites: ' + str( sum( site_distribution.values() ) ) )
             print( 'using {:d} symmetry operations: '.format( len( self.symmetry_group.symmetry_operations ) ) )
-        permutations = []
-        working = True
-        seen = set()
-        unique_configurations = []
         s = flatten_list( [ [ key ] * site_distribution[ key ] for key in site_distribution ] )
-        for new_permutation in unique_permutations( s ):
-            if permutation_as_config_number( new_permutation ) not in seen:
-                config = Configuration.from_tuple( new_permutation )
-                numeric_equivalents = set( config.numeric_equivalents( self.symmetry_group.symmetry_operations ) )
-                config.count = len( numeric_equivalents )
-                [ seen.add( i ) for i in numeric_equivalents ]
-                unique_configurations.append( config )
-                if verbose:
-                    print( "found {:d}, screened {:d}".format( len( unique_configurations ), len( seen ) ) )
-        if verbose:
-            print( 'unique configurations: ' + str( len( unique_configurations ) ) )
-        return( unique_configurations )
+        generator = unique_permutations( s )
+        return self.enumerate_configurations( generator, verbose=verbose )
 
     def unique_colourings( self, colours, verbose=False ):
         """
@@ -85,24 +102,13 @@ class ConfigurationSpace:
             unique_colours (list): A list of :any:`Configuration` objects, for each symmetry
                                    inequivalent colouring.
         """
-        permutations = []
-        working = True
-        seen = set()
-        unique_configurations = []
-        for s in combinations_with_replacement( colours, self.dim ):
-            for new_permutation in unique_permutations( s ):
-                if permutation_as_config_number( new_permutation ) not in seen:
-                    config = Configuration.from_tuple( new_permutation )
-                    numeric_equivalents = set( config.numeric_equivalents( self.symmetry_group.symmetry_operations ) )
-                    config.count = len( numeric_equivalents )
-                    [ seen.add( i ) for i in numeric_equivalents ]
-                    unique_configurations.append( config )
-                    if verbose:
-                        print( "found {:d}, screened {:d}".format( len( unique_configurations ), len( seen ) ) )
-            if verbose:
-                print( 'unique configurations: ' + str( len( unique_configurations ) ) )
-        return( unique_configurations )
+        generator = colourings_generator( colours, self.dim )
+        return self.enumerate_configurations( generator, verbose=verbose )
 
+def colourings_generator( colours, dim ):
+    for s in combinations_with_replacement( colours, dim ):
+        for new_permutation in unique_permutations( s ):
+            yield new_permutation 
 
         
 def permutation_as_config_number( p ):
