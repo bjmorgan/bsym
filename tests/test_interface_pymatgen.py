@@ -1,10 +1,11 @@
 import unittest
 from unittest.mock import Mock, MagicMock, patch, call
 import numpy as np
-from pymatgen import Lattice, Structure
-from bsym.interface.pymatgen import unique_symmetry_operations_as_vectors_from_structure, space_group_from_structure, parse_site_distribution, unique_structure_substitutions, new_structure_from_substitution, configuration_space_from_structure, space_group_symbol_from_structure
+from pymatgen import Lattice, Structure, Molecule
+from bsym.interface.pymatgen import unique_symmetry_operations_as_vectors_from_structure, space_group_from_structure, parse_site_distribution, unique_structure_substitutions, new_structure_from_substitution, configuration_space_from_structure, space_group_symbol_from_structure, configuration_space_from_molecule
+
 from itertools import permutations
-from bsym import SymmetryOperation, Configuration, SpaceGroup, ConfigurationSpace
+from bsym import SymmetryOperation, Configuration, SpaceGroup, PointGroup, ConfigurationSpace
 
 class TestPymatgenInterface( unittest.TestCase ):
 
@@ -18,6 +19,15 @@ class TestPymatgenInterface( unittest.TestCase ):
         atom_list = [ 'Li' ] * len( coords )
         lattice = Lattice.from_parameters( a=3.0, b=3.0, c=3.0, alpha=90, beta=90, gamma=90 )
         self.structure = Structure( lattice, atom_list, coords )
+        # construct a pymatgen Molecule instance
+        # square molecule (D4h)
+        m_coords = np.array( [ [ 0.0, 0.0, 0.0 ],
+                               [ 1.0, 0.0, 0.0 ],
+                               [ 0.0, 1.0, 0.0 ],
+                               [ 1.0, 1.0, 0.0 ] ] )
+        molecule = Molecule( atom_list, m_coords )
+        molecule = Molecule( molecule.species, molecule.cart_coords - molecule.center_of_mass )
+        self.molecule = molecule 
 
     def test_unique_symmetry_operations_as_vectors_from_structure( self ):
         # integration test
@@ -62,6 +72,18 @@ class TestPymatgenInterface( unittest.TestCase ):
         self.assertEqual( config_space, mock_configspace )
         mock_space_group_from_structure.assert_called_with( self.structure, subset=None, atol=1e-5 )
         mock_ConfigurationSpace.assert_called_with( objects=[ 1, 2, 3, 4 ], symmetry_group=mock_space_group )
+
+    @patch( 'bsym.interface.pymatgen.point_group_from_molecule' )
+    @patch( 'bsym.interface.pymatgen.ConfigurationSpace' )
+    def test_configuration_space_from_molecule( self, mock_ConfigurationSpace, mock_point_group_from_molecule ):
+        mock_point_group = Mock( spec=PointGroup )
+        mock_point_group_from_molecule.return_value = mock_point_group
+        mock_configspace = Mock( spec=ConfigurationSpace )
+        mock_ConfigurationSpace.return_value = mock_configspace
+        config_space = configuration_space_from_molecule( self.molecule )
+        self.assertEqual( config_space, mock_configspace )
+        mock_point_group_from_molecule.assert_called_with( self.molecule, subset=None, atol=1e-5 )
+        mock_ConfigurationSpace.assert_called_with( objects=[ 1, 2, 3, 4 ], symmetry_group=mock_point_group )
  
     @patch( 'bsym.interface.pymatgen.unique_symmetry_operations_as_vectors_from_structure' )
     @patch( 'bsym.symmetry_operation.SymmetryOperation.from_vector' )
