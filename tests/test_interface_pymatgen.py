@@ -96,7 +96,13 @@ class TestPymatgenInterface( unittest.TestCase ):
         atol = 1e-5
         space_group = space_group_from_structure( self.structure, subset=subset )
         mock_symmetry_operations_from_structure.assert_called_once_with( self.structure, subset=subset, atol=atol )
-  
+ 
+    def test_unique_structure_colourings( self ):
+        # integration test
+        c = configuration_space_from_molecule( self.molecule )
+        uc = c.unique_colourings( [ 0, 1 ] )
+        self.assertEqual( len( uc ), 6 )
+ 
     def test_unique_structure_substitutions( self ):
         # integration test
         # Create a pymatgen structure with 16 sites in a 4x4 square grid
