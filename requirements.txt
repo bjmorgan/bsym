@@ -1,5 +1,4 @@
 codeclimate-test-reporter
 numpy
-jupyter
 git+https://github.com/materialsproject/pymatgen.git
 coverage==4.3.4
