@@ -51,8 +51,8 @@ class TestPymatgenInterface( unittest.TestCase ):
     def test_parse_site_distribution( self ):
         site_distribution = { 'Mg': 1, 'Li': 3 }
         n, d = parse_site_distribution( site_distribution )
-        self.assertEqual( n, {0: 1, 1: 3} )
-        self.assertEqual( d, {0: 'Mg', 1: 'Li'} )
+        self.assertEqual( n, {1: 1, 0: 3} )
+        self.assertEqual( d, {1: 'Mg', 0: 'Li'} )
 
 if __name__ == '__main__':
     unittest.main()
