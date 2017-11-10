@@ -174,13 +174,5 @@ class TestPymatgenInterface( unittest.TestCase ):
         # integration test
         self.assertEqual( space_group_symbol_from_structure( self.structure ), 'Fm-3m' )
 
-class TestPymatgenAPI( unittest.TestCase ):
-    
-    def test_parse_site_distribution( self ):
-        sd = { 'Li': 2, 'Mg': 4 }
-        sd_numeric, sd_mapping = parse_site_distribution( sd )    
-        for k, v in sd_numeric.items():
-            self.assertEqual( sd[ sd_mapping[ k ] ], v )
-
 if __name__ == '__main__':
     unittest.main()

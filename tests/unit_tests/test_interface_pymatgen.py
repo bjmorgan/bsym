@@ -48,5 +48,11 @@ class TestPymatgenInterface( unittest.TestCase ):
         with self.assertRaises( ValueError ):
             new_structure_from_substitution( self.structure, substitution_index, new_species_list )
 
+    def test_parse_site_distribution( self ):
+        site_distribution = { 'Mg': 1, 'Li': 3 }
+        n, d = parse_site_distribution( site_distribution )
+        self.assertEqual( n, {0: 1, 1: 3} )
+        self.assertEqual( d, {0: 'Mg', 1: 'Li'} )
+
 if __name__ == '__main__':
     unittest.main()
