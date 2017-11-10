@@ -269,7 +269,7 @@ def parse_site_distribution( site_distribution ):
 
     Returns:
         numeric_site_distribution ( dict): e.g. `{ 1:1, 0:3 }`
-        numeric_site_mapping (dict): e.g. `{ 1:'Mg', 0:'Li' }`
+        numeric_site_mapping (dict): e.g. `{ 0:'Mg', 1:'Li' }`
     """
     numeric_site_distribution = {}
     numeric_site_mapping = {}

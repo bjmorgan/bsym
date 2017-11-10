@@ -2,6 +2,8 @@ bsym/__pycache__
 bsym/*pyc
 tests/.coverage
 tests/*pyc
+tests/*/*pyc
+tests/unit_tests/__pycache__
 tests/__pycache__
 .coverage
 .DS_Store
