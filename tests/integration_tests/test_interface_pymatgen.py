@@ -164,37 +164,14 @@ class TestPymatgenInterface( unittest.TestCase ):
         np.testing.assert_array_equal( np.array( sorted( [ s.full_configuration_degeneracy for s in ns ] ) ), np.array( [ 16, 32, 64, 64, 64 ] ) )
 
     def test_unique_structure_substitutions_with_mismatched_site_distribution_raises_ValueError( self ):
+        # integration test
         mock_structure = Mock( spec=Structure )
         mock_structure.indices_from_symbol = Mock( return_value = [ 0, 1, 2 ] )
         with self.assertRaises( ValueError ):
             unique_structure_substitutions( mock_structure, 'Li', { 'A':1, 'B':1 } )
          
-    def test_pymatgen_structure_can_be_patched( self ):
-        with self.assertRaises( AttributeError ):
-            self.structure.number_of_equivalent_configurations
-        with self.assertRaises( AttributeError ):
-            self.structure.full_configuration_degeneracy
- 
-    def test_new_structure_from_substitution( self ):
-        substitution_index = [ 2,3 ]
-        new_species_list = [ 'Mg', 'Fe' ] 
-        s_new = new_structure_from_substitution( self.structure, substitution_index, new_species_list ) 
-        self.assertEqual( s_new[2].species_string, 'Mg' )
-        self.assertEqual( s_new[3].species_string, 'Fe' )
-
-    def test_new_structure_from_substitution_raises_ValueError_with_oversize_index( self ):
-        substitution_index = [ 0, 1, 2, 3, 4 ]
-        new_species_list = [ 'Mg', 'Fe' ]
-        with self.assertRaises( ValueError ):
-            new_structure_from_substitution( self.structure, substitution_index, new_species_list )
-
-    def test_new_structure_from_substitution_raises_ValueError_with_invalid_index( self ):
-        substitution_index = [ 2, 4 ]
-        new_species_list = [ 'Mg', 'Fe' ]
-        with self.assertRaises( ValueError ):
-            new_structure_from_substitution( self.structure, substitution_index, new_species_list )
-
     def test_space_group_symbol_from_structure( self ):
+        # integration test
         self.assertEqual( space_group_symbol_from_structure( self.structure ), 'Fm-3m' )
 
 class TestPymatgenAPI( unittest.TestCase ):

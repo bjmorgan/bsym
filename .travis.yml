@@ -17,6 +17,8 @@ os:
 # command to install dependencies
 install: pip install -r requirements.txt
 # command to run tests
-script: coverage run --rcfile=.coveragerc -m unittest discover
+script:
+  - python -m unittest discover tests/integration_tests 
+  - coverage run --rcfile=.coveragerc -m unittest discover tests/unit_tests
 after_success: 
   - codeclimate-test-reporter --debug --token $CODECLIMATE_REPO_TOKEN
