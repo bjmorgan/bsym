@@ -20,9 +20,9 @@ install:
   - pip install -r tests/notebook_tests/requirements.txt
 # command to run tests
 script:
-  - python -m tests.notebook_tests.test_notebooks
-  - python -m unittest discover tests/notebook_tests 
   - python -m unittest discover tests/integration_tests 
   - coverage run --rcfile=.coveragerc -m unittest discover tests/unit_tests
+  - pip install .
+  - python -m unittest discover tests/notebook_tests 
 after_success: 
   - codeclimate-test-reporter --debug --token $CODECLIMATE_REPO_TOKEN
