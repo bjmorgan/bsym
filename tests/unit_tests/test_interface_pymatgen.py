@@ -2,7 +2,8 @@ import unittest
 from unittest.mock import Mock, MagicMock, patch, call
 import numpy as np
 from pymatgen import Lattice, Structure, Molecule
-from bsym.interface.pymatgen import unique_symmetry_operations_as_vectors_from_structure, space_group_from_structure, parse_site_distribution, unique_structure_substitutions, new_structure_from_substitution, configuration_space_from_structure, space_group_symbol_from_structure, configuration_space_from_molecule
+from pymatgen.core.operations import SymmOp
+from bsym.interface.pymatgen import unique_symmetry_operations_as_vectors_from_structure, space_group_from_structure, parse_site_distribution, unique_structure_substitutions, new_structure_from_substitution, configuration_space_from_structure, space_group_symbol_from_structure, configuration_space_from_molecule, structure_cartesian_coordinates_mapping
 
 from itertools import permutations
 from bsym import SymmetryOperation, Configuration, SpaceGroup, PointGroup, ConfigurationSpace
@@ -54,5 +55,14 @@ class TestPymatgenInterface( unittest.TestCase ):
         for k, v in n.items():
             self.assertEqual( site_distribution[ d[ k ] ], v )
 
+    def test_structure_cartesian_coordinates_mapping( self ):
+        mock_symmop = Mock( spec=SymmOp )
+        new_coords = np.array( [ [ 0.5, 0.5, 0.5 ] ] )
+        mock_symmop.operate_multi = Mock( return_value=new_coords )
+        self.structure.lattice.get_cartesian_coords = Mock( return_value=np.array( [ [ 2.0, 2.0, 2.0 ] ] ) )
+        mapped_coords = structure_cartesian_coordinates_mapping( self.structure, mock_symmop )
+        np.testing.assert_array_equal( mapped_coords, np.array( [ [ 2.0, 2.0, 2.0 ] ] ) )
+        np.testing.assert_array_equal( mock_symmop.operate_multi.call_args[0][0], self.structure.frac_coords )
+ 
 if __name__ == '__main__':
     unittest.main()
