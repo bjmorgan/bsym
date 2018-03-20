@@ -1,3 +1,6 @@
 Working with molecular systems / point groups:
     - Ideally the code should handle non-periodic pymatgen Structure objects.
     - A possibly extra idea is for CoordinateConfigSpace objects to be able to identify their own symmetries (given appropriate site labels)
+
+pymatgen requirements:
+    - At the moment the requirements file imports from my own fork of pymatgen. If it works with the latest release, this should use the main public release
