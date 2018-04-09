@@ -2,10 +2,21 @@ import unittest
 from unittest.mock import Mock, MagicMock, patch, call
 import numpy as np
 from pymatgen import Lattice, Structure, Molecule
-from bsym.interface.pymatgen import unique_symmetry_operations_as_vectors_from_structure, space_group_from_structure, parse_site_distribution, unique_structure_substitutions, new_structure_from_substitution, configuration_space_from_structure, space_group_symbol_from_structure, configuration_space_from_molecule
+from bsym.interface.pymatgen import ( unique_symmetry_operations_as_vectors_from_structure, 
+                                      space_group_from_structure, 
+                                      parse_site_distribution, 
+                                      unique_structure_substitutions, 
+                                      new_structure_from_substitution, 
+                                      configuration_space_from_structure, 
+                                      space_group_symbol_from_structure, 
+                                      configuration_space_from_molecule )
 
 from itertools import permutations
-from bsym import SymmetryOperation, Configuration, SpaceGroup, PointGroup, ConfigurationSpace
+from bsym import ( SymmetryOperation, 
+                   Configuration, 
+                   SpaceGroup, 
+                   PointGroup, 
+                   ConfigurationSpace )
 
 class TestPymatgenInterface( unittest.TestCase ):
 
