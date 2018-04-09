@@ -1,8 +1,7 @@
-bsym/__pycache__
+**/__pycache__
 bsym/*pyc
 tests/.coverage
-tests/*pyc
-tests/*/*pyc
+**/*.pyc
 tests/unit_tests/__pycache__
 tests/__pycache__
 .coverage
