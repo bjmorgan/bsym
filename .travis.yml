@@ -5,6 +5,7 @@ branches:
 env:
   - CODECLIMATE_REPO_TOKEN=485cb396b16303635d466a260de4990e36dfab060fa4a5b66641f235fd4f2821
 language: python
+cache: pip
 notifications:
   email: false
 python:
@@ -18,12 +19,12 @@ os:
 install: 
   - pip install -r requirements.txt
   - pip install -r tests/notebook_tests/requirements.txt
+  - pip install -U numpy # force update of numpy
   - pip list
 # command to run tests
 script:
   - python -m unittest discover tests/integration_tests 
   - coverage run --rcfile=.coveragerc -m unittest discover tests/unit_tests
-  - pip install .
   - python -m unittest discover tests/notebook_tests 
 after_success: 
   - codeclimate-test-reporter --debug --token $CODECLIMATE_REPO_TOKEN
