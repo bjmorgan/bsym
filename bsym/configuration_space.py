@@ -61,8 +61,8 @@ class ConfigurationSpace:
                 if verbose:
                     print( "found {:d}, screened {:d}".format( len( unique_configurations ), len( seen ) ) )
         if verbose:
-            print( 'unique configurations: ' + str( len( unique_configurations ) ) )
-            print( 'screened: ' + len( seen ) )
+            print( 'unique configurations: {}'.format( len( unique_configurations ) ) )
+            print( 'screened: {}'.format( len( seen ) ) )
         return( unique_configurations )
 
     def unique_configurations( self, site_distribution, verbose=False ):
