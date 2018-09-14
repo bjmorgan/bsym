@@ -1,4 +1,4 @@
 codeclimate-test-reporter
-pymatgen
+pymatgen>=v2017.10.16
 numpy
 coverage==4.3.4

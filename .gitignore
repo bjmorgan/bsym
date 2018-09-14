@@ -11,3 +11,5 @@ dist/
 bsym.egg-info/
 build/
 examples/.nbgrader.log
+**/.python-version
+**/*.pyc
