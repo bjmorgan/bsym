@@ -11,7 +11,7 @@ config = {
     'author': 'Benjamin J. Morgan',
     'author_email': 'b.j.morgan@bath.ac.uk',
     'url': 'https://github.com/bjmorgan/bsym',
-    'download_url': "https://github.com/bjmorgan/bsym/archive/%s.tar.gz" % (__version__),
+    'download_url': "https://github.com/bjmorgan/bsym/archive/%s.tar.gz" % (VERSION),
     'author_email': 'b.j.morgan@bath.ac.uk',
     'version': __version__,
     'install_requires': [ 'numpy', 
