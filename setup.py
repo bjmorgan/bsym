@@ -13,7 +13,7 @@ config = {
     'url': 'https://github.com/bjmorgan/bsym',
     'download_url': "https://github.com/bjmorgan/bsym/archive/%s.tar.gz" % (VERSION),
     'author_email': 'b.j.morgan@bath.ac.uk',
-    'version': __version__,
+    'version': VERSION,
     'install_requires': [ 'numpy', 
 			  'pymatgen>=v2017.10.16', 
                           'coverage',
