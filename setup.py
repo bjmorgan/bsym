@@ -1,20 +1,13 @@
-import os
-from bsym import __version__
+from setuptools import setup, find_packages
+from bsym import __version__ as VERSION
 
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
-
-try:
-    import pypandoc
-    long_description = pypandoc.convert('README.md', 'rst')
-except ImportError:
-    long_description = open('README.md').read()
+readme = 'README.md'
+long_description = open( readme ).read()
 
 config = {
     'description': 'A Basic Symmetry Module',
     'long_description': long_description,
+    'long_description_content_type': 'text/markdown',
     'author': 'Benjamin J. Morgan',
     'author_email': 'b.j.morgan@bath.ac.uk',
     'url': 'https://github.com/bjmorgan/bsym',
@@ -22,7 +15,7 @@ config = {
     'author_email': 'b.j.morgan@bath.ac.uk',
     'version': __version__,
     'install_requires': [ 'numpy', 
-			  'pymatgen', 
+			  'pymatgen>=v2017.10.16', 
                           'coverage',
                           'codeclimate-test-reporter' ],
     'python_requires': '>=3.5',
