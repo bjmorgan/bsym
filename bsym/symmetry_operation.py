@@ -23,12 +23,16 @@ class SymmetryOperation:
         Initialise a `SymmetryOperation` object
 
         Args:
-            matrix (numpy.matrix|numpy.ndarray|list): 1D vector as either a
-            `numpy.matrix`, `numpy.ndarray`, or `list` containing the site mappings
+            matrix (numpy.matrix|numpy.ndarray|list): square 2D vector as either a
+            `numpy.matrix`, `numpy.ndarray`, or `list`.
             for this symmetry operation.
             label (default=None) (str): optional string label for this `SymmetryOperation` object.
         Raises:
             TypeError: if matrix is not `numpy.matrix`, `numpy.ndarray`, or `list`.
+            ValueError: if matrix is not square.
+        Notes:
+            To construct a `SymmetryOperation` object from a vector of site mappings
+            use the `SymmetryOperation.from_vector()` method.
 
         Returns:
             None
