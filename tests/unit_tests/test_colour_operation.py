@@ -7,7 +7,7 @@ class ColourOperationTestCase( unittest.TestCase ):
     """Tests for colour operation methods"""
 
     def test_symmetry_operation_is_initialised_from_a_matrix( self ):
-        matrix = np.matrix( [ [ 1, 0 ], [ 0, 1 ] ] )
+        matrix = np.array( [ [ 1, 0 ], [ 0, 1 ] ] )
         mapping = [ { 1: 0, 0: 1 }, { 1: 1, 0: 0 } ]
         co = ColourOperation( matrix, colour_mapping=mapping )
         np.testing.assert_array_equal( co.matrix, matrix )
@@ -15,9 +15,9 @@ class ColourOperationTestCase( unittest.TestCase ):
 
     def test_from_vector( self ):
         vector = [ 2, 3, 1 ]
-        mapping = [ { 1: 0, 0: 1 }, { 1: 1, 0: 0 } ]
+        mapping = [ { 1: 0, 0: 1 }, { 1: 1, 0: 0 }, { 1: 1, 0: 0 } ]
         co = ColourOperation.from_vector( vector, mapping )
-        np.testing.assert_array_equal( co.matrix, np.matrix( [ [ 0, 0, 1 ], [ 1, 0, 0 ], [ 0, 1, 0 ] ] ) )
+        np.testing.assert_array_equal( co.matrix, np.array( [ [ 0, 0, 1 ], [ 1, 0, 0 ], [ 0, 1, 0 ] ] ) )
         self.assertEqual( co.colour_mapping, mapping )
 
     def test_from_vector_with_label( self ):
@@ -25,12 +25,12 @@ class ColourOperationTestCase( unittest.TestCase ):
         mapping = [ { 1: 0, 0: 1 }, { 1: 1, 0: 0 } ]
         label = 'A'
         co = ColourOperation.from_vector( vector, mapping, label=label )
-        np.testing.assert_array_equal( co.matrix, np.matrix( [ [ 0, 0, 1 ], [ 1, 0, 0 ], [ 0, 1, 0 ] ] ) )
+        np.testing.assert_array_equal( co.matrix, np.array( [ [ 0, 0, 1 ], [ 1, 0, 0 ], [ 0, 1, 0 ] ] ) )
         self.assertEqual( co.label, label )
         self.assertEqual( co.colour_mapping, mapping )
 
     def test_symmetry_operation_is_initialised_with_label( self ):
-        matrix = np.matrix( [ [ 1, 0 ], [ 0, 1 ] ] )
+        matrix = np.array( [ [ 1, 0 ], [ 0, 1 ] ] )
         label = 'E'
         mapping = [ { 1: 0, 0: 1 }, { 1: 1, 0: 0 } ]
         co = ColourOperation( matrix, mapping, label=label )
@@ -41,11 +41,11 @@ class ColourOperationTestCase( unittest.TestCase ):
         vector = [ 1, 2, 0 ]
         mapping = [ { 1: 0, 0: 1 }, { 1: 1, 0: 0 } ]
         co = ColourOperation.from_vector( vector, mapping, count_from_zero=True )
-        np.testing.assert_array_equal( co.matrix, np.matrix( [ [ 0, 0, 1 ], [ 1, 0, 0 ], [ 0, 1, 0 ] ] ) )
+        np.testing.assert_array_equal( co.matrix, np.array( [ [ 0, 0, 1 ], [ 1, 0, 0 ], [ 0, 1, 0 ] ] ) )
         self.assertEqual( co.colour_mapping, mapping )
 
     def test_operate_on( self ):
-        matrix = np.matrix( [ [ 0, 1, 0 ], [ 0, 0, 1 ], [ 1, 0, 0 ] ] )
+        matrix = np.array( [ [ 0, 1, 0 ], [ 0, 0, 1 ], [ 1, 0, 0 ] ] )
         colour_mapping = [ { 1:1, 2:2, 3:3 },
                            { 1:2, 2:3, 3:1 },
                            { 1:3, 2:2, 3:1 } ]
@@ -55,14 +55,14 @@ class ColourOperationTestCase( unittest.TestCase ):
         np.testing.assert_array_equal( co.operate_on( configuration ).vector, np.array( [ 2, 1, 3 ] ) )
 
     def test_mul( self ):
-        matrix_a = np.array( [ [ 1, 1 ], [ 0, 0 ] ] )
+        matrix_a = np.array( [ [ 1, 0 ], [ 0, 1 ] ] )
         colour_mapping_a = [ { 0:1, 1:0 }, { 0:1, 1:0 } ]
-        matrix_b = np.array( [ [ 1, 0 ], [ 1, 0 ] ] )
+        matrix_b = np.array( [ [ 0, 1 ], [ 1, 0 ] ] )
         colour_mapping_b = [ { 0:1, 1:0 }, { 0:1, 1:0 } ]
         co_a = ColourOperation( matrix_a, colour_mapping_a )
         co_b = ColourOperation( matrix_b, colour_mapping_b )
         co_c = co_a * co_b
-        np.testing.assert_array_equal( co_c.matrix , np.array( [ [ 2, 0 ], [ 0, 0 ] ] ) )
+        np.testing.assert_array_equal( co_c.matrix , np.array( [ [ 0, 1 ], [ 1, 0 ] ] ) )
         self.assertEqual( co_c.colour_mapping, [ { 0:0, 1:1 }, { 0:0, 1:1 } ] )
 
 if __name__ == '__main__':

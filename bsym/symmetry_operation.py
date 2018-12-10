@@ -13,6 +13,24 @@ def is_square( m ):
     """
     return m.shape[0] == m.shape[1]
 
+def is_permutation_matrix( m ):
+    """
+    Test whether a numpy array is a `permutation matrix`_.
+
+    .. _permutation_matrix: https://en.wikipedia.org/wiki/Permutation_matrix
+    
+    Args:
+        m (mp.matrix): The matrix.
+
+    Returns:
+        (bool): True | False.
+    """
+    m = np.asanyarray(m)
+    return (m.ndim == 2 and m.shape[0] == m.shape[1] and
+            (m.sum(axis=0) == 1).all() and 
+            (m.sum(axis=1) == 1).all() and
+            ((m == 1) | (m == 0)).all())
+    
 class SymmetryOperation:
     """
     `SymmetryOperation` class.
@@ -30,6 +48,10 @@ class SymmetryOperation:
         Raises:
             TypeError: if matrix is not `numpy.matrix`, `numpy.ndarray`, or `list`.
             ValueError: if matrix is not square.
+            ValueError: if matrix is not a `permutation matrix`_.
+
+            .. _permutation_matrix: https://en.wikipedia.org/wiki/Permutation_matrix
+
         Notes:
             To construct a `SymmetryOperation` object from a vector of site mappings
             use the `SymmetryOperation.from_vector()` method.
@@ -46,8 +68,11 @@ class SymmetryOperation:
         else:
             raise TypeError
         if not is_square( self.matrix ):
-            raise ValueError
+            raise ValueError('Not a square matrix')
+        if not is_permutation_matrix( self.matrix ):
+            raise ValueError('Not a permutation matrix')
         self.label = label
+        self.index_mapping = np.array( [ np.array(row).tolist().index(1) for row in matrix ] )
 
     def __mul__( self, other ):
         """
@@ -96,9 +121,10 @@ class SymmetryOperation:
         if not count_from_zero:
             vector = [ x - 1 for x in vector ]
         dim = len( vector )
-        new_symmetry_operation = cls( np.zeros( ( dim, dim ), dtype=int ), label=label )
+        matrix = np.zeros( ( dim, dim ) )
         for index, element in enumerate( vector ):
-            new_symmetry_operation.matrix[ element, index ] = 1
+            matrix[ element, index ] = 1
+        new_symmetry_operation = cls( matrix, label=label )
         return new_symmetry_operation
 
     def similarity_transform( self, s, label=None ):
@@ -129,7 +155,8 @@ class SymmetryOperation:
         """
         if not isinstance( configuration, Configuration ):
             raise TypeError
-        return Configuration( self.matrix.dot( configuration.vector ) )
+        return Configuration( configuration.vector[ self.index_mapping ] )
+        #return Configuration( self.matrix.dot( configuration.vector ) )
 
     def character( self ):
         """
@@ -154,7 +181,7 @@ class SymmetryOperation:
             a vector representation of this symmetry operation (as a list)
         """
         offset = 0 if count_from_zero else 1
-        return [ row.index( 1 ) + offset for row in self.matrix.T.tolist() ]
+        return [ row.tolist().index( 1 ) + offset for row in self.matrix.T ]
 
     def set_label( self, label ):
         """
