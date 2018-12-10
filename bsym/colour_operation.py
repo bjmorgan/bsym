@@ -57,10 +57,11 @@ class ColourOperation( SymmetryOperation ):
         if not count_from_zero:
             vector = [ x - 1 for x in vector ]
         dim = len( vector )
-        new_symmetry_operation = cls( np.zeros( ( dim, dim ), dtype=int ), colour_mapping=colour_mapping, label=label )
+        matrix = np.zeros( ( dim, dim ) )
         for index, element in enumerate( vector ):
-            new_symmetry_operation.matrix[ element, index ] = 1
-        return new_symmetry_operation
+            matrix[ element, index ] = 1
+        new_colour_operation = cls( matrix, colour_mapping=colour_mapping, label=label )
+        return new_colour_operation
     
     def operate_on( self, configuration ):
         """
