@@ -208,7 +208,7 @@ def configuration_space_from_molecule( molecule, subset=None, atol=1e-5 ):
     config_space = ConfigurationSpace( objects=subset, symmetry_group=point_group )
     return config_space
  
-def unique_structure_substitutions( structure, to_substitute, site_distribution, verbose=False, atol=1e-5 ):
+def unique_structure_substitutions( structure, to_substitute, site_distribution, verbose=False, atol=1e-5, show_progress=False ):
     """
     Generate all symmetry-unique structures formed by substituting a set of sites in a `pymatgen` structure.
 
@@ -217,7 +217,11 @@ def unique_structure_substitutions( structure, to_substitute, site_distribution,
         to_substitute (str): atom label for the sites to be substituted.
         site_distribution (dict): A dictionary that defines the number of each substituting element.
         verbose (bool): verbose output.
-        atol      (Optional [float]):       tolerance factor for the ``pymatgen`` `coordinate mapping`_ under each symmetry operation.
+        atol      (Optional [float]):       tolerance factor for the ``pymatgen`` `coordinate mapping`_ under each symmetry operation. Default=1e-5.
+        show_progress (opt:default=False): Show a progress bar.
+                                           Setting to `True` gives a simple progress bar.
+                                           Setting to `"notebook"` gives a Jupyter notebook compatible progress bar.
+
 
     Returns:
         (list[Structure]): A list of Structure objects for each unique substitution.
@@ -248,7 +252,7 @@ def unique_structure_substitutions( structure, to_substitute, site_distribution,
     else:
         raise ValueError( "pymatgen Structure or Molecule object expected" )
     numeric_site_distribution, numeric_site_mapping = parse_site_distribution( site_distribution )
-    unique_configurations = config_space.unique_configurations( numeric_site_distribution, verbose=verbose )
+    unique_configurations = config_space.unique_configurations( numeric_site_distribution, verbose=verbose, show_progress=show_progress )
     new_structures = [ new_structure_from_substitution( structure, site_substitution_index, [ numeric_site_mapping[k] for k in c.tolist() ] ) for c in unique_configurations ]
     if hasattr( structure, 'number_of_equivalent_configurations' ):
         for s, c in zip( new_structures, unique_configurations ):

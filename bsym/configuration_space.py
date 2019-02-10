@@ -1,8 +1,9 @@
-from bsym.permutations import flatten_list, unique_permutations
+from bsym.permutations import flatten_list, unique_permutations, number_of_unique_permutations
 from bsym import Configuration, SymmetryGroup, SymmetryOperation
 import numpy as np
 from itertools import combinations_with_replacement
 from collections import Counter
+from tqdm import tqdm, tqdm_notebook
 
 class ConfigurationSpace:
 
@@ -51,6 +52,7 @@ class ConfigurationSpace:
         working = True
         seen = set()
         unique_configurations = []
+        using_tqdm = hasattr( generator, 'postfix' )
         for new_permutation in generator:
             if permutation_as_config_number( new_permutation ) not in seen:
                 config = Configuration.from_tuple( new_permutation )
@@ -58,14 +60,13 @@ class ConfigurationSpace:
                 config.count = len( numeric_equivalents )
                 [ seen.add( i ) for i in numeric_equivalents ]
                 unique_configurations.append( config )
-                if verbose:
-                    print( "found {:d}, screened {:d}".format( len( unique_configurations ), len( seen ) ) )
+                if using_tqdm:
+                    generator.set_postfix( found=len(unique_configurations) )
         if verbose:
-            print( 'unique configurations: {}'.format( len( unique_configurations ) ) )
-            print( 'screened: {}'.format( len( seen ) ) )
+            print( 'unique configurations: {} / {}'.format( len( unique_configurations ), len( seen ) ) )
         return( unique_configurations )
 
-    def unique_configurations( self, site_distribution, verbose=False ):
+    def unique_configurations( self, site_distribution, verbose=False, show_progress=False ):
         """
         Find the symmetry inequivalent configurations for a given population of objects.
 
@@ -78,16 +79,26 @@ class ConfigurationSpace:
 
                                           { 1: 2, 0: 2 }
             verbose (opt:default=False): Print verbose output.
+            show_progress (opt:default=False): Show a progress bar.
+                                      Setting to `True` gives a simple progress bar.
+                                      Setting to `"notebook"` gives a Jupyter notebook compatible progress bar.
 
         Returns:
             unique_configurations (list): A list of :any:`Configuration` objects, for each symmetry 
                                           inequivalent configuration. 
         """
+        s = flatten_list( [ [ key ] * site_distribution[ key ] for key in site_distribution ] )
+        total_permutations = number_of_unique_permutations( s )
         if verbose:
             print( 'total number of sites: ' + str( sum( site_distribution.values() ) ) )
-            print( 'using {:d} symmetry operations: '.format( len( self.symmetry_group.symmetry_operations ) ) )
-        s = flatten_list( [ [ key ] * site_distribution[ key ] for key in site_distribution ] )
+            print( 'using {:d} symmetry operations.'.format( len( self.symmetry_group.symmetry_operations ) ) )
+            print( 'evaluating {:d} unique permutations.'.format( total_permutations ) )
         generator = unique_permutations( s )
+        if show_progress:
+            if show_progress=='notebook':
+                generator = tqdm_notebook( generator, total=total_permutations, unit=' permutations' )
+            else:
+                generator = tqdm( generator, total=total_permutations, unit=' permutations' )
         return self.enumerate_configurations( generator, verbose=verbose )
 
     def unique_colourings( self, colours, verbose=False ):
@@ -109,7 +120,6 @@ def colourings_generator( colours, dim ):
     for s in combinations_with_replacement( colours, dim ):
         for new_permutation in unique_permutations( s ):
             yield new_permutation 
-
         
 def permutation_as_config_number( p ):
     """
