@@ -41,7 +41,7 @@ class ConfigurationSpace:
         `generator`.
 
         Args:
-            generator (:obj:`generator`): Generator object, the yields the configurations
+            generator (:obj:`generator`): Generator object, that yields the configurations
                 to search through.
             verbose (opt:default=False): Print verbose output.
    
