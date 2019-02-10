@@ -1,5 +1,24 @@
+from collections import Counter
+from math import factorial
+from functools import reduce
+from operator import mul
+
 def flatten_list( this_list ):
     return [ item for sublist in this_list for item in sublist ]
+
+def number_of_unique_permutations( seq ):
+    """Calculate the number of unique permutations of a sequence seq.
+
+    Args:
+        seq (list): list of items.
+        
+    Returns:
+        int: The number of unique permutations of seq
+        
+    """
+    times_included = list( Counter( seq ).values() )
+    factorials = list( map( factorial, times_included ) )
+    return int( factorial( len( seq ) ) / reduce( mul, factorials ) )
 
 def unique_permutations( seq ):
     """

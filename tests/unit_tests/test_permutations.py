@@ -8,6 +8,14 @@ class PermutationsTestCase( unittest.TestCase ):
         l = [ [ 1, 2 ], [ 3, 4, 5 ] ]
         self.assertEqual( permutations.flatten_list( l ), [ 1, 2, 3, 4, 5 ] )
 
+    def test_number_of_unique_permutations(self):
+        a = [1,1,0,0]
+        self.assertEqual( permutations.number_of_unique_permutations( a ), 6 )
+        b = [1]*8 + [0]*8
+        self.assertEqual( permutations.number_of_unique_permutations( b ), 12870 )
+        c = [1,1,2,2,3,3]
+        self.assertEqual( permutations.number_of_unique_permutations( c ), 90 )
+  
     def test_unique_permuations( self ):
         all_permutations = [ [ 1, 1, 0, 0 ],
                              [ 1, 0, 1, 0 ],
