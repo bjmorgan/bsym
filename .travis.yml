@@ -2,8 +2,6 @@ branches:
   only:
     - master
     - development
-env:
-  - CODECLIMATE_REPO_TOKEN=485cb396b16303635d466a260de4990e36dfab060fa4a5b66641f235fd4f2821
 language: python
 cache: pip
 notifications:
