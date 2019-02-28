@@ -87,7 +87,7 @@ class ConfigurationSpace:
             unique_configurations (list): A list of :any:`Configuration` objects, for each symmetry 
                                           inequivalent configuration. 
         """
-        s = flatten_list( [ [ key ] * site_distribution[ key ] for key in site_distribution ] )
+        s = list_from_site_distribution( site_distribution )
         total_permutations = number_of_unique_permutations( s )
         if verbose:
             print( 'total number of sites: ' + str( sum( site_distribution.values() ) ) )
@@ -120,7 +120,30 @@ def colourings_generator( colours, dim ):
     for s in combinations_with_replacement( colours, dim ):
         for new_permutation in unique_permutations( s ):
             yield new_permutation 
-        
+
+def list_from_site_distribution( site_distribution ):
+    """Returns a list of site occupations from a site distribution dict.
+
+      Args:
+          site_distribution (dict): A dictionary that defines the number of each object 
+                                    to be arranged in this system.
+
+                                    e.g. for a system with four sites, with two occupied (denoted `1`)
+                                    and two unoccupied (denoted `0`)::
+
+                                        { 1: 2, 0: 2 }
+
+     Returns:
+         (list): A list of objects assigned to each site.
+
+                 e.g.::
+
+                     [ 1, 1, 0, 0 ]
+
+    """        
+    s = flatten_list( [ [ key ] * site_distribution[ key ] for key in site_distribution ] )
+    return s
+
 def permutation_as_config_number( p ):
     """
     A numeric representation of a numeric list.

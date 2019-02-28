@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import Mock, patch
 from bsym import ConfigurationSpace, SymmetryGroup, SymmetryOperation, Configuration
 from bsym.configuration_space import permutation_as_config_number, colourings_generator
+from bsym.configuration_space import list_from_site_distribution
 import numpy as np
 
 class ConfigurationSpaceTestCase( unittest.TestCase ):
@@ -85,6 +86,11 @@ class ConfigurationSpaceModuleFunctionsTestCase( unittest.TestCase ):
             self.assertEqual( c in expected_colourings, True )
         for ec in expected_colourings:
             self.assertEqual( ec in colourings, True )
-        
+    
+    def list_from_site_distribution( self ):
+        site_distributions = { 1: 2, 0: 2}
+        expected_list = [ 1, 1, 0, 0 ]
+        self.assertEqual( list_from_site_distributions( site_distributions ), expected_list )
+    
 if __name__ == '__main__':
     unittest.main()
