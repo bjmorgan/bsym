@@ -72,6 +72,7 @@ class ConfigurationSpace:
         s = [ list_from_site_distribution( d ) for d in site_distribution ]
         total_permutations = reduce(operator.mul, [ number_of_unique_permutations(sub) for sub in s ], 1)
         if verbose:
+            # TODO this probably doesn't work with the new site_distribution type
             print( 'total number of sites: ' + str( sum( site_distribution.values() ) ) )
             print( 'using {:d} symmetry operations.'.format( len( self.symmetry_group.symmetry_operations ) ) )
             print( 'evaluating {:d} unique permutations.'.format( total_permutations ) )
