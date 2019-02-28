@@ -4,6 +4,8 @@ import numpy as np
 from itertools import combinations_with_replacement
 from collections import Counter
 from tqdm import tqdm, tqdm_notebook
+from functools import reduce
+import operator
 
 class ConfigurationSpace:
 
@@ -65,6 +67,23 @@ class ConfigurationSpace:
         if verbose:
             print( 'unique configurations: {} / {}'.format( len( unique_configurations ), len( seen ) ) )
         return( unique_configurations )
+
+    def unique_configurations_multi( self, site_distribution, verbose=False, show_progress=False ):
+        s = [ list_from_site_distribution( d ) for d in site_distribution ]
+        print(s)
+        # Note this is not the correct permutation count
+        total_permutations = reduce(operator.mul, [ number_of_unique_permutations(sub) for sub in s ], 1)
+        if verbose:
+            print( 'total number of sites: ' + str( sum( site_distribution.values() ) ) )
+            print( 'using {:d} symmetry operations.'.format( len( self.symmetry_group.symmetry_operations ) ) )
+            print( 'evaluating {:d} unique permutations.'.format( total_permutations ) )
+        generator = iterate_unique_permutations( s )
+        if show_progress:
+            if show_progress=='notebook':
+                generator = tqdm_notebook( generator, total=total_permutations, unit=' permutations' )
+            else:
+                generator = tqdm( generator, total=total_permutations, unit=' permutations' )
+        return self.enumerate_configurations( generator, verbose=verbose )
 
     def unique_configurations( self, site_distribution, verbose=False, show_progress=False ):
         """
@@ -166,3 +185,14 @@ def is_nested_list( this ):
   
     """ 
     return any( isinstance(i, list) for i in this )
+
+def iterate_unique_permutations(a):
+    """
+    TODO
+    """
+    if is_nested_list(a):
+        for b in unique_permutations(a[0]):
+            for c in iterate_unique_permutations(a[1:]):
+                yield flatten_list( [ b, c ] )
+    else:
+        yield from unique_permutations(a)
