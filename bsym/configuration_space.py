@@ -70,8 +70,6 @@ class ConfigurationSpace:
 
     def unique_configurations_multi( self, site_distribution, verbose=False, show_progress=False ):
         s = [ list_from_site_distribution( d ) for d in site_distribution ]
-        print(s)
-        # Note this is not the correct permutation count
         total_permutations = reduce(operator.mul, [ number_of_unique_permutations(sub) for sub in s ], 1)
         if verbose:
             print( 'total number of sites: ' + str( sum( site_distribution.values() ) ) )
