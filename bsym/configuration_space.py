@@ -77,12 +77,10 @@ class ConfigurationSpace:
             print( 'using {:d} symmetry operations.'.format( len( self.symmetry_group.symmetry_operations ) ) )
             print( 'evaluating {:d} unique permutations.'.format( total_permutations ) )
         generator = iterate_unique_permutations( s )
-        if show_progress:
-            if show_progress=='notebook':
-                generator = tqdm_notebook( generator, total=total_permutations, unit=' permutations' )
-            else:
-                generator = tqdm( generator, total=total_permutations, unit=' permutations' )
-        return self.enumerate_configurations( generator, verbose=verbose )
+        return self.run_unique_configurations( generator=generator,
+                                               total_permutations=total_permutations,
+                                               show_progress=show_progress,
+                                               verbose=verbose ) 
 
     def unique_configurations( self, site_distribution, verbose=False, show_progress=False ):
         """
@@ -112,6 +110,12 @@ class ConfigurationSpace:
             print( 'using {:d} symmetry operations.'.format( len( self.symmetry_group.symmetry_operations ) ) )
             print( 'evaluating {:d} unique permutations.'.format( total_permutations ) )
         generator = unique_permutations( s )
+        return self.run_unique_configurations( generator=generator,
+                                               total_permutations=total_permutations,
+                                               show_progress=show_progress,
+                                               verbose=verbose ) 
+
+    def run_unique_configurations( self, generator, total_permutations, show_progress=False, verbose=False ):
         if show_progress:
             if show_progress=='notebook':
                 generator = tqdm_notebook( generator, total=total_permutations, unit=' permutations' )
