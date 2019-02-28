@@ -128,17 +128,12 @@ def list_from_site_distribution( site_distribution ):
           site_distribution (dict): A dictionary that defines the number of each object 
                                     to be arranged in this system.
 
-                                    e.g. for a system with four sites, with two occupied (denoted `1`)
-                                    and two unoccupied (denoted `0`)::
-
-                                        { 1: 2, 0: 2 }
-
      Returns:
          (list): A list of objects assigned to each site.
 
-                 e.g.::
-
-                     [ 1, 1, 0, 0 ]
+     Example:
+         >>> list_from_site_distribution( { 1: 2, 0: 2 } )
+         [ 1, 1, 0, 0 ]
 
     """        
     s = flatten_list( [ [ key ] * site_distribution[ key ] for key in site_distribution ] )
@@ -151,9 +146,23 @@ def permutation_as_config_number( p ):
     Example:
         >>> permutation_as_config_number( [ 1, 1, 0, 0, 1 ] )
         11001
+
     """
     tot = 0
     for num in p:
         tot *= 10
         tot += num
     return tot
+
+def is_nested_list( this ):
+    """
+    Test whether an object is a nested list.
+
+    Args:
+        this (:obj:): The object to be tested.
+
+    Returns:
+        (bool)
+  
+    """ 
+    return any( isinstance(i, list) for i in this )

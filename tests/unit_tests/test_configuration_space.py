@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock, patch
 from bsym import ConfigurationSpace, SymmetryGroup, SymmetryOperation, Configuration
 from bsym.configuration_space import permutation_as_config_number, colourings_generator
-from bsym.configuration_space import list_from_site_distribution
+from bsym.configuration_space import list_from_site_distribution, is_nested_list
 import numpy as np
 
 class ConfigurationSpaceTestCase( unittest.TestCase ):
@@ -46,13 +46,13 @@ class ConfigurationSpaceTestCase( unittest.TestCase ):
         site_distribution = { 1:2, 2:1 }
         mock_configuration = Mock( spec=Configuration )
         configuration_space.enumerate_configurations = Mock( return_value=[ mock_configuration ] )
-        with patch( 'bsym.configuration_space.flatten_list' ) as mock_flatten_list:
-            mock_flatten_list.return_value = [ 1, 1, 2 ] 
-            with patch( 'bsym.configuration_space.unique_permutations' ) as mock_unique_permutations:
-                mock_unique_permutations.return_value = [ [ 1, 1, 2 ], [ 1, 2, 1 ], [ 2, 1, 1 ] ]
+        with patch( 'bsym.configuration_space.unique_permutations' ) as mock_unique_permutations:
+            mock_unique_permutations.return_value = [ [ 1, 1, 2 ], [ 1, 2, 1 ], [ 2, 1, 1 ] ]
+            with patch( 'bsym.configuration_space.list_from_site_distribution' ) as mock_list_from_site_distribution:
+                mock_list_from_site_distribution.return_value = [ 1, 1, 2 ]
                 configurations = configuration_space.unique_configurations( site_distribution )
                 mock_unique_permutations.assert_called_with( [ 1, 1, 2 ] )
-            mock_flatten_list.assert_called_with( [ [1, 1 ], [ 2 ] ] )
+                mock_list_from_site_distribution.assert_called_with( { 1: 2, 2: 1 } )
         configuration_space.enumerate_configurations.assert_called_with(
                           mock_unique_permutations(), verbose=False )
         self.assertEqual( configurations, [ mock_configuration ] )
@@ -90,7 +90,17 @@ class ConfigurationSpaceModuleFunctionsTestCase( unittest.TestCase ):
     def list_from_site_distribution( self ):
         site_distributions = { 1: 2, 0: 2}
         expected_list = [ 1, 1, 0, 0 ]
-        self.assertEqual( list_from_site_distributions( site_distributions ), expected_list )
-    
+        with patch( 'bsym.configuration_space.flatten_list' ) as mock_flatten_list:
+            mock_flatten_list.return_value = [ 1, 1, 0, 0 ]
+            self.assertEqual( list_from_site_distributions( site_distributions ), expected_list )
+            mock_flatten_list.assert_called_with( [ [1, 1], [ 0, 0 ] ] )
+   
+    def test_is_nested_list_returns_true( self ):
+        self.assertEqual( is_nested_list( [[1],[0]] ), True )
+
+    def test_is_nested_list_returns_false( self ):
+        self.assertEqual( is_nested_list( [1] ), False )
+
+ 
 if __name__ == '__main__':
     unittest.main()
