@@ -9,6 +9,7 @@ from bsym.interface.pymatgen import ( unique_symmetry_operations_as_vectors_from
                                       unique_structure_substitutions, 
                                       new_structure_from_substitution, 
                                       configuration_space_from_structure, 
+                                      configuration_space_from_object,
                                       space_group_symbol_from_structure, 
                                       configuration_space_from_molecule, 
                                       structure_cartesian_coordinates_mapping,
@@ -80,6 +81,32 @@ class TestPymatgenInterface( unittest.TestCase ):
         mapped_coords = molecule_cartesian_coordinates_mapping( self.molecule, mock_symmop ) 
         np.testing.assert_array_equal( mapped_coords, new_coords )
         np.testing.assert_array_equal( mock_symmop.operate_multi.call_args[0][0], self.molecule.cart_coords )
+
+    def test_configuration_space_from_object_with_Structure( self ):
+        mock_structure = Mock( spec=Structure )
+        mock_configuration_space = Mock( spec=ConfigurationSpace )
+        with patch( 'bsym.interface.pymatgen.configuration_space_from_structure' ) as mock_configuration_space_from_structure:
+            mock_configuration_space_from_structure.return_value = mock_configuration_space
+            config_space = configuration_space_from_object( mock_structure )
+            self.assertEqual( config_space, mock_configuration_space )
+            self.assertEqual( mock_configuration_space_from_structure.call_args[0][0], mock_structure ) 
+
+    def test_configuration_space_from_object_with_Molecule( self ):
+        mock_structure = Mock( spec=Molecule )
+        mock_structure.species = [ 'Li' ]
+        mock_structure.cart_coords = np.array( [[ 1.0, 2.0, 3.0 ]] )
+        mock_structure.center_of_mass = np.array( [ 0.5, 0.2, 0.1 ] )
+        mock_configuration_space = Mock( spec=ConfigurationSpace )
+        with patch( 'bsym.interface.pymatgen.configuration_space_from_molecule' ) as mock_configuration_space_from_molecule:
+            mock_configuration_space_from_molecule.return_value = mock_configuration_space
+            config_space = configuration_space_from_object( mock_structure )
+            self.assertEqual( config_space, mock_configuration_space )
+            self.assertEqual( mock_configuration_space_from_molecule.call_args[0][0], mock_structure ) 
+
+    def test_configuration_space_from_object_raises_ValueError( self ):
+        obj = 'foo'
+        with self.assertRaises( ValueError ):
+            configuration_space_from_object( obj )
 
 if __name__ == '__main__':
     unittest.main()

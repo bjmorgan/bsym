@@ -207,7 +207,56 @@ def configuration_space_from_molecule( molecule, subset=None, atol=1e-5 ):
         subset = list( range( 1, len( molecule )+1 ) )
     config_space = ConfigurationSpace( objects=subset, symmetry_group=point_group )
     return config_space
- 
+
+def configuration_space_from_object( obj, subset=None, atol=1e-5 ):
+    """Convenience function for generating a ConfigurationSpace from a Pymatgen object.
+   
+    Valid objects are ``Structure`` and ``Molecule`` objects.
+
+    Args:
+        obj (:obj:): structure-like object used to define the :any:`ConfigurationSpace`.
+        subset    (Optional [list]):        list of atom indices to be used for generating the configuration space.
+        atol      (Optional [float]):       tolerance factor for the ``pymatgen`` `coordinate mapping`_ under each symmetry operation.
+        
+    Returns:
+        a new :any:`ConfigurationSpace` instance.
+    
+    .. _coordinate mapping:
+        http://pymatgen.org/pymatgen.util.coord_utils.html#pymatgen.util.coord_utils.coord_list_mapping_pbc
+
+    """
+    if isinstance( obj, Structure ):
+        config_space = configuration_space_from_structure( obj, subset=subset, atol=atol )
+    elif isinstance( obj, Molecule ):
+        structure = Molecule( obj.species, obj.cart_coords - obj.center_of_mass )
+        config_space = configuration_space_from_molecule( obj, subset=subset, atol=atol )
+    else:
+        raise ValueError( "pymatgen Structure or Molecule object expected" )
+    return config_space
+
+def get_site_substitution_index( structure, to_substitute, site_distribution=None ):
+    """Generate a list of site indices from a Structure for specfied atom labels.
+
+    Args:
+        structure (pymatgen ``Structure``): structure used to generate index list.
+        to_substitute (str): atom label for generating the site list.
+        site_distribution (Optional [dict]): A dictionary that defines the number of each substituting element. Default=None.
+
+    Returns:
+        (list): A list of site indices matching the species in `to_substitute`.
+
+    Raises:
+        ValueError: If `site_distribution` is provided the number of matching sites will be 
+                    compared to the number of substitutions to distribute. If these numbers
+                    are not equal an error is raised. 
+
+    """
+    site_substitution_index = list( structure.indices_from_symbol( to_substitute ) )
+    if site_distribution:
+        if len( site_substitution_index ) != sum( site_distribution.values() ):
+            raise ValueError( "Number of sites from index does not match number from site distribution" )
+    return site_substitution_index
+
 def unique_structure_substitutions( structure, to_substitute, site_distribution, verbose=False, atol=1e-5, show_progress=False ):
     """
     Generate all symmetry-unique structures formed by substituting a set of sites in a `pymatgen` structure.
@@ -241,16 +290,8 @@ def unique_structure_substitutions( structure, to_substitute, site_distribution,
         http://pymatgen.org/pymatgen.util.coord_utils.html#pymatgen.util.coord_utils.coord_list_mapping_pbc
 
     """
-    site_substitution_index = list( structure.indices_from_symbol( to_substitute ) )
-    if len( site_substitution_index ) != sum( site_distribution.values() ):
-        raise ValueError( "Number of sites from index does not match number from site distribution" )
-    if isinstance( structure, Structure ):
-        config_space = configuration_space_from_structure( structure, subset=site_substitution_index, atol=atol )
-    elif isinstance( structure, Molecule ):
-        structure = Molecule( structure.species, structure.cart_coords - structure.center_of_mass )
-        config_space = configuration_space_from_molecule( structure, subset=site_substitution_index, atol=atol )
-    else:
-        raise ValueError( "pymatgen Structure or Molecule object expected" )
+    site_substitution_index = get_site_substitution_index( structure, to_substitute, site_distribution=site_distribution )
+    config_space = configuration_space_from_object( structure, subset=site_substitution_index, atol=atol )
     numeric_site_distribution, numeric_site_mapping = parse_site_distribution( site_distribution )
     unique_configurations = config_space.unique_configurations( numeric_site_distribution, verbose=verbose, show_progress=show_progress )
     new_structures = [ new_structure_from_substitution( structure, site_substitution_index, [ numeric_site_mapping[k] for k in c.tolist() ] ) for c in unique_configurations ]
