@@ -22,8 +22,8 @@ class Configuration:
 
     """ 
 
-    def __init__( self, vector ):
-        self.count = None
+    def __init__( self, vector, count=None ):
+        self.count = count
         self.lowest_numeric_representation = None
         self.vector = np.array( vector )
 
@@ -125,7 +125,7 @@ class Configuration:
         return as_number( self.vector )
 
     @classmethod
-    def from_tuple( cls, this_tuple ):
+    def from_tuple( cls, this_tuple, count=None ):
         """
         Construct a :any:`Configuration` from a `tuple`,
         e.g.::
@@ -138,7 +138,7 @@ class Configuration:
         Returns:
             (:any:`Configuration`): The new :any:`Configuration`.
         """
-        return( cls( this_tuple ) )
+        return( cls( this_tuple, count=count ) )
 
     def tolist( self ):
         """
