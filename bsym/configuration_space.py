@@ -54,19 +54,20 @@ class ConfigurationSpace:
         working = True
         seen = set()
         unique_configurations = []
+        counts = []
         using_tqdm = hasattr( generator, 'postfix' )
         for new_permutation in generator:
             if permutation_as_config_number( new_permutation ) not in seen:
                 config = Configuration.from_tuple( new_permutation )
                 numeric_equivalents = set( config.numeric_equivalents( self.symmetry_group.symmetry_operations ) )
-                config.count = len( numeric_equivalents )
-                [ seen.add( i ) for i in numeric_equivalents ]
-                unique_configurations.append( config )
+                counts.append( len( numeric_equivalents ) )
+                seen.update( numeric_equivalents )
+                unique_configurations.append( new_permutation )
                 if using_tqdm:
                     generator.set_postfix( found=len(unique_configurations) )
         if verbose:
             print( 'unique configurations: {} / {}'.format( len( unique_configurations ), len( seen ) ) )
-        return( unique_configurations )
+        return [ Configuration.from_tuple( c, count=count ) for c, count in zip( unique_configurations, counts ) ] 
 
     def unique_configurations_multi( self, site_distribution, verbose=False, show_progress=False ):
         s = [ list_from_site_distribution( d ) for d in site_distribution ]
