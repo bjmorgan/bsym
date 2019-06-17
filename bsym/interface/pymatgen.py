@@ -349,19 +349,24 @@ def new_structure_from_substitution( parent_structure, site_substitution_index, 
         s[i] = spec
     return s
 
-def group_sites( structure, species_list ):
+def group_sites( structure, species_list, in_place=False ):
     """
     Group sites in a pymatgen ``Structure`` by species.
 
     Args:
         structure (Structure): The pymatgen ``Structure`` to apply the grouping to.
         species_list (list[``str``]): The list of species for each group.
-    
+        in_place (:obj:`bool`, optional): Modify the input ``Structure`` in place.
+            Default is to return a copy, leaving the input ``Structure` unchanged.
+ 
     Returns:
         (``Structure``): The new pymatgen ``Structure``.
   
     """
-    grouped_structure = structure.copy()
+    if in_place:
+        grouped_structure = structure
+    else:
+        grouped_structure = structure.copy()
     grouped_sites = []
     for species_string in species_list:
         grouped_sites.extend( [ s for s in structure.sites if s.species_string == species_string ] )

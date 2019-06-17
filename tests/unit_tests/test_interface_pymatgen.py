@@ -126,5 +126,22 @@ class TestPymatgenInterface( unittest.TestCase ):
                         [ 0.5, 0.5, 0.0 ],
                         [ 0.5, 0.0, 0.5 ] ] ) )
 
+    def test_group_sites_in_place( self ):
+        coords = np.array( [ [ 0.0, 0.0, 0.0 ],
+                             [ 0.5, 0.5, 0.0 ],
+                             [ 0.0, 0.5, 0.5 ],
+                             [ 0.5, 0.0, 0.5 ] ] )
+        atom_list = [ 'Li', 'Cl', 'Li', 'Cl' ]
+        lattice = Lattice.from_parameters( a=3.0, b=3.0, c=3.0, alpha=90, beta=90, gamma=90 )
+        structure = Structure( lattice, atom_list, coords )
+        group_sites( structure, [ 'Li', 'Cl' ], in_place=True )
+        self.assertEqual( [ str(s) for s in structure.species ],
+                          [ 'Li', 'Li', 'Cl', 'Cl' ] )
+        np.testing.assert_array_equal( structure.frac_coords,
+            np.array( [ [ 0.0, 0.0, 0.0 ],
+                        [ 0.0, 0.5, 0.5 ],
+                        [ 0.5, 0.5, 0.0 ],
+                        [ 0.5, 0.0, 0.5 ] ] ) )
+
 if __name__ == '__main__':
     unittest.main()
