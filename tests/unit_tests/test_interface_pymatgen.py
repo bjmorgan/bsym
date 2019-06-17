@@ -13,7 +13,8 @@ from bsym.interface.pymatgen import ( unique_symmetry_operations_as_vectors_from
                                       space_group_symbol_from_structure, 
                                       configuration_space_from_molecule, 
                                       structure_cartesian_coordinates_mapping,
-                                      molecule_cartesian_coordinates_mapping )
+                                      molecule_cartesian_coordinates_mapping,
+                                      group_sites )
 
 from itertools import permutations
 from bsym import SymmetryOperation, Configuration, SpaceGroup, PointGroup, ConfigurationSpace
@@ -107,6 +108,23 @@ class TestPymatgenInterface( unittest.TestCase ):
         obj = 'foo'
         with self.assertRaises( ValueError ):
             configuration_space_from_object( obj )
+
+    def test_group_sites( self ):
+        coords = np.array( [ [ 0.0, 0.0, 0.0 ],
+                             [ 0.5, 0.5, 0.0 ],
+                             [ 0.0, 0.5, 0.5 ],
+                             [ 0.5, 0.0, 0.5 ] ] )
+        atom_list = [ 'Li', 'Cl', 'Li', 'Cl' ]
+        lattice = Lattice.from_parameters( a=3.0, b=3.0, c=3.0, alpha=90, beta=90, gamma=90 )
+        structure = Structure( lattice, atom_list, coords )
+        grouped_structure = group_sites( structure, [ 'Li', 'Cl' ] )
+        self.assertEqual( [ str(s) for s in grouped_structure.species ], 
+                          [ 'Li', 'Li', 'Cl', 'Cl' ] )
+        np.testing.assert_array_equal( grouped_structure.frac_coords,
+            np.array( [ [ 0.0, 0.0, 0.0 ],
+                        [ 0.0, 0.5, 0.5 ],
+                        [ 0.5, 0.5, 0.0 ],
+                        [ 0.5, 0.0, 0.5 ] ] ) )
 
 if __name__ == '__main__':
     unittest.main()
