@@ -361,7 +361,43 @@ def group_sites( structure, species_list, in_place=False ):
  
     Returns:
         (``Structure``): The new pymatgen ``Structure``.
-  
+
+    Example:
+    
+        >>> coords = np.array( [ [ 0.0, 0.0, 0.0 ],
+        >>>          [ 0.5, 0.5, 0.0 ],
+        >>>          [ 0.0, 0.5, 0.5 ],
+        >>>          [ 0.5, 0.0, 0.5 ] ] )
+        >>> atom_list = [ 'Li', 'Cl', 'Li', 'Cl' ]
+        >>> lattice = Lattice.from_parameters( a=3.0, b=3.0, c=3.0, alpha=90, beta=90, gamma=90 )
+        >>> structure = Structure( lattice, atom_list, coords )
+        >>> structure  
+            Structure Summary
+            Lattice
+                abc : 3.0 3.0 3.0
+             angles : 90.0 90.0 90.0
+             volume : 27.0
+                  A : 3.0 0.0 1.8369701987210297e-16
+                  B : -1.8369701987210297e-16 3.0 1.8369701987210297e-16
+                  C : 0.0 0.0 3.0
+            PeriodicSite: Li (0.0000, 0.0000, 0.0000) [0.0000, 0.0000, 0.0000]
+            PeriodicSite: Cl (1.5000, 1.5000, 0.0000) [0.5000, 0.5000, 0.0000]
+            PeriodicSite: Li (-0.0000, 1.5000, 1.5000) [0.0000, 0.5000, 0.5000]
+            PeriodicSite: Cl (1.5000, 0.0000, 1.5000) [0.5000, 0.0000, 0.5000]
+        >>> group_sites( structure, ['Li', 'Cl'] )
+            Structure Summary
+            Lattice
+                abc : 3.0 3.0 3.0
+             angles : 90.0 90.0 90.0
+             volume : 27.0
+                  A : 3.0 0.0 1.8369701987210297e-16
+                  B : -1.8369701987210297e-16 3.0 1.8369701987210297e-16
+                  C : 0.0 0.0 3.0
+            PeriodicSite: Li (0.0000, 0.0000, 0.0000) [0.0000, 0.0000, 0.0000]
+            PeriodicSite: Li (-0.0000, 1.5000, 1.5000) [0.0000, 0.5000, 0.5000]
+            PeriodicSite: Cl (1.5000, 1.5000, 0.0000) [0.5000, 0.5000, 0.0000]
+            PeriodicSite: Cl (1.5000, 0.0000, 1.5000) [0.5000, 0.0000, 0.5000]
+
     """
     if in_place:
         grouped_structure = structure
