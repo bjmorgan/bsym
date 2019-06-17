@@ -364,13 +364,6 @@ def group_sites( structure, species_list, in_place=False ):
 
     Example:
     
-        >>> coords = np.array( [ [ 0.0, 0.0, 0.0 ],
-        >>>          [ 0.5, 0.5, 0.0 ],
-        >>>          [ 0.0, 0.5, 0.5 ],
-        >>>          [ 0.5, 0.0, 0.5 ] ] )
-        >>> atom_list = [ 'Li', 'Cl', 'Li', 'Cl' ]
-        >>> lattice = Lattice.from_parameters( a=3.0, b=3.0, c=3.0, alpha=90, beta=90, gamma=90 )
-        >>> structure = Structure( lattice, atom_list, coords )
         >>> structure  
             Structure Summary
             Lattice
