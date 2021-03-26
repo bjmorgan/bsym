@@ -37,8 +37,6 @@ python setup.py install
 
 ## Tests
 
-Automated testing of the latest commit happens [here](https://travis-ci.org/bjmorgan/bsym).
-
 Manual tests can be run using
 ```
 python -m unittest discover
