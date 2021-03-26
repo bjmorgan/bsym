@@ -1,0 +1,42 @@
+name: Build
+
+on: [push, pull_request]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        python-version: [3.7]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Cache python dependencies
+      id: cache-pip
+      uses: actions/cache@v1
+      with:
+        path: ~/.cache/pip
+        key: pip-${{ matrix.python-version }}-tests-${{ hashFiles('**/setup.json') }}
+        restore-keys: |
+          pip-${{ matrix.python-version }}-tests
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install python dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r tests/notebook_tests/requirements.txt
+        pip install -U numpy
+        pip list
+    - name: Run tests
+      run: |
+        python -m unittest discover tests/integration_tests
+        coverage run --rcfile=.coveragerc -m unittest discover tests/unit_tests
+        pip install .
+        python -m unittest discover tests/notebook_tests
+    - name: Run codeclimate
+      run: |
+        codeclimate-test-reporter --debug --token $CODECLIMATE_REPO_TOKEN
+    
