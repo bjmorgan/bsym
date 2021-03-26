@@ -38,5 +38,5 @@ jobs:
         python -m unittest discover tests/notebook_tests
     - name: Run codeclimate
       run: |
-        codeclimate-test-reporter --debug --token $CODECLIMATE_REPO_TOKEN
+        codeclimate-test-reporter --debug --token ${{secrets.CODECLIMATE_REPO_TOKEN}}
     
