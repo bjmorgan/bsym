@@ -37,7 +37,6 @@ jobs:
         pip install .
         python -m unittest discover tests/notebook_tests
     - name: Publish code coverage
-      uses: paambaati/codeclimate-action@v2.7.5
-      env:
-        CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_REPO_TOKEN }}
+      run: |
+        codeclimate-test-reporter --debug --token ${{ secrets.CODECLIMATE_REPO_TOKEN }}
     
