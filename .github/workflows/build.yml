@@ -10,17 +10,9 @@ jobs:
       matrix:
         python-version: [3.7,3.8,3.9]
     steps:
-    - uses: actions/checkout@v1
-    - name: Cache python dependencies
-      id: cache-pip
-      uses: actions/cache@v1
-      with:
-        path: ~/.cache/pip
-        key: pip-${{ matrix.python-version }}-tests-${{ hashFiles('**/setup.json') }}
-        restore-keys: |
-          pip-${{ matrix.python-version }}-tests
+    - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install python dependencies
