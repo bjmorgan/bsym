@@ -36,7 +36,12 @@ jobs:
         coverage run --rcfile=.coveragerc -m unittest discover tests/unit_tests
         pip install .
         python -m unittest discover tests/notebook_tests
-    # - name: Run codeclimate
-    #   run: |
-    #     codeclimate-test-reporter --debug --token ${{secrets.CODECLIMATE_REPO_TOKEN}}
+    - name: Run codeclimate
+      uses: paambaati/codeclimate-action@v2.7.5
+      env:
+        CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
+      with: 
+        coverageCommand: coverage run --rcfile=.coveragerc -m unittest discover tests/unit_tests
+        debug: true 
+        # codeclimate-test-reporter --debug --token ${{secrets.CODECLIMATE_REPO_TOKEN}}
     
