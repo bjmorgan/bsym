@@ -23,6 +23,7 @@ jobs:
         pip install -U numpy
         pip install pytest
         pip install pytest-cov
+        pip install .
         pip list
     - name: Run tests
       run: |
