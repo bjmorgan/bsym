@@ -1,5 +1,3 @@
-codeclimate-test-reporter
 pymatgen>=v2017.10.16
 numpy
 tqdm
-coverage==4.3.4
