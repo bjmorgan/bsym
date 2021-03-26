@@ -1,7 +1,8 @@
 import unittest
 from unittest.mock import Mock, MagicMock, patch, call
 import numpy as np
-from pymatgen import Lattice, Structure, Molecule
+from pymatgen.core.lattice import Lattice
+from pymatgen.core.structure import Molecule, Structure
 from bsym.interface.pymatgen import ( unique_symmetry_operations_as_vectors_from_structure, 
                                       space_group_from_structure, 
                                       parse_site_distribution, 

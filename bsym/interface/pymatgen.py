@@ -1,6 +1,8 @@
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer, SpacegroupOperations, PointGroupAnalyzer
 from pymatgen.util.coord import coord_list_mapping_pbc, coord_list_mapping
-from pymatgen import Lattice, Structure, Composition, Molecule
+from pymatgen.core.lattice import Lattice
+from pymatgen.core.structure import Molecule, Structure
+
 from bsym import SpaceGroup, SymmetryOperation, ConfigurationSpace, PointGroup
 from copy import copy
 from functools import partial
