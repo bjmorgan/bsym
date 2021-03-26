@@ -1,7 +1,6 @@
 import unittest
 from unittest.mock import Mock, MagicMock, patch, call
 import numpy as np
-from pymatgen.core.composition import Composition
 from pymatgen.core.lattice import Lattice
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.core.operations import SymmOp
