@@ -29,7 +29,7 @@ jobs:
       run: |
         pytest tests/integration_tests
         pytest tests/notebook_tests
-        pytest --cov-report xml --cov=tests/unit_tests
+        pytest tests/unit_tests --cov=bsym --cov-report xml 
     - name: Publish code coverage
       uses: paambaati/codeclimate-action@v2.7.5
       env:
