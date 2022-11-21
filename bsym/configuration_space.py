@@ -3,7 +3,7 @@ from bsym import Configuration, SymmetryGroup, SymmetryOperation
 import numpy as np
 from itertools import combinations_with_replacement
 from collections import Counter
-from tqdm import tqdm, tqdm_notebook
+from tqdm import tqdm, tqdm_notebook # type: ignore
 
 class ConfigurationSpace:
 

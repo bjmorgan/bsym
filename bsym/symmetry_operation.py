@@ -1,7 +1,8 @@
 import numpy as np
 from bsym.configuration import Configuration
+from typing import Union, List, Optional
 
-def is_square( m ):
+def is_square(m: np.ndarray) -> bool:
     """
     Test whether a numpy matrix is square.
 
@@ -13,7 +14,7 @@ def is_square( m ):
     """
     return m.shape[0] == m.shape[1]
 
-def is_permutation_matrix( m ):
+def is_permutation_matrix(m: np.ndarray) -> bool:
     """
     Test whether a numpy array is a `permutation matrix`_.
 
@@ -36,7 +37,9 @@ class SymmetryOperation:
     `SymmetryOperation` class.
     """
 
-    def __init__( self, matrix, label=None ):
+    def __init__(self,
+                 matrix: Union[List, np.ndarray],
+                 label: Optional[str]=None) -> None:
         """
         Initialise a `SymmetryOperation` object
 

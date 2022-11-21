@@ -2,11 +2,12 @@ from collections import Counter
 from math import factorial
 from functools import reduce
 from operator import mul
+from typing import List, Generator
 
-def flatten_list( this_list ):
-    return [ item for sublist in this_list for item in sublist ]
+def flatten_list(this_list: List[List]) -> List:
+    return [item for sublist in this_list for item in sublist]
 
-def number_of_unique_permutations( seq ):
+def number_of_unique_permutations(seq: List) -> int:
     """Calculate the number of unique permutations of a sequence seq.
 
     Args:
@@ -16,11 +17,11 @@ def number_of_unique_permutations( seq ):
         int: The number of unique permutations of seq
         
     """
-    times_included = list( Counter( seq ).values() )
-    factorials = list( map( factorial, times_included ) )
-    return int( factorial( len( seq ) ) / reduce( mul, factorials ) )
+    times_included = list(Counter(seq).values())
+    factorials = list(map(factorial, times_included))
+    return int(factorial(len(seq)) / reduce(mul, factorials))
 
-def unique_permutations( seq ):
+def unique_permutations(seq: List) -> Generator[List, None, None]:
     """
     Yield only unique permutations of seq in an efficient way.
 
@@ -37,7 +38,7 @@ def unique_permutations( seq ):
     seq = sorted(seq)
     while True:
         #yield list( seq )
-        yield list( seq )
+        yield list(seq)
         # Working backwards from the last-but-one index,           k
         # we find the index of the first decrease in value.  0 0 1 0 1 1 1 0
         for k in k_indices:
