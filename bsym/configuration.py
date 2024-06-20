@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 import numpy as np
 from numpy.typing import NDArray
-from typing import Any
-from bsym.symmetry_operation import SymmetryOperation
+from typing import TYPE_CHECKING, Any
+if TYPE_CHECKING:
+    from bsym.symmetry_operation import SymmetryOperation
 
 
 class Configuration:
@@ -31,11 +34,11 @@ class Configuration:
         self.lowest_numeric_representation = None
         self.vector = np.array(vector)
 
-    # def __eq__(self,
-    #           other: Configuration) -> bool:
-    #    if not isinstance(other, Configuration):
-    #        raise TypeError('Can only evaluate equality between two Configuration objects')
-    #    return np.array_equal(self.vector, other.vector)
+    def __eq__(self,
+              other: Configuration) -> bool:
+       if not isinstance(other, Configuration):
+           raise TypeError('Can only evaluate equality between two Configuration objects')
+       return np.array_equal(self.vector, other.vector)
 
     # def __hash__(self) -> int:
     #    return hash(self.vector.tobytes())
@@ -52,7 +55,7 @@ class Configuration:
         """
         if not isinstance(test_configuration, Configuration):
             raise TypeError
-        return (self.vector == test_configuration.vector).all()
+        return self == test_configuration
 
     def is_equivalent_to(
         self,
@@ -71,7 +74,7 @@ class Configuration:
             (bool): True | False
         """
         for symmetry_operation in symmetry_operations:
-            if symmetry_operation.operate_on(self).matches(test_configuration):
+            if symmetry_operation.operate_on(self) == test_configuration:
                 return True
         else:
             return False

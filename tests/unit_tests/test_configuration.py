@@ -4,34 +4,50 @@ from bsym.configuration import Configuration
 from bsym import SymmetryOperation
 import numpy as np
 
-class TestConfiguration( unittest.TestCase ):
+class TestConfiguration(unittest.TestCase):
 
-    def setUp( self ):
-        self.configuration = Configuration( [ 1, 0, 0 ] )
+    def setUp(self):
+        self.configuration = Configuration([1, 0, 0])
 
-    def test_matches_returns_true_for_a_match( self ):
-        self.assertEqual( self.configuration.matches( self.configuration ), True )
+    def test__eq__returns_true_for_a_match1(self):
+        other_configuration = Configuration([1, 0, 0])
+        self.assertEqual(self.configuration == other_configuration, True)
 
-    def test_matches_returns_false_for_a_non_match( self ):
-        other_configuration = Configuration( [0, 0, 1] )
-        self.assertEqual( self.configuration.matches( other_configuration ), False )
+    def test__eq__returns_false_for_a_non_match1(self):
+        other_configuration = Configuration([1, 1, 0])
+        self.assertEqual(self.configuration == other_configuration, False)
 
-    def test_matches_raises_TypeError_for_invalid_type( self ):
-        other_configuration = 'foo'
-        with self.assertRaises( TypeError ):
-            self.configuration.matches( other_configuration )
+    def test_matches_true(self):
+        config1 = Configuration([1, 1, 0])
+        config2 = Configuration([1, 1, 0])
+        with patch.object(Configuration, '__eq__', return_value=True):
+            self.assertTrue(config1.matches(config2))
 
-    def test_is_equivalent_to_if_equivalent( self ):
-        test_configuration = Configuration( [0, 1, 0] )
-        symmetry_operations = [ Mock( spec=SymmetryOperation ) ]
-        symmetry_operations[0].operate_on = Mock( return_value=test_configuration )
-        self.assertEqual( self.configuration.is_equivalent_to( test_configuration, symmetry_operations ), True )
+    def test_matches_false(self):
+        config1 = Configuration([1, 1, 0])
+        config2 = Configuration([0, 1, 1])
+        with patch.object(Configuration, '__eq__', return_value=False):
+            self.assertFalse(config1.matches(config2))
+
+    def test_matches_invalid_type(self):
+        config = Configuration([1, 1, 0])
+        invalid_config = [1, 1, 0]
+        with self.assertRaises(TypeError):
+            config.matches(invalid_config)
+
+    def test_is_equivalent_to_if_equivalent(self):
+        test_configuration = Configuration([0, 1, 0])
+        symmetry_operations = [Mock(spec=SymmetryOperation)]
+        symmetry_operations[0].operate_on = Mock(return_value=test_configuration)
+        with patch.object(Configuration, '__eq__', return_value=True):
+            self.assertEqual(self.configuration.is_equivalent_to(test_configuration, symmetry_operations), True)
 
     def test_is_equivalent_to_if_not_equivalent( self ):
-        test_configuration = Configuration( [ 0, 1, 0 ] )
-        symmetry_operations = [ Mock( spec=SymmetryOperation ) ]
-        symmetry_operations[0].operate_on = Mock( return_value=Configuration( [ 0, 0, 1 ] ) )
-        self.assertEqual( self.configuration.is_equivalent_to( test_configuration, symmetry_operations ), False )
+        test_configuration = Configuration([0, 1, 0 ])
+        symmetry_operations = [Mock(spec=SymmetryOperation)] 
+        symmetry_operations[0].operate_on = Mock(return_value=Configuration([0, 0, 1]))
+        with patch.object(Configuration, '__eq__', return_value=False):
+            self.assertEqual(self.configuration.is_equivalent_to(test_configuration, symmetry_operations), False)
 
     def test_is_in_list( self ):
         configuration_list = [ Configuration( [ 0, 1, 0 ] ), 
