@@ -1,33 +1,46 @@
 import numpy as np
+from numpy.typing import NDArray
+from typing import Any
+from bsym.symmetry_operation import SymmetryOperation
+
 
 class Configuration:
     """
     A :any:`Configuration` describes a specific arrangement of objects in the vector space of possible positions.
     Objects are represented by integers, with indistinguishable objects denoted by identical integers.
-    This class subclasses `numpy.matrix <https://docs.scipy.org/doc/numpy/reference/generated/numpy.matrix.html>`_. 
+    This class subclasses `numpy.matrix <https://docs.scipy.org/doc/numpy/reference/generated/numpy.matrix.html>`_.
     Each configuration in the vector space of positions is represented as a column vector.
 
     Attributes:
         count (int): If symmetry-inequivalent configurations have been generated for a `configuration space`,
-                     this records the number of configurations equivalent to this one. 
+                     this records the number of configurations equivalent to this one.
                      Value at initialisation is  ``None``.
-        lowest_numeric_representation (int): If the numeric representations for the set of equivalent 
-                     configurations are calculated, this can be used to store the lowest valued numeric 
+        lowest_numeric_representation (int): If the numeric representations for the set of equivalent
+                     configurations are calculated, this can be used to store the lowest valued numeric
                      representation, for use as a simple hash.
-    
+
     Example:
 
-        >>> Configuration( [1, 1, 0] )
+        >>> Configuration([1, 1, 0])
         Configuration([1, 1, 0])
 
-    """ 
+    """
 
-    def __init__( self, vector ):
+    def __init__(self, vector: list[int] | NDArray[np.int_]) -> None:
         self.count = None
         self.lowest_numeric_representation = None
-        self.vector = np.array( vector )
+        self.vector = np.array(vector)
 
-    def matches( self, test_configuration ):
+    # def __eq__(self,
+    #           other: Configuration) -> bool:
+    #    if not isinstance(other, Configuration):
+    #        raise TypeError('Can only evaluate equality between two Configuration objects')
+    #    return np.array_equal(self.vector, other.vector)
+
+    # def __hash__(self) -> int:
+    #    return hash(self.vector.tobytes())
+
+    def matches(self, test_configuration: Configuration) -> bool:
         """
         Test whether this configuration is equal to another configuration.
 
@@ -37,11 +50,15 @@ class Configuration:
         Returns:
             (bool): True | False.
         """
-        if not isinstance( test_configuration, Configuration ):
+        if not isinstance(test_configuration, Configuration):
             raise TypeError
-        return ( self.vector == test_configuration.vector ).all()
+        return (self.vector == test_configuration.vector).all()
 
-    def is_equivalent_to( self, test_configuration, symmetry_operations ):
+    def is_equivalent_to(
+        self,
+        test_configuration: Configuration,
+        symmetry_operations: list[SymmetryOperation],
+    ) -> bool:
         """
         Test whether this configuration is equivalent to another configuration
         under one or more of a set of symmetry operations.
@@ -54,12 +71,12 @@ class Configuration:
             (bool): True | False
         """
         for symmetry_operation in symmetry_operations:
-            if ( symmetry_operation.operate_on( self ).matches( test_configuration ) ):
-                return True 
+            if symmetry_operation.operate_on(self).matches(test_configuration):
+                return True
         else:
             return False
 
-    def is_in_list( self, the_list ):
+    def is_in_list(self, the_list: list[Configuration]) -> bool:
         """
         Test whether this configuration is in a list of configurations.
 
@@ -69,9 +86,13 @@ class Configuration:
         Returns:
             (bool): True | False
         """
-        return next( ( True for c in the_list if self.matches( c ) ), False )
+        return next((True for c in the_list if self.matches(c)), False)
 
-    def has_equivalent_in_list( self, the_list, symmetry_operations ):
+    def has_equivalent_in_list(
+        self,
+        the_list: list[Configuration],
+        symmetry_operations: list[SymmetryOperation],
+    ) -> bool:
         """
         Test whether this configuration is equivalent by symmetry to one or more
         in a list of configurations.
@@ -81,23 +102,34 @@ class Configuration:
             symmetry_operations (list(bsym.SymmetryOperation)): A list of :any:`SymmetryOperation` objects.
 
         Returns:
-            (bool): True | False 
+            (bool): True | False
         """
-        return next( ( True for c in the_list if self.is_equivalent_to( c, symmetry_operations ) ), False )
+        return next(
+            (True for c in the_list if self.is_equivalent_to(c, symmetry_operations)),
+            False,
+        )
 
-    def set_lowest_numeric_representation( self, symmetry_operations ):
-       """
-       Sets `self.lowest_numeric_representation` to the lowest value numeric representation of this configuration when permutated under a set of symmetry operations.
+    def set_lowest_numeric_representation(
+        self, symmetry_operations: list[SymmetryOperation]
+    ) -> None:
+        """
+        Sets `self.lowest_numeric_representation` to the lowest value numeric representation of this configuration when permutated under a set of symmetry operations.
 
-       Args:
-           symmetry_operations (list): A list of :any:`SymmetryOperation` instances.
+        Args:
+            symmetry_operations (list): A list of :any:`SymmetryOperation` instances.
 
-       Returns:
-           None
-       """
-       self.lowest_numeric_representation = min( [ symmetry_operation.operate_on( self ).as_number for symmetry_operation in symmetry_operations ] )
+        Returns:
+            None
+        """
+        self.lowest_numeric_representation = min(
+            [
+                symmetry_operation.operate_on(self).as_number
+                for symmetry_operation in symmetry_operations
+            ]
+        )
 
-    def numeric_equivalents( self, symmetry_operations ):
+    def numeric_equivalents(self,
+        symmetry_operations: list[SymmetryOperation]) -> list[int]:
         """
         Returns a list of all symmetry equivalent configurations generated by a set of symmetry operations
         with each configuration given in numeric representation.
@@ -108,11 +140,13 @@ class Configuration:
         Returns:
             (list(int)): A list of numbers representing each equivalent configuration.
         """
-        return [ symmetry_operation.operate_on( self ).as_number for symmetry_operation in symmetry_operations ]
-        #return [ as_number( symmetry_operation.operate_on( self, config=False ) ) for symmetry_operation in symmetry_operations ]
+        return [
+            symmetry_operation.operate_on(self).as_number
+            for symmetry_operation in symmetry_operations
+        ]
 
     @property
-    def as_number( self ):
+    def as_number(self) -> int:
         """
         A numeric representation of this configuration.
 
@@ -122,40 +156,40 @@ class Configuration:
             120
 
         """
-        return as_number( self.vector )
+        return as_number(self.vector)
 
     @classmethod
-    def from_tuple( cls, this_tuple ):
+    def from_tuple(cls, this_tuple) -> Configuration:
         """
         Construct a :any:`Configuration` from a `tuple`,
         e.g.::
-     
+
             Configuration.from_tuple( ( 1, 1, 0 ) )
- 
+
         Args:
             this_tuple (tuple): The tuple used to construct this :any:`Configuration`.
 
         Returns:
             (:any:`Configuration`): The new :any:`Configuration`.
         """
-        return( cls( this_tuple ) )
+        return cls(this_tuple)
 
-    def tolist( self ):
+    def tolist(self) -> list[int]:
         """
         Returns the configuration data as a list.
-        
+
         Args:
             None
 
         Returns:
             (List)
         """
-        return list( self.vector )
+        return list(self.vector)
 
-    def pprint( self ):
-        print( ' '.join( [ str(e) for e in self.tolist() ] ) )
+    def pprint(self) -> None:
+        print(" ".join([str(e) for e in self.tolist()]))
 
-    def position( self, label ):
+    def position(self, label: int) -> list[int]:
         """
         Returns the vector indices where elements are equal to `label`.
 
@@ -165,13 +199,13 @@ class Configuration:
         Returns:
             (list): A list of all positions that match `label`.
         """
-        return [ i for i,x in enumerate( self.tolist() ) if x == label ]
+        return [i for i, x in enumerate(self.tolist()) if x == label]
 
-    def __repr__( self ):
+    def __repr__(self) -> str:
         to_return = "Configuration({})\n".format(self.vector)
         return to_return
 
-    def map_objects( self, objects ):
+    def map_objects(self, objects: list) -> dict[int, Any]:
         """
         Returns a dict of objects sorted according to this configuration.
 
@@ -181,17 +215,17 @@ class Configuration:
         Returns:
             sorted_objects [dict]: A dictionary of sorted objects.
         """
-        if len( objects ) != len( self.vector ):
+        if len(objects) != len(self.vector):
             raise ValueError
         sorted_objects = {}
-        for key in set( self.vector ):
-            sorted_objects[key] = [ o for k, o in zip( self.vector, objects ) if k == key ]
-        return sorted_objects 
+        for key in set(self.vector):
+            sorted_objects[key] = [o for k, o in zip(self.vector, objects) if k == key]
+        return sorted_objects
 
-def as_number( a ):
+
+def as_number(a: list[int] | NDArray[np.int_]) -> int:
     tot = 0
     for num in a:
         tot *= 10
-        tot += int( num )
+        tot += int(num)
     return tot
-
