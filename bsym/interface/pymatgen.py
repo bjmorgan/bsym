@@ -1,7 +1,7 @@
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer, SpacegroupOperations, PointGroupAnalyzer
-from pymatgen.util.coord import coord_list_mapping_pbc, coord_list_mapping
-from pymatgen.core.lattice import Lattice
-from pymatgen.core.structure import Molecule, Structure
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer, SpacegroupOperations, PointGroupAnalyzer # type: ignore
+from pymatgen.util.coord import coord_list_mapping_pbc, coord_list_mapping # type: ignore
+from pymatgen.core.lattice import Lattice # type: ignore
+from pymatgen.core.structure import Molecule, Structure # type: ignore
 
 from bsym import SpaceGroup, SymmetryOperation, ConfigurationSpace, PointGroup
 from copy import copy
