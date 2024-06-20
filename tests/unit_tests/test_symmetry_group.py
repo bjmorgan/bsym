@@ -1,5 +1,6 @@
 import unittest
 from bsym import SymmetryGroup, SymmetryOperation
+from bsym.configuration import Configuration
 from unittest.mock import Mock, patch, call
 import numpy as np
 
@@ -76,6 +77,27 @@ class SymmetryGroupTestCase( unittest.TestCase ):
         s1.label = 'B'
         sg = SymmetryGroup( symmetry_operations=[ s0, s1 ] )
         self.assertEqual( sg.labels, [ 'A', 'B' ] )
-  
+
+    def test_operate_on(self):
+        s0 = Mock(spec=SymmetryOperation)
+        s1 = Mock(spec=SymmetryOperation)
+        s0.operate_on.return_value = Configuration([0, 1, 0])
+        s1.operate_on.return_value = Configuration([0, 0, 1])
+        configuration = Configuration([1, 0, 0])
+        sg = SymmetryGroup(symmetry_operations=[s0, s1])
+        all_configurations = sg.operate_on(configuration)
+        self.assertEqual(all_configurations, [Configuration([0, 1, 0]),
+                                              Configuration([0, 0, 1])])
+        
+    def test_operate_on_returns_minimal_set(self):
+        s0 = Mock(spec=SymmetryOperation)
+        s1 = Mock(spec=SymmetryOperation)
+        s0.operate_on.return_value = Configuration([0, 0, 1])
+        s1.operate_on.return_value = Configuration([0, 0, 1])
+        configuration = Configuration([1, 0, 0])
+        sg = SymmetryGroup(symmetry_operations=[s0, s1])
+        all_configurations = sg.operate_on(configuration, minimal_set=True)
+        self.assertEqual(all_configurations, [Configuration([0, 0, 1])])
+
 if __name__ == '__main__':
     unittest.main()
