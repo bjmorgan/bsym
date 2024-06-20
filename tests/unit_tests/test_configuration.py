@@ -17,6 +17,22 @@ class TestConfiguration(unittest.TestCase):
         other_configuration = Configuration([1, 1, 0])
         self.assertEqual(self.configuration == other_configuration, False)
 
+    def test_hash_equal_configurations(self):
+        config1 = Configuration([1, 1, 0])
+        config2 = Configuration([1, 1, 0])
+        self.assertEqual(hash(config1), hash(config2))
+
+    def test_hash_different_configurations(self):
+        config1 = Configuration([1, 1, 0])
+        config2 = Configuration([0, 1, 1])
+        self.assertNotEqual(hash(config1), hash(config2))
+
+    def test_hash_consistent(self):
+        config = Configuration([1, 1, 0])
+        hash_value1 = hash(config)
+        hash_value2 = hash(config)
+        self.assertEqual(hash_value1, hash_value2)
+
     def test_matches_true(self):
         config1 = Configuration([1, 1, 0])
         config2 = Configuration([1, 1, 0])

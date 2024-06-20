@@ -40,8 +40,8 @@ class Configuration:
            raise TypeError('Can only evaluate equality between two Configuration objects')
        return np.array_equal(self.vector, other.vector)
 
-    # def __hash__(self) -> int:
-    #    return hash(self.vector.tobytes())
+    def __hash__(self) -> int:
+        return hash(self.vector.tobytes())
 
     def matches(self, test_configuration: Configuration) -> bool:
         """
@@ -154,7 +154,7 @@ class Configuration:
         A numeric representation of this configuration.
 
         Examples:
-            >>> c = Configuration( [ 1, 2, 0 ] )
+            >>> c = Configuration([1, 2, 0])
             >>> c.as_number
             120
 
