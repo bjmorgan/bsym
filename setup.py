@@ -14,7 +14,7 @@ config = {
     'download_url': "https://github.com/bjmorgan/bsym/archive/%s.tar.gz" % (VERSION),
     'author_email': 'b.j.morgan@bath.ac.uk',
     'version': VERSION,
-    'install_requires': ['numpy',
+    'install_requires': ['numpy<2.0',
                          'pymatgen',
                          'tqdm'],
     'python_requires': '>=3.9',
