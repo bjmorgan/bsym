@@ -31,13 +31,12 @@ jobs:
         pytest tests/integration_tests
         pytest tests/notebook_tests
         pytest tests/unit_tests --cov=bsym --cov-report xml 
-            - name: Coveralls GitHub Action
-          uses: coverallsapp/github-action@v2
-          with:
-            file: ./coverage.lcov
-            github-token: ${{ secrets.COVERALLS_REPO_TOKEN }}
-        - name: Static type checking
-          run: |
-            mypy bsym
-      env:
-        CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_REPO_TOKEN }}
+    - name: Coveralls GitHub Action
+      uses: coverallsapp/github-action@v2.3.0
+      with:
+        file: ./coverage.lcov
+        github-token: ${{ secrets.COVERALLS_REPO_TOKEN }}
+    - name: Static type checking
+      run: |
+        mypy bsym
+
