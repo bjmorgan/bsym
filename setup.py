@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 from bsym.version import __version__ as VERSION
 
 readme = 'README.md'
-long_description = open( readme ).read()
+long_description = open(readme).read()
 
 config = {
     'description': 'A Basic Symmetry Module',
@@ -14,8 +14,10 @@ config = {
     'download_url': "https://github.com/bjmorgan/bsym/archive/%s.tar.gz" % (VERSION),
     'author_email': 'b.j.morgan@bath.ac.uk',
     'version': VERSION,
-    'install_requires': open( 'requirements.txt' ).read(),
-    'python_requires': '>=3.5',
+    'install_requires': ['numpy',
+                         'pymatgen',
+                         'tqdm'],
+    'python_requires': '>=3.7',
     'license': 'MIT',
     'packages': ['bsym', 'bsym.interface'],
     'scripts': [],
