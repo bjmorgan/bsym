@@ -17,7 +17,7 @@ config = {
     'install_requires': ['numpy',
                          'pymatgen',
                          'tqdm'],
-    'python_requires': '>=3.7',
+    'python_requires': '>=3.9',
     'license': 'MIT',
     'packages': ['bsym', 'bsym.interface'],
     'scripts': [],
