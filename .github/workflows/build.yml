@@ -18,8 +18,9 @@ jobs:
     - name: Install python dependencies
       run: |
         pip install --upgrade pip
-        pip install -U numpy
         pip install -r requirements.txt
+        pip install -U numpy
+        pip install mypy
         pip install -r tests/notebook_tests/requirements.txt
         pip install pytest
         pip install pytest-cov
@@ -30,7 +31,13 @@ jobs:
         pytest tests/integration_tests
         pytest tests/notebook_tests
         pytest tests/unit_tests --cov=bsym --cov-report xml 
-    - name: Publish code coverage
-      uses: paambaati/codeclimate-action@v2.7.5
+            - name: Coveralls GitHub Action
+          uses: coverallsapp/github-action@v2
+          with:
+            file: ./coverage.lcov
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+        - name: Static type checking
+          run: |
+            mypy bsym
       env:
         CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_REPO_TOKEN }}
