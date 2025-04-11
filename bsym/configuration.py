@@ -34,11 +34,10 @@ class Configuration:
         self.lowest_numeric_representation = None
         self.vector = np.array(vector)
 
-    def __eq__(self,
-              other: Configuration) -> bool:
-       if not isinstance(other, Configuration):
-           raise TypeError('Can only evaluate equality between two Configuration objects')
-       return np.array_equal(self.vector, other.vector)
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Configuration):
+            return NotImplemented
+        return np.array_equal(self.vector, other.vector)
 
     def __hash__(self) -> int:
         return hash(self.vector.tobytes())
