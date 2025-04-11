@@ -20,7 +20,7 @@ def is_permutation_matrix( m ):
     .. _permutation_matrix: https://en.wikipedia.org/wiki/Permutation_matrix
     
     Args:
-        m (mp.matrix): The matrix.
+        m (np.matrix): The matrix.
 
     Returns:
         (bool): True | False.
