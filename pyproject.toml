@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bsym"
+dynamic = ["version"]
+description = "A Basic Symmetry Module"
+readme = "README.md"
+authors = [
+    {name = "Benjamin J. Morgan", email = "b.j.morgan@bath.ac.uk"},
+]
+license = {text = "MIT"}
+requires-python = ">=3.9"
+dependencies = [
+    "numpy",
+    "pymatgen",
+    "tqdm",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/bjmorgan/bsym"
+"Bug Tracker" = "https://github.com/bjmorgan/bsym/issues"
+"Source Code" = "https://github.com/bjmorgan/bsym"
+
+[tool.setuptools]
+packages = ["bsym", "bsym.interface"]
+
+[tool.setuptools.dynamic]
+version = {attr = "bsym.version.__version__"}
