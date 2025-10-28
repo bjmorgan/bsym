@@ -13,3 +13,4 @@ build/
 examples/.nbgrader.log
 **/.python-version
 **/*.pyc
+**/.ipynb_checkpoints
