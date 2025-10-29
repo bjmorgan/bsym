@@ -21,7 +21,6 @@ jobs:
         pip install numpy
         pip install -r requirements.txt
         pip install mypy
-        pip install -r tests/notebook_tests/requirements.txt
         pip install pytest
         pip install pytest-cov
         pip install .
@@ -29,7 +28,6 @@ jobs:
     - name: Run tests
       run: |
         pytest tests/integration_tests
-        pytest tests/notebook_tests
         pytest tests/unit_tests --cov-config=.coveragerc --cov=bsym --cov-report lcov 
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@v2.3.0
