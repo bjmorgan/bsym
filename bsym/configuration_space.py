@@ -63,7 +63,7 @@ class ConfigurationSpace:
         using_tqdm = hasattr(generator, 'postfix')
         
         for new_permutation in generator:
-            perm_as_bytes = np.array(new_permutation).tobytes()
+            perm_as_bytes = np.array(new_permutation, dtype=np.int8).tobytes()
             if perm_as_bytes not in seen:
                 config = Configuration.from_tuple(new_permutation)
                 byte_equivalents = self.symmetry_group.get_numeric_equivalents(config)

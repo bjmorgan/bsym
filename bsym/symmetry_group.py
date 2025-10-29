@@ -252,24 +252,14 @@ class SymmetryGroup:
         """
         Direct product.
         """
-        return SymmetryGroup([s1 * s2 for s1, s2 in product( self.symmetry_operations, other.symmetry_operations)])
+        return SymmetryGroup([s1 * s2 for s1, s2 in product(self.symmetry_operations, other.symmetry_operations)])
         
     def get_numeric_equivalents(self, configuration: Configuration) -> set[bytes]:
-        """
-        Get byte representations of all symmetry-equivalent configurations.
-        
-        Uses uint8 for memory efficiency (supports up to 256 species).
-        
-        Args:
-            configuration: The configuration to transform.
-            
-        Returns:
-            set[bytes]: Set of byte representations of all equivalent configurations.
-        """
+        """Get byte representations of all symmetry-equivalent configurations."""
         transformed_vectors = configuration.vector[self.unique_index_mappings]
-        transformed_uint8 = transformed_vectors.astype(np.uint8)
+
         byte_equivalents = set(
-            vec.tobytes() for vec in transformed_uint8
+            vec.tobytes() for vec in transformed_vectors.astype(np.int8)
         )
         
         return byte_equivalents
