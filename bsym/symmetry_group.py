@@ -258,8 +258,7 @@ class SymmetryGroup:
         """
         Get byte representations of all symmetry-equivalent configurations.
         
-        This method is optimized to avoid creating intermediate Configuration objects,
-        using fast byte representation for hashing and deduplication.
+        Uses uint8 for memory efficiency (supports up to 256 species).
         
         Args:
             configuration: The configuration to transform.
@@ -267,13 +266,12 @@ class SymmetryGroup:
         Returns:
             set[bytes]: Set of byte representations of all equivalent configurations.
         """
-        # Apply all unique operations at once using batched indexing
         transformed_vectors = configuration.vector[self.unique_index_mappings]
-        
-        # Convert to bytes (fast and overflow-safe)
+        transformed_uint8 = transformed_vectors.astype(np.uint8)
         byte_equivalents = set(
-            vec.tobytes() for vec in transformed_vectors
+            vec.tobytes() for vec in transformed_uint8
         )
         
         return byte_equivalents
+        
    
