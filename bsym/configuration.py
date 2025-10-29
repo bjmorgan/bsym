@@ -30,9 +30,9 @@ class Configuration:
     """
 
     def __init__(self, vector: list[int] | NDArray[np.int_]) -> None:
-        self.count = None
-        self.lowest_numeric_representation = None
-        self.vector = np.array(vector)
+        self.count: int | None = None
+        self.lowest_numeric_representation: int | None = None
+        self.vector: np.ndarray = np.array(vector)
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Configuration):

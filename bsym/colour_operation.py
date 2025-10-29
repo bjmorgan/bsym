@@ -1,7 +1,7 @@
 from bsym import Configuration, SymmetryOperation
 import numpy as np
 
-class ColourOperation( SymmetryOperation ):
+class ColourOperation(SymmetryOperation):
     """
     This class subclasses `SymmetryOperation`.
     It defines a class of object for performing a compound operation on a
@@ -12,7 +12,12 @@ class ColourOperation( SymmetryOperation ):
     configuration vector space.
     """
 
-    def __init__( self, matrix, colour_mapping, label=None ):
+    def __init__(
+        self,
+        matrix,
+        colour_mapping,
+        label=None
+    ) -> None:
         """
         Initialise a `ColourOperation` object.
         A `ColourOperation` object behaves similarly to a `SymmetryOperation`, but has
@@ -78,7 +83,10 @@ class ColourOperation( SymmetryOperation ):
         new_configuration = Configuration( self.matrix.dot( configuration.vector ) )
         return Configuration( [ d[value] for value, d in zip( new_configuration.vector, self.colour_mapping ) ] )
     
-    def __mul__( self, other ):
+    def __mul__(
+        self: ColourOperation,
+        other: ColourOperation
+    ) -> ColourOperation:
         """
         Operate on another object with this `ColourOperation`.
 
@@ -89,9 +97,9 @@ class ColourOperation( SymmetryOperation ):
             (ColourOperation): a new `ColourOperation` instance with the resultant matrix and colour_mapping..
             (Configuration): if `other` is a `Configuration`.
         """
-        if isinstance( other, ColourOperation ):
-            new_matrix = self.matrix.dot( other.matrix )
-            new_mapping = [ {} for d in self.colour_mapping ]
+        if isinstance(other, ColourOperation):
+            new_matrix = self.matrix.dot(other.matrix)
+            new_mapping: list[dict] = [{} for d in self.colour_mapping]
             for i, (this_mapping, other_mapping) in enumerate( zip( self.colour_mapping, other.colour_mapping ) ):
                 for key in this_mapping.keys():
                     new_mapping[i][key] = this_mapping[ other_mapping[ key ] ]

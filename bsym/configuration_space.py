@@ -6,6 +6,7 @@ import numpy as np
 from itertools import combinations_with_replacement
 from collections import Counter
 from tqdm import tqdm, tqdm_notebook
+from typing import Iterator
 
 
 class ConfigurationSpace:
@@ -62,13 +63,13 @@ class ConfigurationSpace:
         working = True
         seen = set()
         unique_configurations = []
-        using_tqdm = hasattr( generator, 'postfix' )
+        using_tqdm = hasattr(generator, 'postfix')
         for new_permutation in generator:
             if permutation_as_config_number(new_permutation) not in seen:
                 config = Configuration.from_tuple(new_permutation)
                 numeric_equivalents = set(config.numeric_equivalents(self.symmetry_group.symmetry_operations))
                 config.count = len(numeric_equivalents)
-                [seen.add(i) for i in numeric_equivalents]
+                seen.update(numeric_equivalents)
                 unique_configurations.append(config)
                 if using_tqdm:
                     generator.set_postfix(found=len(unique_configurations))
@@ -106,12 +107,10 @@ class ConfigurationSpace:
             print('total number of sites: ' + str( sum( site_distribution.values())))
             print('using {:d} symmetry operations.'.format( len( self.symmetry_group.symmetry_operations)))
             print('evaluating {:d} unique permutations.'.format( total_permutations))
-        generator = unique_permutations(s)
+        generator: Iterator[tuple[int, ...]] = unique_permutations(s)
         if show_progress:
-            if show_progress=='notebook':
-                generator = tqdm_notebook(generator, total=total_permutations, unit=' permutations')
-            else:
-                generator = tqdm(generator, total=total_permutations, unit=' permutations')
+            TqdmClass = tqdm_notebook if show_progress == 'notebook' else tqdm
+            generator = TqdmClass(generator, total=total_permutations, unit=' permutations')  # type: ignore[assignment]
         return self.enumerate_configurations(generator, verbose=verbose)
 
     def unique_colourings(self, colours, verbose=False):

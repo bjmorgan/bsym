@@ -1,7 +1,7 @@
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer, SpacegroupOperations, PointGroupAnalyzer # type: ignore
-from pymatgen.util.coord import coord_list_mapping_pbc, coord_list_mapping # type: ignore
-from pymatgen.core.lattice import Lattice # type: ignore
-from pymatgen.core.structure import Molecule, Structure # type: ignore
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer, SpacegroupOperations, PointGroupAnalyzer
+from pymatgen.util.coord import coord_list_mapping_pbc, coord_list_mapping
+from pymatgen.core.lattice import Lattice
+from pymatgen.core.structure import Molecule, Structure 
 
 from bsym import SpaceGroup, SymmetryOperation, ConfigurationSpace, PointGroup
 from copy import copy
@@ -49,7 +49,7 @@ def structure_mapping_list(
     Returns:
         list of indices such that mapping_structure.sites[indices] == new_structure.sites
     """
-    return coord_list_mapping_pbc(
+    return coord_list_mapping_pbc( # type: ignore[no-any-return]
         new_structure.frac_coords,
         mapping_structure.frac_coords,
         atol=atol
@@ -70,7 +70,7 @@ def molecule_mapping_list(
     Returns:
         list of indices such that mapping_molecule.sites[indices] == new_molecule.sites
     """
-    return coord_list_mapping(
+    return coord_list_mapping( # type: ignore[no-any-return]
         new_molecule.cart_coords,
         mapping_molecule.cart_coords,
         atol=atol
