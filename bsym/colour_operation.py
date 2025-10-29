@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from bsym import Configuration, SymmetryOperation
 import numpy as np
 
