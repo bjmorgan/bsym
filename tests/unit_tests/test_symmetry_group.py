@@ -229,8 +229,8 @@ class SymmetryGroupTestCase( unittest.TestCase ):
         
         # Should get byte representations of [1, 0, 0] and [0, 1, 0]
         expected = {
-            np.array([1, 0, 0]).tobytes(),
-            np.array([0, 1, 0]).tobytes()
+            np.array([1, 0, 0]).astype(np.int8).tobytes(),
+            np.array([0, 1, 0]).astype(np.int8).tobytes()
         }
         self.assertEqual(byte_equivalents, expected)
     
