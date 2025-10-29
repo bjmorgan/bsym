@@ -132,7 +132,7 @@ class ConfigurationSpace:
         bounds: dict[int, tuple[int|None, int|None]] | None = None,
         verbose: bool = False,
         show_progress: bool | str = False
-    ) -> dict[tuple[int, int], list[Configuration]]:
+    ) -> dict[tuple[int, ...], list[Configuration]]:
         """
         Find all symmetry inequivalent configurations for all compositions within a range.
         
@@ -162,16 +162,13 @@ class ConfigurationSpace:
         """
         n_sites = self.dim
         
-        # Generate all partitions
         all_partitions = generate_partitions(n_sites, n_species)
         
-        # Generate all composition tuples
         all_compositions = []
         for partition in all_partitions:
             for composition_tuple in unique_permutations(partition):
                 all_compositions.append(composition_tuple)
         
-        # Filter by bounds if provided
         if bounds is not None:
             valid_compositions = []
             for composition_tuple in all_compositions:
@@ -181,7 +178,6 @@ class ConfigurationSpace:
         else:
             valid_compositions = all_compositions
         
-        # Setup progress bar
         if show_progress:
             if show_progress == 'notebook':
                 progress_bar = tqdm_notebook(
@@ -196,49 +192,39 @@ class ConfigurationSpace:
                     unit=" compositions"
                 )
         
-        # Container for results
         results = {}
         
-        # Process each valid composition
         for composition_tuple in valid_compositions:
             
-            # Verbose output
             if verbose:
                 print(f"Processing composition {composition_tuple}...")
             
-            # Create site_distribution (exclude zero counts)
             site_distribution = {
                 species: count
                 for species, count in enumerate(composition_tuple)
                 if count > 0
             }
             
-            # Get unique configurations for this composition
             unique_configs = self.unique_configurations(
                 site_distribution=site_distribution,
                 verbose=False,
                 show_progress=show_progress
             )
             
-            # Store results
             results[composition_tuple] = unique_configs
             
-            # Verbose output
             if verbose:
                 print(f"  Found {len(unique_configs)} unique configurations")
             
-            # Update progress bar
             if show_progress:
                 progress_bar.update(1)
                 progress_bar.set_postfix(
                     total_configs=sum(len(configs) for configs in results.values())
                 )
         
-        # Close progress bar
         if show_progress:
             progress_bar.close()
         
-        # Summary output
         if verbose:
             print(f"\nSummary:")
             print(f"  Evaluated {len(valid_compositions)} compositions")

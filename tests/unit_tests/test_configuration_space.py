@@ -351,8 +351,8 @@ class ConfigurationSpaceTestCase( unittest.TestCase ):
         # Verify tqdm was called with correct total
         mock_tqdm.assert_called_once()
         call_args = mock_tqdm.call_args
-        # Should be called with iterable of valid_compositions (length 2)
-        self.assertEqual(call_args[0][0], 2)  # total
+        # Should be called with total=2 (number of valid compositions)
+        self.assertEqual(call_args[1]['total'], 2)  # keyword arg 'total'
         
         # Verify progress bar was updated
         self.assertEqual(mock_progress_bar.update.call_count, 2)
@@ -369,7 +369,7 @@ class ConfigurationSpaceTestCase( unittest.TestCase ):
         self.unique_configurations for nested progress bars.
         """
         mock_generate_partitions.return_value = [(2, 0)]
-        mock_unique_permutations.return_value = iter([(2, 0)])
+        mock_unique_permutations.side_effect = lambda x: iter([(2, 0)])
         
         config_space = ConfigurationSpace(objects=[1, 2])
         
@@ -389,21 +389,20 @@ class ConfigurationSpaceTestCase( unittest.TestCase ):
 
 class ConfigurationSpaceModuleFunctionsTestCase( unittest.TestCase ):
       
-    def test_permutation_as_config_number( self ):
-        self.assertEqual( permutation_as_config_number( [ 1, 1, 0, 0, 1 ] ), 11001 )
+    def test_permutation_as_config_number(self):
+        self.assertEqual( permutation_as_config_number([1, 1, 0, 0, 1]), 11001)
 
-    def test_colourings_generator( self ):
-        colourings = list( colourings_generator( [ 1, 0 ], dim=3 ) )
-        expected_colourings = [ [1, 1, 1], 
-                                [0, 1, 1], [1, 0, 1], [1, 1, 0], 
-                                [0, 0, 1], [0, 1, 0], [1, 0, 0], 
-                                [0, 0, 0] ]
+    def test_colourings_generator(self):
+        colourings = list(colourings_generator([1, 0], dim=3))
+        expected_colourings = [(1, 1, 1),
+                            (0, 1, 1), (1, 0, 1), (1, 1, 0),
+                            (0, 0, 1), (0, 1, 0), (1, 0, 0),
+                            (0, 0, 0)]
         for c in colourings:
-            self.assertEqual( c in expected_colourings, True )
+            self.assertEqual(c in expected_colourings, True)
         for ec in expected_colourings:
-            self.assertEqual( ec in colourings, True )
+            self.assertEqual(ec in colourings, True)
             
 
-        
 if __name__ == '__main__':
     unittest.main()
