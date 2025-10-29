@@ -111,7 +111,12 @@ class ConfigurationSpace:
         generator: Iterator[tuple[int, ...]] = unique_permutations(s)
         if show_progress:
             TqdmClass = tqdm_notebook if show_progress == 'notebook' else tqdm
-            generator = TqdmClass(generator, total=total_permutations, unit=' permutations')  # type: ignore[assignment]
+            generator = TqdmClass( # type: ignore[assignment]
+                generator,
+                total=total_permutations,
+                unit=' permutations',
+                mininterval=0.1
+            )  
         return self.enumerate_configurations(generator, verbose=verbose)
 
     def unique_colourings(self, colours, verbose=False):
@@ -146,7 +151,8 @@ class ConfigurationSpace:
             TqdmClass = tqdm_notebook if show_progress == 'notebook' else tqdm
             progress_bar = TqdmClass(
                 desc="Compositions",
-                unit=" compositions"
+                unit=" compositions",
+                mininterval=0.1
             )
         
         results = {}
