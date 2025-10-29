@@ -4,13 +4,17 @@ Development
 Tests
 -----
 
-Automated testing of the latest commit happens
-`here <https://travis-ci.org/bjmorgan/bsym>`__.
+Automated testing of the latest commit happens via GitHub Actions.
+View the build status `here <https://github.com/bjmorgan/bsym/actions/workflows/build.yml>`__.
 
 Manual tests can be run using::
 
-    python -m unittest discover
+    pytest
 
+or using unittest directly::
+
+    python -m unittest discover
+    
 Contributing
 ------------
 

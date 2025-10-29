@@ -24,8 +24,8 @@ Indices and tables
 
 .. |DOI| image:: https://zenodo.org/badge/19279643.svg
    :target: https://zenodo.org/badge/latestdoi/19279643
-.. |Build Status| image:: https://travis-ci.org/bjmorgan/bsym.svg?branch=master
-   :target: https://travis-ci.org/bjmorgan/bsym
+.. |Build Status| image:: https://github.com/bjmorgan/bsym/actions/workflows/build.yml/badge.svg
+   :target: https://github.com/bjmorgan/bsym/actions/workflows/build.yml
 .. |Test Coverage| image:: https://codeclimate.com/github/bjmorgan/bsym/badges/coverage.svg
    :target: https://codeclimate.com/github/bjmorgan/bsym/coverage
 .. |Documentation Status| image:: https://readthedocs.org/projects/bsym/badge/?version=latest
