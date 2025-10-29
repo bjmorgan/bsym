@@ -3,14 +3,15 @@ from unittest.mock import Mock, MagicMock, patch, call
 import numpy as np
 from pymatgen.core.lattice import Lattice
 from pymatgen.core.structure import Molecule, Structure
-from bsym.interface.pymatgen import ( unique_symmetry_operations_as_vectors_from_structure, 
-                                      space_group_from_structure, 
-                                      parse_site_distribution, 
-                                      unique_structure_substitutions, 
-                                      new_structure_from_substitution, 
-                                      configuration_space_from_structure, 
-                                      space_group_symbol_from_structure, 
-                                      configuration_space_from_molecule )
+from bsym.interface.pymatgen import (unique_symmetry_operations_as_vectors_from_structure, 
+                                     space_group_from_structure, 
+                                     parse_site_distribution, 
+                                     unique_structure_substitutions, 
+                                     new_structure_from_substitution, 
+                                     configuration_space_from_structure, 
+                                     space_group_symbol_from_structure, 
+                                     configuration_space_from_molecule,
+                                     unique_structure_substitutions_by_composition)
 
 from itertools import permutations
 from bsym import ( SymmetryOperation, 
@@ -185,6 +186,76 @@ class TestPymatgenInterface( unittest.TestCase ):
     def test_space_group_symbol_from_structure( self ):
         # integration test
         self.assertEqual( space_group_symbol_from_structure( self.structure ), 'Fm-3m' )
+        
+    def test_unique_structure_substitutions_by_composition_binary_on_square(self):
+        """Test binary substitution on 4-site square lattice gives all expected compositions"""
+        # Create a 4-site square lattice structure
+        coords = np.array([[0.0, 0.0, 0.0],
+                           [0.5, 0.0, 0.0],
+                           [0.0, 0.5, 0.0],
+                           [0.5, 0.5, 0.0]])
+        atom_list = ['X'] * 4  # Placeholder atoms to be substituted
+        lattice = Lattice.from_parameters(a=2.0, b=2.0, c=2.0, alpha=90, beta=90, gamma=90)
+        parent_structure = Structure(lattice, atom_list, coords)
+        
+        # Perform composition-based substitution
+        results = unique_structure_substitutions_by_composition(
+            parent_structure,
+            'X',
+            ['Li', 'Na']
+        )
+        
+        # Should have 5 compositions: (4,0), (3,1), (2,2), (1,3), (0,4)
+        self.assertEqual(len(results), 5)
+        
+        # Check (4, 0): all Li
+        self.assertIn((4, 0), results)
+        self.assertEqual(len(results[(4, 0)]), 1)
+        self.assertEqual(results[(4, 0)][0].composition.get_atomic_fraction('Li'), 1.0)
+        self.assertEqual(results[(4, 0)][0].number_of_equivalent_configurations, 1)
+        
+        # Check (3, 1): 3 Li, 1 Na
+        self.assertIn((3, 1), results)
+        self.assertEqual(len(results[(3, 1)]), 1)
+        self.assertEqual(results[(3, 1)][0].composition.get_atomic_fraction('Li'), 0.75)
+        self.assertEqual(results[(3, 1)][0].number_of_equivalent_configurations, 4)
+        
+        # Check (2, 2): 2 Li, 2 Na - should have 2 unique structures
+        self.assertIn((2, 2), results)
+        self.assertEqual(len(results[(2, 2)]), 2)
+        total_degeneracy_2_2 = sum(s.number_of_equivalent_configurations for s in results[(2, 2)])
+        self.assertEqual(total_degeneracy_2_2, 6)  # Should be C(4,2) = 6
+        # Check stoichiometry
+        for s in results[(2, 2)]:
+            self.assertEqual(s.composition.get_atomic_fraction('Li'), 0.5)
+            self.assertEqual(s.composition.get_atomic_fraction('Na'), 0.5)
+        
+        # Verify one structure has adjacent arrangement, one has diagonal
+        distances_squared = []
+        for s in results[(2, 2)]:
+            li_indices = s.indices_from_symbol('Li')
+            na_indices = s.indices_from_symbol('Na')
+            # Distance between the two Li atoms
+            dist_sq = s.get_distance(li_indices[0], li_indices[1])**2
+            distances_squared.append(dist_sq)
+        distances_squared = sorted(distances_squared)
+        np.testing.assert_array_almost_equal(distances_squared, [1.0, 2.0])  # adjacent=1, diagonal=√2
+        
+        # Check (1, 3): 1 Li, 3 Na
+        self.assertIn((1, 3), results)
+        self.assertEqual(len(results[(1, 3)]), 1)
+        self.assertEqual(results[(1, 3)][0].composition.get_atomic_fraction('Li'), 0.25)
+        self.assertEqual(results[(1, 3)][0].number_of_equivalent_configurations, 4)
+        
+        # Check (0, 4): all Na
+        self.assertIn((0, 4), results)
+        self.assertEqual(len(results[(0, 4)]), 1)
+        self.assertEqual(results[(0, 4)][0].composition.get_atomic_fraction('Na'), 1.0)
+        self.assertEqual(results[(0, 4)][0].number_of_equivalent_configurations, 1)
+        
+        # Verify total unique configurations
+        total_unique = sum(len(configs) for configs in results.values())
+        self.assertEqual(total_unique, 6)
 
 if __name__ == '__main__':
     unittest.main()

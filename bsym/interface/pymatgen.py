@@ -309,4 +309,96 @@ def new_structure_from_substitution( parent_structure, site_substitution_index, 
     for i, spec in zip( site_substitution_index, new_species_list ):
         s[i] = spec
     return s
+    
+def unique_structure_substitutions_by_composition(
+    structure,
+    to_substitute,
+    species_list,
+    bounds=None,
+    verbose=False,
+    atol=1e-5,
+    show_progress=False
+):
+    """
+    Generate all symmetry-unique structures for all compositions of substituting species.
+    
+    Args:
+        structure (pymatgen.Structure): The parent structure.
+        to_substitute (str): Atom label for the sites to be substituted.
+        species_list (list[str]): List of species to substitute, e.g., ['Li', 'Na', 'Mg'].
+                                  Order determines composition tuple indices.
+        bounds (dict, optional): Occupancy bounds for each species.
+                                Keys are species names, values are (min, max) tuples.
+                                e.g., {'Li': (1, 3), 'Na': (0, 2)}
+        verbose (bool): Verbose output.
+        atol (float): Tolerance factor for coordinate mapping. Default=1e-5.
+        show_progress (bool): Show progress bars. Can be True, False, or "notebook".
+    
+    Returns:
+        dict: Mapping from composition tuples to lists of Structure objects.
+              Keys are tuples like (2, 1, 1) corresponding to species_list order.
+              Each Structure has a `number_of_equivalent_configurations` attribute.
+    
+    Example:
+        >>> results = unique_structure_substitutions_by_composition(
+        ...     structure, 'X', ['Li', 'Na'])
+        >>> # results[(2, 2)] gives structures with 2 Li and 2 Na
+    """
+    # Get sites to substitute
+    site_substitution_index = list(structure.indices_from_symbol(to_substitute))
+    n_sites = len(site_substitution_index)
+    
+    # Create configuration space
+    if isinstance(structure, Structure):
+        config_space = configuration_space_from_structure(structure, subset=site_substitution_index, atol=atol)
+    elif isinstance(structure, Molecule):
+        structure = Molecule(structure.species, structure.cart_coords - structure.center_of_mass)
+        config_space = configuration_space_from_molecule(structure, subset=site_substitution_index, atol=atol)
+    else:
+        raise ValueError("pymatgen Structure or Molecule object expected")
+    
+    # Create species name to index mapping
+    species_to_index = {species: i for i, species in enumerate(species_list)}
+    
+    # Convert bounds from species names to indices if provided
+    bounds_numeric = None
+    if bounds is not None:
+        bounds_numeric = {}
+        for species, (min_val, max_val) in bounds.items():
+            if species not in species_to_index:
+                raise ValueError(f"Species '{species}' in bounds not found in species_list")
+            index = species_to_index[species]
+            bounds_numeric[index] = (min_val, max_val)
+    
+    # Get unique configurations by composition
+    configs_by_composition = config_space.unique_configurations_by_composition(
+        n_species=len(species_list),
+        bounds=bounds_numeric,
+        verbose=verbose,
+        show_progress=show_progress
+    )
+    
+    # Convert configurations to structures
+    results = {}
+    for composition_tuple, configurations in configs_by_composition.items():
+        structures = []
+        for config in configurations:
+            # Map configuration indices to species names
+            species_for_sites = [species_list[species_idx] for species_idx in config.tolist()]
+            
+            # Create new structure
+            new_structure = new_structure_from_substitution(
+                structure,
+                site_substitution_index,
+                species_for_sites
+            )
+            
+            # Add metadata
+            new_structure.number_of_equivalent_configurations = config.count
+            
+            structures.append(new_structure)
+        
+        results[composition_tuple] = structures
+    
+    return results
 
