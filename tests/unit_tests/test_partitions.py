@@ -99,7 +99,7 @@ class ComputeMappingVectorTestCase(unittest.TestCase):
 	def test_identity_mapping(self):
 		"""Same partition should give identity mapping"""
 		result = compute_mapping_vector((2, 1, 1), (2, 1, 1))
-		self.assertEqual(result, [1, 2, 3])
+		self.assertEqual(result, [0, 1, 2])
 
 	def test_swap_first_two_elements(self):
 		"""Swapping first two elements: A₂BC → AB₂C"""
@@ -107,17 +107,17 @@ class ComputeMappingVectorTestCase(unittest.TestCase):
 		# Permuted:  A=1, B=2, C=1
 		# Should swap A↔B
 		result = compute_mapping_vector((2, 1, 1), (1, 2, 1))
-		self.assertEqual(result, [2, 1, 3])
+		self.assertEqual(result, [1, 0, 2])
 
 	def test_partitions_with_zeros(self):
 		"""Partitions with trailing zeros: A₃B → BA₃"""
 		result = compute_mapping_vector((3, 1, 0), (1, 3, 0))
-		self.assertEqual(result, [2, 1, 3])
+		self.assertEqual(result, [1, 0, 2])
 
 	def test_mapping_is_valid_permutation(self):
 		"""Mapping should be a valid permutation of 1..k"""
 		result = compute_mapping_vector((3, 2, 1), (1, 3, 2))
-		self.assertEqual(sorted(result), list(range(1, len(result) + 1)))
+		self.assertEqual(sorted(result), list(range(len(result))))
 	
 		
 class SatisfiesBoundsTestCase(unittest.TestCase):

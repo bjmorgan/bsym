@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock, patch
 from bsym import ConfigurationSpace, SymmetryGroup, SymmetryOperation, Configuration
-from bsym.configuration_space import permutation_as_config_number, colourings_generator
+from bsym.configuration_space import permutation_as_config_number, colourings_generator, apply_species_mapping
 import numpy as np
 import io
 
@@ -95,33 +95,6 @@ class ConfigurationSpaceTestCase( unittest.TestCase ):
     
     @patch('bsym.configuration_space.generate_partitions')
     @patch('bsym.configuration_space.unique_permutations')
-    def test_unique_configurations_by_composition_calls_unique_configurations(
-        self, mock_unique_permutations, mock_generate_partitions):
-        """
-        Test that the method calls self.unique_configurations with correct
-        site_distribution for each composition.
-        """
-        mock_generate_partitions.return_value = [(2, 1)]
-        mock_unique_permutations.return_value = iter([(2, 1), (1, 2)])
-        
-        config_space = ConfigurationSpace(objects=[1, 2, 3])
-        with patch.object(config_space, 'unique_configurations', return_value=[]) as mock_unique_configs:
-            config_space.unique_configurations_by_composition(n_species=2)
-        
-        self.assertEqual(mock_unique_configs.call_count, 2)
-        
-        # Check first call: composition (2, 1) → site_distribution {0: 2, 1: 1}
-        first_call_kwargs = mock_unique_configs.call_args_list[0][1]
-        self.assertEqual(first_call_kwargs['site_distribution'], {0: 2, 1: 1})
-        self.assertEqual(first_call_kwargs['verbose'], False)
-        self.assertEqual(first_call_kwargs['show_progress'], False)
-        
-        # Check second call: composition (1, 2) → site_distribution {0: 1, 1: 2}
-        second_call_kwargs = mock_unique_configs.call_args_list[1][1]
-        self.assertEqual(second_call_kwargs['site_distribution'], {0: 1, 1: 2})
-    
-    @patch('bsym.configuration_space.generate_partitions')
-    @patch('bsym.configuration_space.unique_permutations')
     def test_unique_configurations_by_composition_excludes_zero_counts_from_site_distribution(
         self, mock_unique_permutations, mock_generate_partitions):
         """
@@ -145,33 +118,45 @@ class ConfigurationSpaceTestCase( unittest.TestCase ):
     def test_unique_configurations_by_composition_stores_configs_under_correct_keys(
         self, mock_unique_permutations, mock_generate_partitions):
         """
-        Test that configurations returned by unique_configurations are stored
-        in the results dict under the correct composition tuple key.
+        Test that configurations are stored under correct composition keys.
+        Canonical composition is analyzed, non-canonical are relabeled.
         """
         mock_generate_partitions.return_value = [(2, 1)]
         mock_unique_permutations.return_value = iter([(2, 1), (1, 2)])
         
-        # Create distinguishable mock configurations
+        # Create mock configuration for canonical
         config_a = Mock(spec=Configuration)
         config_a.label = 'a'
-        config_b = Mock(spec=Configuration)
-        config_b.label = 'b'
+        config_a.vector = np.array([0, 0, 1])  # 2 of species 0, 1 of species 1
+        config_a.count = 3
         
         config_space = ConfigurationSpace(objects=[1, 2, 3])
         
         def mock_unique_configs_side_effect(site_distribution, **kwargs):
-            if site_distribution == {0: 2, 1: 1}:
+            if site_distribution == {0: 2, 1: 1}:  # canonical (2, 1)
                 return [config_a]
-            elif site_distribution == {0: 1, 1: 2}:
-                return [config_b]
+            else:
+                raise ValueError(f"Unexpected site_distribution: {site_distribution}")
         
         with patch.object(config_space, 'unique_configurations', 
-                         side_effect=mock_unique_configs_side_effect):
+                          side_effect=mock_unique_configs_side_effect):
             result = config_space.unique_configurations_by_composition(n_species=2)
         
+        # Both compositions should be in results
         self.assertEqual(len(result), 2)
+        self.assertIn((2, 1), result)
+        self.assertIn((1, 2), result)
+        
+        # Canonical (2, 1) should have the original mock
         self.assertEqual(result[(2, 1)], [config_a])
-        self.assertEqual(result[(1, 2)], [config_b])
+        
+        # Non-canonical (1, 2) should have relabeled version
+        self.assertEqual(len(result[(1, 2)]), 1)
+        relabeled = result[(1, 2)][0]
+        
+        # Check relabelled config has correct species mapping: [0,0,1] → [1,1,0]
+        np.testing.assert_array_equal(relabeled.vector, np.array([1, 1, 0]))
+        self.assertEqual(relabeled.count, 3)  # Count should be preserved
     
     @patch('bsym.configuration_space.generate_partitions')
     @patch('bsym.configuration_space.unique_permutations')
@@ -305,12 +290,15 @@ class ConfigurationSpaceTestCase( unittest.TestCase ):
     def test_unique_configurations_by_composition_verbose_true(
         self, mock_stdout, mock_unique_permutations, mock_generate_partitions):
         """
-        Test that verbose=True prints per-composition and summary information.
+        Test that verbose=True prints per-partition and summary information.
         """
         mock_generate_partitions.return_value = [(2, 1)]
         mock_unique_permutations.return_value = iter([(2, 1), (1, 2)])
         
         mock_config = Mock(spec=Configuration)
+        mock_config.vector = np.array([0, 0, 1])
+        mock_config.count = 1
+        
         config_space = ConfigurationSpace(objects=[1, 2, 3])
         
         with patch.object(config_space, 'unique_configurations', return_value=[mock_config]):
@@ -318,14 +306,14 @@ class ConfigurationSpaceTestCase( unittest.TestCase ):
         
         output = mock_stdout.getvalue()
         
-        # Check for per-composition output
-        self.assertIn('Processing composition (2, 1)', output)
+        # Check for per-partition output
+        self.assertIn('Processing partition (2, 1)', output)
         self.assertIn('Found 1 unique configurations', output)
-        self.assertIn('Processing composition (1, 2)', output)
         
         # Check for summary output
         self.assertIn('Summary:', output)
-        self.assertIn('Evaluated 2 compositions', output)
+        self.assertIn('Analyzed 1 partitions', output)
+        self.assertIn('Generated 2 compositions', output)
         self.assertIn('Total unique configurations: 2', output)
     
     @patch('bsym.configuration_space.generate_partitions')
@@ -348,13 +336,10 @@ class ConfigurationSpaceTestCase( unittest.TestCase ):
         with patch.object(config_space, 'unique_configurations', return_value=[]):
             config_space.unique_configurations_by_composition(n_species=2, show_progress=True)
         
-        # Verify tqdm was called with correct total
+        # Verify tqdm was called (without checking total since it's now indeterminate)
         mock_tqdm.assert_called_once()
-        call_args = mock_tqdm.call_args
-        # Should be called with total=2 (number of valid compositions)
-        self.assertEqual(call_args[1]['total'], 2)  # keyword arg 'total'
         
-        # Verify progress bar was updated
+        # Verify progress bar was updated (once per composition: (2,1) and (1,2))
         self.assertEqual(mock_progress_bar.update.call_count, 2)
         
         # Verify progress bar was closed
@@ -386,6 +371,82 @@ class ConfigurationSpaceTestCase( unittest.TestCase ):
         
         call_kwargs = mock_unique_configs.call_args[1]
         self.assertEqual(call_kwargs['show_progress'], False)
+        
+    @patch('bsym.configuration_space.generate_partitions')
+    @patch('bsym.configuration_space.unique_permutations')
+    def test_unique_configurations_by_composition_only_analyzes_canonical_compositions(
+        self, mock_unique_permutations, mock_generate_partitions):
+        """
+        Test that symmetry analysis is only performed on canonical compositions.
+        
+        For a 2-site system with 2 species:
+        - Compositions: (2, 0), (1, 1), (0, 2)
+        - (2, 0) and (0, 2) are related by species exchange
+        - Only (2, 0) and (1, 1) should undergo symmetry analysis
+        - All three compositions should be present in the output
+        """
+        mock_generate_partitions.return_value = [(2, 0), (1, 1)]
+        mock_unique_permutations.side_effect = [
+            iter([(2, 0), (0, 2)]),  # permutations of partition (2, 0)
+            iter([(1, 1)])           # permutations of partition (1, 1)
+        ]
+        
+        # Create mock configurations
+        mock_config_2_0 = Mock(spec=Configuration)
+        mock_config_2_0.vector = np.array([0, 0])  # Both sites are species 0
+        mock_config_2_0.count = 1
+        
+        mock_config_1_1 = Mock(spec=Configuration)
+        mock_config_1_1.vector = np.array([0, 1])  # One of each species
+        mock_config_1_1.count = 1
+        
+        mock_config_0_2 = Mock(spec=Configuration)  # Shouldn't be needed if working correctly
+        mock_config_0_2.vector = np.array([1, 1])  # Both sites are species 1
+        mock_config_0_2.count = 1
+        
+        config_space = ConfigurationSpace(objects=[1, 2])
+        
+        # Mock unique_configurations to return different configs for different compositions
+        def mock_unique_configs_side_effect(site_distribution, **kwargs):
+            if site_distribution == {0: 2}:  # composition (2, 0)
+                return [mock_config_2_0]
+            elif site_distribution == {0: 1, 1: 1}:  # composition (1, 1)
+                return [mock_config_1_1]
+            elif site_distribution == {1: 2}:  # composition (0, 2) - shouldn't be called
+                return [mock_config_0_2]
+            else:
+                return []  # Default fallback
+        
+        with patch.object(config_space, 'unique_configurations',
+                         side_effect=mock_unique_configs_side_effect) as mock_unique_configs:
+            result = config_space.unique_configurations_by_composition(n_species=2)
+        
+        # Verify unique_configurations called exactly twice (not for (0, 2))
+        self.assertEqual(mock_unique_configs.call_count, 2)
+        
+        # Verify calls for (2, 0) and (1, 1)
+        call_args_list = mock_unique_configs.call_args_list
+        called_site_distributions = [call[1]['site_distribution'] for call in call_args_list]
+        self.assertIn({0: 2}, called_site_distributions)
+        self.assertIn({0: 1, 1: 1}, called_site_distributions)
+        
+        # Verify (0, 2) was NOT analyzed (no site_distribution={1: 2})
+        self.assertNotIn({1: 2}, called_site_distributions)
+        
+        # Verify all three compositions present in output
+        self.assertEqual(len(result), 3)
+        self.assertIn((2, 0), result)
+        self.assertIn((1, 1), result)
+        self.assertIn((0, 2), result)
+        
+        # Verify each composition returns a list
+        self.assertIsInstance(result[(2, 0)], list)
+        self.assertIsInstance(result[(1, 1)], list)
+        self.assertIsInstance(result[(0, 2)], list)
+        
+        # Verify (0, 2) has configurations (generated from (2, 0))
+        self.assertEqual(len(result[(0, 2)]), len(result[(2, 0)]))
+    
 
 class ConfigurationSpaceModuleFunctionsTestCase( unittest.TestCase ):
       
@@ -402,6 +463,61 @@ class ConfigurationSpaceModuleFunctionsTestCase( unittest.TestCase ):
             self.assertEqual(c in expected_colourings, True)
         for ec in expected_colourings:
             self.assertEqual(ec in colourings, True)
+            
+    def test_apply_species_mapping_identity(self):
+        """Identity mapping should return equivalent configuration."""
+        config = Configuration([0, 1, 0, 1])
+        config.count = 3
+        mapping = [0, 1]  # No change
+        
+        result = apply_species_mapping(config, mapping)
+        
+        np.testing.assert_array_equal(result.vector, np.array([0, 1, 0, 1]))
+        self.assertEqual(result.count, 3)
+        self.assertIsNot(result, config)  # Should be a new object
+    
+    def test_apply_species_mapping_binary_swap(self):
+        """Swap two species: 0↔1."""
+        config = Configuration([0, 0, 1])
+        config.count = 2
+        mapping = [1, 0]  # Swap species 0 and 1
+        
+        result = apply_species_mapping(config, mapping)
+        
+        np.testing.assert_array_equal(result.vector, np.array([1, 1, 0]))
+        self.assertEqual(result.count, 2)
+    
+    def test_apply_species_mapping_ternary_rotation(self):
+        """Three-species rotation: 0→1, 1→2, 2→0."""
+        config = Configuration([0, 1, 2, 0])
+        config.count = 5
+        mapping = [1, 2, 0]  # Rotate: 0→1, 1→2, 2→0
+        
+        result = apply_species_mapping(config, mapping)
+        
+        np.testing.assert_array_equal(result.vector, np.array([1, 2, 0, 1]))
+        self.assertEqual(result.count, 5)
+    
+    def test_apply_species_mapping_partial_swap(self):
+        """Swap first two of three species: 0↔1, keep 2."""
+        config = Configuration([0, 1, 2, 1, 0])
+        config.count = 10
+        mapping = [1, 0, 2]  # Swap 0↔1, keep 2
+        
+        result = apply_species_mapping(config, mapping)
+        
+        np.testing.assert_array_equal(result.vector, np.array([1, 0, 2, 0, 1]))
+        self.assertEqual(result.count, 10)
+    
+    def test_apply_species_mapping_preserves_count(self):
+        """Degeneracy count should always be preserved."""
+        config = Configuration([0, 1])
+        config.count = 42
+        mapping = [1, 0]
+        
+        result = apply_species_mapping(config, mapping)
+        
+        self.assertEqual(result.count, 42)
             
 
 if __name__ == '__main__':

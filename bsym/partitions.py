@@ -41,22 +41,19 @@ def compute_mapping_vector(
 	permuted_partition: tuple[int, ...]
 ) -> list[int]:
 	"""
-	Compute 1-indexed mapping vector from canonical to permuted partition.
-	
-	The mapping vector describes how to relabel species when transforming
-	from one composition to another in the same partition.
+	Compute 0-indexed mapping vector from canonical to permuted partition.
 	
 	Args:
 		canonical_partition: The canonical (first) permutation of a partition.
 		permuted_partition: A permutation of the canonical partition.
 		
 	Returns:
-		A 1-indexed list where mapping[i] indicates which species position
+		A 0-indexed list where mapping[i] indicates which species position
 		in the permuted partition corresponds to position i in canonical.
 		
 	Example:
 		>>> compute_mapping_vector((2, 1, 1), (1, 2, 1))
-		[2, 1, 3]  # Swap species 0↔1, keep species 2
+		[1, 0, 2]  # Swap species 0↔1, keep species 2
 	"""
 	mapping = []
 	permuted_list = list(permuted_partition)
@@ -66,7 +63,7 @@ def compute_mapping_vector(
 		# Find matching value in permuted that hasn't been used
 		for i, permuted_val in enumerate(permuted_list):
 			if permuted_val == canonical_val and not used[i]:
-				mapping.append(i + 1)  # 1-indexed
+				mapping.append(i)  # Changed from i + 1
 				used[i] = True
 				break
 	

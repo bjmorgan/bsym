@@ -21,7 +21,7 @@ def structure_cartesian_coordinates_mapping( structure, symmop ):
     """
     return structure.lattice.get_cartesian_coords( symmop.operate_multi( structure.frac_coords ) )
 
-def molecule_cartesian_coordinates_mapping( molecule, symmop ):
+def molecule_cartesian_coordinates_mapping(molecule, symmop):
     """
     Maps the coordinates of pymatgen ``Molecule`` according to a ``SymmOp`` symmetry operation.
 
@@ -32,9 +32,13 @@ def molecule_cartesian_coordinates_mapping( molecule, symmop ):
     Returns
         (np.array):                The mapped Cartesian coordinates.
     """
-    return symmop.operate_multi( molecule.cart_coords )
+    return symmop.operate_multi(molecule.cart_coords)
 
-def structure_mapping_list( new_structure, mapping_structure, atol ):
+def structure_mapping_list(
+    new_structure: Structure,
+    mapping_structure: Structure,
+    atol: float
+) -> list[int]:
     """
     Gives the index mapping between two pymatgen ``Structure`` objects.
 
@@ -45,9 +49,17 @@ def structure_mapping_list( new_structure, mapping_structure, atol ):
     Returns:
         list of indices such that mapping_structure.sites[indices] == new_structure.sites
     """
-    return coord_list_mapping_pbc( new_structure.frac_coords, mapping_structure.frac_coords, atol=atol )
+    return coord_list_mapping_pbc(
+        new_structure.frac_coords,
+        mapping_structure.frac_coords,
+        atol=atol
+    )
 
-def molecule_mapping_list( new_molecule, mapping_molecule, atol ):
+def molecule_mapping_list(
+    new_molecule: Molecule,
+    mapping_molecule: Molecule,
+    atol: float
+) -> list[int]:
     """
     Gives the index mapping between two pymatgen ``Molecule`` objects.
 
@@ -58,9 +70,18 @@ def molecule_mapping_list( new_molecule, mapping_molecule, atol ):
     Returns:
         list of indices such that mapping_molecule.sites[indices] == new_molecule.sites
     """
-    return coord_list_mapping( new_molecule.cart_coords, mapping_molecule.cart_coords, atol=atol )
+    return coord_list_mapping(
+        new_molecule.cart_coords,
+        mapping_molecule.cart_coords,
+        atol=atol
+    )
 
-def unique_symmetry_operations_as_vectors_from_structure( structure, verbose=False, subset=None, atol=1e-5 ):
+def unique_symmetry_operations_as_vectors_from_structure(
+    structure: Structure,
+    verbose: bool=False,
+    subset: list[int] | None = None,
+    atol: float=1e-5
+) -> list[list]:
     """
     Uses `pymatgen`_ symmetry analysis to find the minimum complete set of symmetry operations for the space group of a structure.
 
