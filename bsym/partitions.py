@@ -1,3 +1,7 @@
+from typing import TypeVar
+
+K = TypeVar('K', int, str)
+
 def generate_partitions(
 	n: int,
 	k: int,
@@ -69,8 +73,8 @@ def compute_mapping_vector(
 	return mapping
 
 def satisfies_bounds(
-	composition: dict[str, int],
-	occupancy_bounds: dict[str, tuple[int | None, int | None]]
+	composition: dict[K, int],
+	occupancy_bounds: dict[K, tuple[int | None, int | None]]
 ) -> bool:
 	"""
 	Check if composition satisfies occupancy bounds.

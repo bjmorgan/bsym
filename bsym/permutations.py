@@ -2,7 +2,15 @@ from collections import Counter
 from math import factorial
 from functools import reduce
 from operator import mul
-from typing import Generator
+from typing import Sequence, Generator, TypeVar, Protocol, Any
+
+class SupportsRichComparison(Protocol):
+    def __lt__(self, other: Any) -> bool: ...
+    def __le__(self, other: Any) -> bool: ...
+    def __gt__(self, other: Any) -> bool: ...
+    def __ge__(self, other: Any) -> bool: ...
+
+T = TypeVar('T', bound=SupportsRichComparison)
 
 def flatten_list(this_list: list[list]) -> list:
     return [item for sublist in this_list for item in sublist]
@@ -21,7 +29,7 @@ def number_of_unique_permutations(seq: list) -> int:
     factorials = list(map(factorial, times_included))
     return int(factorial(len(seq)) / reduce(mul, factorials))
 
-def unique_permutations(seq: list) -> Generator[tuple, None, None]:
+def unique_permutations(seq: Sequence[T]) -> Generator[tuple[T, ...], None, None]:
     """
     Yield only unique permutations of seq in an efficient way.
 

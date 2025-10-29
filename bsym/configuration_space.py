@@ -6,6 +6,7 @@ from itertools import combinations_with_replacement
 from collections import Counter
 from tqdm import tqdm, tqdm_notebook
 
+
 class ConfigurationSpace:
 
     def __init__( self, objects, symmetry_group=None ):
@@ -179,18 +180,12 @@ class ConfigurationSpace:
             valid_compositions = all_compositions
         
         if show_progress:
-            if show_progress == 'notebook':
-                progress_bar = tqdm_notebook(
-                    total=len(valid_compositions),
-                    desc="Compositions",
-                    unit=" compositions"
-                )
-            else:
-                progress_bar = tqdm(
-                    total=len(valid_compositions),
-                    desc="Compositions", 
-                    unit=" compositions"
-                )
+            TqdmClass = tqdm_notebook if show_progress == 'notebook' else tqdm
+            progress_bar = TqdmClass(
+                total=len(valid_compositions),
+                desc="Compositions",
+                unit=" compositions"
+            )
         
         results = {}
         
