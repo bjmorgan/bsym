@@ -126,12 +126,12 @@ class SymmetryOperation:
             a new SymmetryOperation object
         """
         if not count_from_zero:
-            vector = [ x - 1 for x in vector ]
+            vector = [x - 1 for x in vector]
         dim = len( vector )
-        matrix = np.zeros( ( dim, dim ) )
-        for index, element in enumerate( vector ):
-            matrix[ element, index ] = 1
-        new_symmetry_operation = cls( matrix, label=label )
+        matrix = np.zeros((dim, dim))
+        for index, element in enumerate(vector):
+            matrix[element, index] = 1
+        new_symmetry_operation = cls(matrix, label=label)
         return new_symmetry_operation
 
     def similarity_transform( self, s, label=None ):

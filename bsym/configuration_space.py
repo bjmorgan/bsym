@@ -44,38 +44,40 @@ class ConfigurationSpace:
         to_return += "\n".join(self.symmetry_group.__repr__().split("\n")[1:])
         return to_return
 
-    def enumerate_configurations(
-        self,
-        generator,
-        verbose=False):
+    def enumerate_configurations(self, generator, verbose=False):
         """
         Find all symmetry inequivalent configurations within the set produced by
         `generator`.
-
+        
         Args:
             generator (:obj:`generator`): Generator object, that yields the configurations
                 to search through.
             verbose (opt:default=False): Print verbose output.
-   
+        
         Returns:
             unique_configurations (list): A list of :any:`Configuration` objects, for each symmetry
-                                          inequivalent configuration. 
+                                        inequivalent configuration. 
         """
-        working = True
         seen = set()
         unique_configurations = []
         using_tqdm = hasattr(generator, 'postfix')
+        
         for new_permutation in generator:
-            if permutation_as_config_number(new_permutation) not in seen:
+            perm_as_bytes = np.array(new_permutation).tobytes()
+            if perm_as_bytes not in seen:
                 config = Configuration.from_tuple(new_permutation)
-                numeric_equivalents = set(config.numeric_equivalents(self.symmetry_group.symmetry_operations))
-                config.count = len(numeric_equivalents)
-                seen.update(numeric_equivalents)
+                byte_equivalents = self.symmetry_group.get_numeric_equivalents(config)
+                config.count = len(byte_equivalents)
+                seen.update(byte_equivalents)
                 unique_configurations.append(config)
                 if using_tqdm:
                     generator.set_postfix(found=len(unique_configurations))
+        
         if verbose:
             print('unique configurations: {} / {}'.format(len(unique_configurations), len(seen)))
+        
+        return unique_configurations
+        
         return unique_configurations
 
     def unique_configurations(self,
