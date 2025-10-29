@@ -11,12 +11,28 @@ import bsym
 # Add any Sphinx extension module names here, as strings
 extensions = [
     'sphinx.ext.autodoc',
-    'myst_parser',
+    'myst_nb',  # Replaces myst_parser for notebooks
     'sphinx.ext.intersphinx',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
-    'nbsphinx'
+]
+
+# MyST-NB settings
+nb_execution_mode = "cache"  # or "auto" to always re-execute
+nb_execution_timeout = 300  # 5 minutes max per cell
+nb_execution_allow_errors = False
+nb_merge_streams = True
+
+# Kernel to use for execution
+nb_kernel_rgx = "python3"
+
+# Configure MyST parser
+myst_enable_extensions = [
+    "colon_fence",  # ::: can be used instead of ```
+    "deflist",
+    "dollarmath",  # $ and $$ for math
+    "amsmath",
 ]
 
 # nbsphinx settings
@@ -30,7 +46,10 @@ nbsphinx_prompt_width = "0"
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
-source_suffix = ['.rst', '.md']
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.md': 'myst-nb',
+}
 
 # The master toctree document.
 master_doc = 'index'

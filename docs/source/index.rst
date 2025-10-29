@@ -9,11 +9,11 @@ bsym - A basic symmetry module
    :maxdepth: 2
    :caption: Contents:
 
-   introduction
-   installation
-   examples/bsym_examples
+   getting_started/index
+   theory/index
+   user_guide/index
    api/modules
-   development
+   examples/bsym_examples
 
 Indices and tables
 ==================
