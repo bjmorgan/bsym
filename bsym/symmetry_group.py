@@ -63,32 +63,40 @@ class SymmetryGroup:
         return( cls( symmetry_operations = symmetry_operations ) )
 
     @classmethod
-    def read_from_file_with_labels( cls, filename ):
+    def read_from_file_with_labels(cls, filename: str) -> SymmetryGroup:
         """
         Create a :any:`SymmetryGroup` object from a file, with labelled symmetry operations.
-
-        The file format should be a series of numerical mappings representing each symmetry operation, prepended with a string that will be used as a label.
-
+        
+        The file format should be a series of numerical mappings representing each 
+        symmetry operation, prepended with a string that will be used as a label.
+        
         e.g. for a pair of equivalent sites::
-
+        
             # example input file to define the spacegroup for a pair of equivalent sites
             E  1 2
             C2 2 1
-
+        
         Args:
             filename (str): Name of the file to be read in.
-
+        
         Returns:
-            spacegroup (SymmetryGroup)
+            SymmetryGroup: The symmetry group read from the file.
         """
-        data = np.genfromtxt( filename, dtype=str )
-        labels = [ row[0] for row in data ]
-        vectors = [ [ float(s) for s in row[1:] ] for row in data ]
-        symmetry_operations = [ SymmetryOperation.from_vector( v ) for v in vectors ]
-        [ so.set_label( l ) for (l, so) in zip( labels, symmetry_operations ) ]
-        return( cls( symmetry_operations=symmetry_operations ) )
+        data = np.genfromtxt(filename, dtype=str)
+        labels = [row[0] for row in data]
+        vectors = [[int(s) for s in row[1:]] for row in data]
+        symmetry_operations = [SymmetryOperation.from_vector(v) for v in vectors]
+        
+        # Set labels on each symmetry operation
+        for label, so in zip(labels, symmetry_operations):
+            so.set_label(label)
+        
+        return cls(symmetry_operations=symmetry_operations)
 
-    def save_symmetry_operation_vectors_to( self, filename ):
+    def save_symmetry_operation_vectors_to(
+        self,
+        filename: str
+    ) -> None:
         """
         Save the set of vectors describing each symmetry operation in this :any:`SymmetryGroup` to a file.
 
@@ -100,10 +108,13 @@ class SymmetryGroup:
         """
         operation_list = []
         for symmetry_operation in self.symmetry_operations:
-            operation_list.append( symmetry_operation.as_vector() )
-        np.savetxt( filename, np.array( operation_list ), fmt='%i' )
+            operation_list.append(symmetry_operation.as_vector())
+        np.savetxt(filename, np.array( operation_list ), fmt='%i')
 
-    def extend( self, symmetry_operations_list ):
+    def extend(
+        self,
+        symmetry_operations_list: list[SymmetryOperation]
+    ) -> SymmetryGroup:
         """
         Extend the list of symmetry operations in this :any:`SymmetryGroup`.
 
@@ -116,7 +127,10 @@ class SymmetryGroup:
         self.symmetry_operations.extend( symmetry_operations_list )
         return self
 
-    def append( self, symmetry_operation ):
+    def append(
+        self,
+        symmetry_operation: SymmetryOperation
+    ) -> SymmetryGroup:
         """
         Append a :any:`SymmetryOperation` to this :any:`SymmetryGroup`.
 
@@ -126,10 +140,13 @@ class SymmetryGroup:
         Returns:
             self (:any:`SymmetryGroup`)
         """
-        self.symmetry_operations.append( symmetry_operation )
+        self.symmetry_operations.append(symmetry_operation)
         return self
 
-    def by_label( self, label ):
+    def by_label(
+        self,
+        label: str
+    ) -> SymmetryOperation | None:
         """
         Returns the :any:`SymmetryOperation` with a matching label.
 
@@ -142,7 +159,9 @@ class SymmetryGroup:
         return next((so for so in self.symmetry_operations if so.label == label), None)
 
     @property
-    def labels( self ):
+    def labels(
+        self
+    ) -> list[SymmetryOperation]:
         """
         A list of labels for each :any:`SymmetryOperation` in this spacegroup.
 
@@ -152,23 +171,24 @@ class SymmetryGroup:
         Returns:
             (list): A list of label strings.
         """
-        return [ so.label for so in self.symmetry_operations ] 
+        return [so.label for so in self.symmetry_operations] 
 
-    def __repr__( self ):
-        to_return = '{}\n'.format( self.__class__.class_str )
+    def __repr__(self) -> str:
+        to_return: str
+        to_return = '{}\n'.format(self.__class__.class_str)
         for so in self.symmetry_operations:
-            to_return += "{}\t{}\n".format( so.label, so.as_vector() )
+            to_return += "{}\t{}\n".format(so.label, so.as_vector())
         return to_return
 
     @property
-    def size( self ):
-        return len( self.symmetry_operations )
+    def size(self) -> int:
+        return len(self.symmetry_operations)
 
-    def __mul__( self, other ):
+    def __mul__(self, other):
         """
         Direct product.
         """
-        return SymmetryGroup( [ s1 * s2 for s1, s2 in product( self.symmetry_operations, other.symmetry_operations ) ] )
+        return SymmetryGroup([s1 * s2 for s1, s2 in product( self.symmetry_operations, other.symmetry_operations)])
 
     def operate_on(self,
                    configuration: Configuration,

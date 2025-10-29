@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import numpy as np
 from bsym.configuration import Configuration
 
@@ -106,7 +108,12 @@ class SymmetryOperation:
         return SymmetryOperation( np.linalg.inv( self.matrix ).astype( int ), label=label )
 
     @classmethod
-    def from_vector( cls, vector, count_from_zero=False, label=None ):
+    def from_vector(
+        cls,
+        vector: list[int],
+        count_from_zero: bool = False,
+        label: str | None = None
+    ) -> SymmetryOperation:
         """
         Initialise a SymmetryOperation object from a vector of site mappings.
 

@@ -38,6 +38,7 @@ class ConfigurationSpace:
             )
 
     def __repr__(self) -> str:
+        to_return: str
         to_return = "ConfigurationSpace\n"
         to_return += self.objects.__repr__() + "\n"
         to_return += "\n".join(self.symmetry_group.__repr__().split("\n")[1:])

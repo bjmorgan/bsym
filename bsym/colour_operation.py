@@ -39,16 +39,22 @@ class ColourOperation(SymmetryOperation):
 
         Example:
 
-            >>> matrix = np.array( [[1, 0], [0, 1]] )
-            >>> colour_mapping = [ { 0: 1, 1: 0 }, { 0: 0, 1: 1 } ]
-            >>> ColourOperation( matrix, colour_mapping )
+            >>> matrix = np.array([[1, 0], [0, 1]])
+            >>> colour_mapping = [{0: 1, 1: 0}, {0: 0, 1: 1}]
+            >>> ColourOperation(matrix, colour_mapping)
          
         """
         super().__init__( matrix, label )
         self.colour_mapping = colour_mapping
          
     @classmethod
-    def from_vector( cls, vector, colour_mapping, count_from_zero=False, label=None ):
+    def from_vector( # type: ignore[override]
+        cls,
+        vector: list[int],
+        colour_mapping: list[dict[int, int]],
+        count_from_zero: bool = False,
+        label: str | None = None
+    ) -> ColourOperation:
         """
         Initialise a ColourOperation from a vector of site mappings.
 
