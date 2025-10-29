@@ -77,8 +77,6 @@ class ConfigurationSpace:
             print('unique configurations: {} / {}'.format(len(unique_configurations), len(seen)))
         
         return unique_configurations
-        
-        return unique_configurations
 
     def unique_configurations(self,
         site_distribution,
