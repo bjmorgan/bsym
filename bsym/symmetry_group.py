@@ -3,8 +3,8 @@ from __future__ import annotations
 import numpy as np
 from bsym import SymmetryOperation 
 from itertools import product
-from typing import TYPE_CHECKING
 from bsym.configuration import Configuration
+from numpy.typing import NDArray
 
 class SymmetryGroup:
     """
@@ -45,7 +45,7 @@ class SymmetryGroup:
         self._unique_mappings = None
     
     @property
-    def stacked_index_mappings(self) -> np.ndarray:
+    def stacked_index_mappings(self) -> NDArray[np.int_]:
         """
         Stack all index mappings from symmetry operations.
         
@@ -59,7 +59,7 @@ class SymmetryGroup:
         return self._stacked_mappings
     
     @property
-    def unique_index_mappings(self) -> np.ndarray:
+    def unique_index_mappings(self) -> NDArray[np.int_]:
         """
         Get unique index mappings, removing duplicates.
         
