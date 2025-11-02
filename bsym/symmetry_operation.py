@@ -1,52 +1,63 @@
+from __future__ import annotations
+
+from typing import overload
 import numpy as np
 from bsym.configuration import Configuration
 
-def is_square( m ):
+
+def is_square(m: np.ndarray) -> bool:
     """
     Test whether a numpy matrix is square.
 
     Args:
-        m (np.matrix): The matrix.
+        m: The matrix.
 
     Returns:
-        (bool): True | False.
+        True if matrix is square, False otherwise.
     """
-    return m.shape[0] == m.shape[1]
+    return bool(m.shape[0] == m.shape[1])
 
-def is_permutation_matrix( m ):
+
+def is_permutation_matrix(m: np.ndarray) -> bool:
     """
     Test whether a numpy array is a `permutation matrix`_.
 
     .. _permutation_matrix: https://en.wikipedia.org/wiki/Permutation_matrix
-    
+
     Args:
-        m (np.matrix): The matrix.
+        m: The matrix.
 
     Returns:
-        (bool): True | False.
+        True if matrix is a permutation matrix, False otherwise.
     """
     m = np.asanyarray(m)
-    return (m.ndim == 2 and m.shape[0] == m.shape[1] and
-            (m.sum(axis=0) == 1).all() and 
-            (m.sum(axis=1) == 1).all() and
-            ((m == 1) | (m == 0)).all())
-    
+    return bool(
+        m.ndim == 2 and m.shape[0] == m.shape[1] and
+        (m.sum(axis=0) == 1).all() and
+        (m.sum(axis=1) == 1).all() and
+        ((m == 1) | (m == 0)).all()
+    )
+
+
 class SymmetryOperation:
     """
     `SymmetryOperation` class.
     """
 
-    def __init__( self, matrix, label=None ):
+    def __init__(
+        self,
+        matrix: np.ndarray | list[list[int]],
+        label: str | None = None
+    ) -> None:
         """
         Initialise a `SymmetryOperation` object
 
         Args:
-            matrix (numpy.matrix|numpy.ndarray|list): square 2D vector as either a
-            `numpy.matrix`, `numpy.ndarray`, or `list`.
-            for this symmetry operation.
-            label (default=None) (str): optional string label for this `SymmetryOperation` object.
+            matrix: Square 2D vector as either a `numpy.ndarray` or `list`.
+            label: Optional string label for this `SymmetryOperation` object.
+
         Raises:
-            TypeError: if matrix is not `numpy.matrix`, `numpy.ndarray`, or `list`.
+            TypeError: if matrix is not `numpy.ndarray` or `list`.
             ValueError: if matrix is not square.
             ValueError: if matrix is not a `permutation matrix`_.
 
@@ -59,153 +70,171 @@ class SymmetryOperation:
         Returns:
             None
         """
-        if isinstance( matrix, np.matrix ):
-            self.matrix = np.array( matrix )
-        elif isinstance( matrix, np.ndarray ):
-            self.matrix = np.array( matrix )
-        elif isinstance( matrix, list):
-            self.matrix = np.array( matrix )
+        if isinstance(matrix, np.matrix):
+            self.matrix = np.array(matrix)
+        elif isinstance(matrix, np.ndarray):
+            self.matrix = np.array(matrix)
+        elif isinstance(matrix, list):
+            self.matrix = np.array(matrix)
         else:
             raise TypeError
-        if not is_square( self.matrix ):
+        if not is_square(self.matrix):
             raise ValueError('Not a square matrix')
-        if not is_permutation_matrix( self.matrix ):
+        if not is_permutation_matrix(self.matrix):
             raise ValueError('Not a permutation matrix')
         self.label = label
-        self.index_mapping = np.array( [ np.array(row).tolist().index(1) for row in matrix ] )
+        self.index_mapping: np.ndarray = np.array([np.array(row).tolist().index(1) for row in matrix])
 
-    def __mul__( self, other ):
+    @overload
+    def __mul__(self, other: SymmetryOperation) -> SymmetryOperation: ...
+
+    @overload
+    def __mul__(self, other: Configuration) -> Configuration: ...
+
+    def __mul__(self, other: SymmetryOperation | Configuration) -> SymmetryOperation | Configuration:
         """
         Multiply this `SymmetryOperation` matrix with another `SymmetryOperation`.
 
         Args:
-            other (SymmetryOperation, Configuration): the other symmetry operation or configuration or matrix
-            for the matrix multiplication self * other.
+            other: The other symmetry operation or configuration
+                for the matrix multiplication self * other.
 
         Returns:
-            (SymmetryOperation): a new `SymmetryOperation` instance with the resultant matrix.
-            (Configuration): if `other` is a `Configuration`.
+            A new `SymmetryOperation` instance with the resultant matrix,
+            or a `Configuration` if `other` is a `Configuration`.
         """
-        if isinstance( other, SymmetryOperation ):
-            return SymmetryOperation( self.matrix.dot( other.matrix ) )
-        elif isinstance( other, Configuration ):
-            return self.operate_on( other )
+        if isinstance(other, SymmetryOperation):
+            return SymmetryOperation(self.matrix.dot(other.matrix))
+        elif isinstance(other, Configuration):
+            return self.operate_on(other)
         else:
             raise TypeError
 
-    def invert( self, label=None ):
+    def invert(self, label: str | None = None) -> SymmetryOperation:
         """
         Invert this `SymmetryOperation` object.
 
         Args:
-            None
- 
+            label: Optional label for the inverted symmetry operation.
+
         Returns:
             A new `SymmetryOperation` object corresponding to the inverse matrix operation.
         """
-        return SymmetryOperation( np.linalg.inv( self.matrix ).astype( int ), label=label )
+        return SymmetryOperation(np.linalg.inv(self.matrix).astype(int), label=label)
 
     @classmethod
-    def from_vector( cls, vector, count_from_zero=False, label=None ):
+    def from_vector(
+        cls,
+        vector: list[int],
+        count_from_zero: bool = False,
+        label: str | None = None
+    ) -> SymmetryOperation:
         """
         Initialise a SymmetryOperation object from a vector of site mappings.
 
         Args:
-            vector (list): vector of integers defining a symmetry operation mapping.
-            count_from_zero (default = False) (bool): set to True if the site index counts from zero.
-            label (default=None) (str): optional string label for this `SymmetryOperation` object.
-   
+            vector: Vector of integers defining a symmetry operation mapping.
+            count_from_zero: Set to True if the site index counts from zero.
+            label: Optional string label for this `SymmetryOperation` object.
+
         Returns:
-            a new SymmetryOperation object
+            A new SymmetryOperation object
         """
         if not count_from_zero:
-            vector = [ x - 1 for x in vector ]
-        dim = len( vector )
-        matrix = np.zeros( ( dim, dim ) )
-        for index, element in enumerate( vector ):
-            matrix[ element, index ] = 1
-        new_symmetry_operation = cls( matrix, label=label )
+            vector = [x - 1 for x in vector]
+        dim = len(vector)
+        matrix = np.zeros((dim, dim))
+        for index, element in enumerate(vector):
+            matrix[element, index] = 1
+        new_symmetry_operation = cls(matrix, label=label)
         return new_symmetry_operation
 
-    def similarity_transform( self, s, label=None ):
+    def similarity_transform(
+        self,
+        s: SymmetryOperation,
+        label: str | None = None
+    ) -> SymmetryOperation:
         """
         Generate the SymmetryOperation produced by a similarity transform S^{-1}.M.S
 
         Args:
-            s: the symmetry operation or matrix S.
-            label (:obj:`str`, optional): the label to assign to the new SymmetryOperation. Defaults to None.
+            s: The symmetry operation or matrix S.
+            label: The label to assign to the new SymmetryOperation.
 
         Returns:
-            the SymmetryOperation produced by the similarity transform
+            The SymmetryOperation produced by the similarity transform
         """
-        s_new = s.invert() * ( self * s )
+        s_new = s.invert() * (self * s)
         if label:
-            s_new.set_label( label )
+            s_new.set_label(label)
         return s_new
 
-    def operate_on(self, configuration):
+    def operate_on(self, configuration: Configuration) -> Configuration:
         """
         Return the Configuration generated by applying this symmetry operation
 
         Args:
-            configuration (Configuration): the configuration / occupation vector to operate on
+            configuration: The configuration / occupation vector to operate on
 
         Returns:
-            (Configuration): the new configuration obtained by operating on configuration with this symmetry operation. 
+            The new configuration obtained by operating on configuration with this 
+            symmetry operation.
         """
         if not isinstance(configuration, Configuration):
             raise TypeError
         return Configuration(configuration.vector[self.index_mapping])
 
-    def character( self ):
+    def character(self) -> int:
         """
         Return the character of this symmetry operation (the trace of `self.matrix`).
 
         Args:
-            none
+            None
 
         Returns:
-            np.trace( self.matrix )
+            The trace of self.matrix
         """
-        return np.trace( self.matrix )
+        return int(np.trace(self.matrix))
 
-    def as_vector( self, count_from_zero=False ):
+    def as_vector(self, count_from_zero: bool = False) -> list[int]:
         """
         Return a vector representation of this symmetry operation
 
         Args:
-            count_from_zero (default = False) (bool): set to True if the vector representation counts from zero
-      
+            count_from_zero: Set to True if the vector representation counts from zero
+
         Returns:
-            a vector representation of this symmetry operation (as a list)
+            A vector representation of this symmetry operation (as a list)
         """
         offset = 0 if count_from_zero else 1
-        return [ row.tolist().index( 1 ) + offset for row in self.matrix.T ]
+        return [row.tolist().index(1) + offset for row in self.matrix.T]
 
-    def set_label( self, label ):
+    def set_label(self, label: str) -> SymmetryOperation:
         """
         Set the label for this symmetry operation.
-  
+
         Args:
-            label: label to set for this symmetry operation
+            label: Label to set for this symmetry operation
+
         Returns:
-            self 
+            self
         """
         self.label = label
         return self
 
-    def pprint( self ):
+    def pprint(self) -> None:
         """
         Pretty print for this symmetry operation
 
         Args:
             None
+
         Returns:
             None
         """
         label = self.label if self.label else '---'
-        print( label + ' : ' + ' '.join( [ str(e) for e in self.as_vector() ] ) )
-        
-    def __repr__( self ):
+        print(label + ' : ' + ' '.join([str(e) for e in self.as_vector()]))
+
+    def __repr__(self) -> str:
         label = self.label if self.label else '---'
         return 'SymmetryOperation\nlabel(' + label + ")\n" + self.matrix.__repr__()

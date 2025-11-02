@@ -11,7 +11,7 @@ authors = [
     {name = "Benjamin J. Morgan", email = "b.j.morgan@bath.ac.uk"},
 ]
 license = {text = "MIT"}
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "numpy",
     "pymatgen",
@@ -19,12 +19,32 @@ dependencies = [
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Topic :: Scientific/Engineering",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "mypy>=1.0",
+    "types-tqdm"
+]
+docs = [
+    "sphinx>=7.0.0",
+    "sphinx_rtd_theme>=1.0.0",
+    "nbsphinx>=0.8.9",
+    "ipykernel>=6.0.0",
+    "matplotlib>=3.4.0",
+    "pypandoc>=1.5",
+    "myst-parser",
+    "myst-nb",
 ]
 
 [project.urls]
@@ -37,3 +57,36 @@ packages = ["bsym", "bsym.interface"]
 
 [tool.setuptools.dynamic]
 version = {attr = "bsym.version.__version__"}
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--verbose",
+    "--strict-markers",
+]
+
+[tool.coverage.run]
+source = ["bsym"]
+omit = [
+    "*/python?.?/*",
+    "*/lib-python/?.?/*.py",
+    "*/lib_pypy/_*.py",
+    "*/site-packages/ordereddict.py",
+    "*/site-packages/nose/*",
+    "*/unittest2/*",
+    "docs",
+]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true

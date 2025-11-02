@@ -30,9 +30,9 @@ class Configuration:
     """
 
     def __init__(self, vector: list[int] | NDArray[np.int_]) -> None:
-        self.count = None
-        self.lowest_numeric_representation = None
-        self.vector = np.array(vector)
+        self.count: int | None = None
+        self.lowest_numeric_representation: int | None = None
+        self.vector: np.ndarray = np.asarray(vector, dtype=np.int8)
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Configuration):
@@ -161,20 +161,19 @@ class Configuration:
         return as_number(self.vector)
 
     @classmethod
-    def from_tuple(cls, this_tuple) -> Configuration:
+    def from_tuple(cls, configuration_tuple):
         """
-        Construct a :any:`Configuration` from a `tuple`,
-        e.g.::
-
-            Configuration.from_tuple( ( 1, 1, 0 ) )
-
+        Create a Configuration from a tuple.
+        
+        Configurations are stored as int8 arrays, supporting species labels 0-255.
+        
         Args:
-            this_tuple (tuple): The tuple used to construct this :any:`Configuration`.
-
+            configuration_tuple: Tuple of configuration values (0-255).
+        
         Returns:
-            (:any:`Configuration`): The new :any:`Configuration`.
+            Configuration: New configuration object.
         """
-        return cls(this_tuple)
+        return cls(np.array(configuration_tuple, dtype=np.int8))
 
     def tolist(self) -> list[int]:
         """
@@ -223,7 +222,48 @@ class Configuration:
         for key in set(self.vector):
             sorted_objects[key] = [o for k, o in zip(self.vector, objects) if k == key]
         return sorted_objects
-
+        
+    @staticmethod
+    def tuple_to_bytes(tup: tuple) -> bytes:
+        """
+        Convert configuration tuple to bytes.
+        
+        Used for initial permutation checking in enumerate_configurations.
+        
+        Args:
+            tup: Configuration as tuple.
+            
+        Returns:
+            bytes: Byte representation for hashing.
+        """
+        return np.array(tup, dtype=np.int8).tobytes()
+    
+    @staticmethod
+    def array_to_bytes(arr: np.ndarray) -> bytes:
+        """
+        Convert configuration array to bytes.
+        
+        Assumes array is already int8. Used for transformations.
+        
+        Args:
+            arr: Configuration as int8 numpy array.
+            
+        Returns:
+            bytes: Byte representation for hashing.
+        """
+        return arr.tobytes()
+    
+    def as_bytes(self) -> bytes:
+        """Get byte representation of this configuration."""
+        return Configuration.array_to_bytes(self.vector)
+    
+    def get_byte_equivalents(self, symmetry_group) -> set[bytes]:
+        """Get byte representations of all symmetry-equivalent configurations."""
+        transformed_vectors = self.vector[symmetry_group.unique_index_mappings]
+        byte_equivalents = set(
+            Configuration.array_to_bytes(vec) for vec in transformed_vectors
+        )
+        return byte_equivalents
 
 def as_number(a: list[int] | NDArray[np.int_]) -> int:
     tot = 0

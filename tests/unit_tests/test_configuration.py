@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import Mock, patch
 from bsym.configuration import Configuration
+from bsym.symmetry_group import SymmetryGroup
 from bsym import SymmetryOperation
 import numpy as np
 
@@ -127,12 +128,156 @@ class TestConfiguration(unittest.TestCase):
     def test_position( self ):
         self.assertEqual( self.configuration.position( 0 ), [ 1, 2 ] )
 
-    def test_map_objects( self ):
-        self.assertEqual( self.configuration.map_objects( [ 'A', 'B', 'C' ] ), { 1: [ 'A' ], 0: [ 'B', 'C' ] } )  
+    def test_map_objects(self):
+        self.assertEqual(self.configuration.map_objects(['A', 'B', 'C']), {1: ['A'], 0: ['B', 'C']})  
 
-    def test_map_objects_with_incompatible_object_list_raises_ValueError( self ):
-        with self.assertRaises( ValueError ):
-            self.configuration.map_objects( [ 'A', 'B' ] )
+    def test_map_objects_with_incompatible_object_list_raises_ValueError(self):
+        with self.assertRaises(ValueError):
+            self.configuration.map_objects(['A', 'B'])
+            
+    def test_get_byte_equivalents_returns_set_of_bytes(self):
+        """Test that get_byte_equivalents returns a set of bytes."""
+        s0 = SymmetryOperation.from_vector([1, 2, 3])
+        sg = SymmetryGroup(symmetry_operations=[s0])
+        
+        config = Configuration([1, 0, 0])
+        result = config.get_byte_equivalents(sg)
+        
+        self.assertIsInstance(result, set)
+        for item in result:
+            self.assertIsInstance(item, bytes)
+    
+    def test_get_byte_equivalents_returns_correct_values(self):
+        """Test that get_byte_equivalents returns correct byte representations."""
+        s0 = SymmetryOperation.from_vector([1, 2, 3])
+        s1 = SymmetryOperation.from_vector([2, 1, 3])
+        sg = SymmetryGroup(symmetry_operations=[s0, s1])
+        
+        config = Configuration([1, 0, 0])
+        byte_equivalents = config.get_byte_equivalents(sg)
+        
+        # Should get byte representations of [1, 0, 0] and [0, 1, 0]
+        expected = {
+            np.array([1, 0, 0], dtype=np.int8).tobytes(),
+            np.array([0, 1, 0], dtype=np.int8).tobytes()
+        }
+        self.assertEqual(byte_equivalents, expected)
+    
+    def test_get_byte_equivalents_uses_unique_operations(self):
+        """Test that get_byte_equivalents only applies unique operations."""
+        s0 = SymmetryOperation.from_vector([1, 2, 3])
+        s1 = SymmetryOperation.from_vector([2, 1, 3])
+        s2 = SymmetryOperation.from_vector([1, 2, 3])  # Duplicate of s0
+        sg = SymmetryGroup(symmetry_operations=[s0, s1, s2])
+        
+        config = Configuration([1, 0, 0])
+        byte_equivalents = config.get_byte_equivalents(sg)
+        
+        # Should only apply 2 unique operations, not 3
+        self.assertEqual(len(byte_equivalents), 2)
+    
+    def test_get_byte_equivalents_with_larger_configuration(self):
+        """Test get_byte_equivalents with larger configuration space."""
+        s0 = SymmetryOperation.from_vector([1, 2, 3, 4, 5])
+        s1 = SymmetryOperation.from_vector([5, 4, 3, 2, 1])
+        sg = SymmetryGroup(symmetry_operations=[s0, s1])
+        
+        # Use an asymmetric configuration so reverse gives different result
+        config = Configuration([1, 0, 0, 0, 0])
+        byte_equivalents = config.get_byte_equivalents(sg)
+        
+        # Should have 2 results (identity and reverse are different)
+        self.assertEqual(len(byte_equivalents), 2)
+        # All should be bytes
+        for val in byte_equivalents:
+            self.assertIsInstance(val, bytes)
+    
+    def test_get_byte_equivalents_produces_different_values_for_different_configs(self):
+        """Test that different configurations produce different byte representations."""
+        s0 = SymmetryOperation.from_vector([1, 2, 3])
+        sg = SymmetryGroup(symmetry_operations=[s0])
+        
+        config1 = Configuration([1, 0, 0])
+        config2 = Configuration([0, 1, 0])
+        
+        bytes1 = config1.get_byte_equivalents(sg)
+        bytes2 = config2.get_byte_equivalents(sg)
+        
+        # Different configurations should produce different byte sets
+        self.assertNotEqual(bytes1, bytes2)
+    
+    def test_as_bytes_returns_byte_representation(self):
+        """Test that as_bytes returns the byte representation of the configuration."""
+        config = Configuration([1, 0, 1])
+        result = config.as_bytes()
+        
+        self.assertIsInstance(result, bytes)
+        expected = np.array([1, 0, 1], dtype=np.int8).tobytes()
+        self.assertEqual(result, expected)
+    
+    def test_as_bytes_consistent_with_hash(self):
+        """Test that as_bytes is consistent with __hash__."""
+        config1 = Configuration([1, 0, 1])
+        config2 = Configuration([1, 0, 1])
+        
+        # Same configuration should have same bytes and hash
+        self.assertEqual(config1.as_bytes(), config2.as_bytes())
+        self.assertEqual(hash(config1), hash(config2))
+        
+    def test_tuple_to_bytes_returns_bytes(self):
+        """Test that tuple_to_bytes returns bytes."""
+        result = Configuration.tuple_to_bytes((1, 0, 1))
+        self.assertIsInstance(result, bytes)
+    
+    def test_tuple_to_bytes_converts_to_int8(self):
+        """Test that tuple_to_bytes uses int8 representation."""
+        result = Configuration.tuple_to_bytes((1, 0, 1))
+        expected = np.array([1, 0, 1], dtype=np.int8).tobytes()
+        self.assertEqual(result, expected)
+    
+    def test_tuple_to_bytes_consistent_results(self):
+        """Test that same tuple produces same bytes."""
+        result1 = Configuration.tuple_to_bytes((1, 0, 1))
+        result2 = Configuration.tuple_to_bytes((1, 0, 1))
+        self.assertEqual(result1, result2)
+    
+    def test_tuple_to_bytes_different_for_different_tuples(self):
+        """Test that different tuples produce different bytes."""
+        result1 = Configuration.tuple_to_bytes((1, 0, 0))
+        result2 = Configuration.tuple_to_bytes((0, 1, 0))
+        self.assertNotEqual(result1, result2)
+    
+    def test_array_to_bytes_returns_bytes(self):
+        """Test that array_to_bytes returns bytes."""
+        arr = np.array([1, 0, 1], dtype=np.int8)
+        result = Configuration.array_to_bytes(arr)
+        self.assertIsInstance(result, bytes)
+    
+    def test_array_to_bytes_uses_array_directly(self):
+        """Test that array_to_bytes converts int8 array to bytes."""
+        arr = np.array([1, 0, 1], dtype=np.int8)
+        result = Configuration.array_to_bytes(arr)
+        expected = arr.tobytes()
+        self.assertEqual(result, expected)
+    
+    def test_array_to_bytes_consistent_with_tuple_to_bytes(self):
+        """Test that tuple and array conversions produce same bytes for same values."""
+        tup = (1, 0, 1)
+        arr = np.array([1, 0, 1], dtype=np.int8)
+        
+        tuple_result = Configuration.tuple_to_bytes(tup)
+        array_result = Configuration.array_to_bytes(arr)
+        
+        self.assertEqual(tuple_result, array_result)
+    
+    def test_as_bytes_uses_array_to_bytes(self):
+        """Test that as_bytes is consistent with array_to_bytes."""
+        config = Configuration([1, 0, 1])
+        
+        instance_result = config.as_bytes()
+        static_result = Configuration.array_to_bytes(config.vector)
+        
+        self.assertEqual(instance_result, static_result)
 
 if __name__ == '__main__':
     unittest.main()

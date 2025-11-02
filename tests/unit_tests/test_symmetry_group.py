@@ -79,25 +79,145 @@ class SymmetryGroupTestCase( unittest.TestCase ):
         self.assertEqual( sg.labels, [ 'A', 'B' ] )
 
     def test_operate_on(self):
+        """Test operate_on with mock operations."""
         s0 = Mock(spec=SymmetryOperation)
         s1 = Mock(spec=SymmetryOperation)
-        s0.operate_on.return_value = Configuration([0, 1, 0])
-        s1.operate_on.return_value = Configuration([0, 0, 1])
+        s0.index_mapping = np.array([0, 1, 2])
+        s1.index_mapping = np.array([0, 2, 1])
         configuration = Configuration([1, 0, 0])
         sg = SymmetryGroup(symmetry_operations=[s0, s1])
         all_configurations = sg.operate_on(configuration)
-        self.assertEqual(all_configurations, [Configuration([0, 1, 0]),
-                                              Configuration([0, 0, 1])])
+        self.assertEqual(all_configurations, [Configuration([1, 0, 0]),
+                                            Configuration([1, 0, 0])])
         
     def test_operate_on_returns_minimal_set(self):
+        """Test operate_on returns minimal set when requested."""
         s0 = Mock(spec=SymmetryOperation)
         s1 = Mock(spec=SymmetryOperation)
-        s0.operate_on.return_value = Configuration([0, 0, 1])
-        s1.operate_on.return_value = Configuration([0, 0, 1])
+        s0.index_mapping = np.array([0, 1, 2])
+        s1.index_mapping = np.array([0, 1, 2])  # Same as s0
         configuration = Configuration([1, 0, 0])
         sg = SymmetryGroup(symmetry_operations=[s0, s1])
         all_configurations = sg.operate_on(configuration, minimal_set=True)
-        self.assertEqual(all_configurations, [Configuration([0, 0, 1])])
+        self.assertEqual(all_configurations, [Configuration([1, 0, 0])])
 
+    def test_stacked_index_mappings_has_correct_shape(self):
+        """Test that stacked_index_mappings returns correct shape."""
+        s0 = SymmetryOperation.from_vector([1, 2, 3])
+        s1 = SymmetryOperation.from_vector([2, 1, 3])
+        s2 = SymmetryOperation.from_vector([2, 3, 1])
+        sg = SymmetryGroup(symmetry_operations=[s0, s1, s2])
+        
+        mappings = sg.stacked_index_mappings
+        self.assertEqual(mappings.shape, (3, 3))  # 3 operations, 3 sites
+    
+    def test_stacked_index_mappings_contains_correct_values(self):
+        """Test that stacked_index_mappings contains correct index mappings."""
+        s0 = SymmetryOperation.from_vector([1, 2, 3])
+        s1 = SymmetryOperation.from_vector([2, 1, 3])
+        s2 = SymmetryOperation.from_vector([2, 3, 1])
+        sg = SymmetryGroup(symmetry_operations=[s0, s1, s2])
+        
+        mappings = sg.stacked_index_mappings
+        np.testing.assert_array_equal(mappings[0], [0, 1, 2])  # Identity
+        np.testing.assert_array_equal(mappings[1], [1, 0, 2])  # Swap first two
+        np.testing.assert_array_equal(mappings[2], [2, 0, 1])  # Cycle
+    
+    def test_stacked_index_mappings_is_cached(self):
+        """Test that stacked_index_mappings is cached on repeated access."""
+        s0 = SymmetryOperation.from_vector([1, 2, 3])
+        s1 = SymmetryOperation.from_vector([2, 1, 3])
+        sg = SymmetryGroup(symmetry_operations=[s0, s1])
+        
+        mappings1 = sg.stacked_index_mappings
+        mappings2 = sg.stacked_index_mappings
+        self.assertIs(mappings1, mappings2)  # Same object
+    
+    def test_unique_index_mappings_removes_duplicates(self):
+        """Test that unique_index_mappings removes duplicate operations."""
+        s0 = SymmetryOperation.from_vector([1, 2, 3])
+        s1 = SymmetryOperation.from_vector([2, 1, 3])
+        s2 = SymmetryOperation.from_vector([1, 2, 3])  # Duplicate of s0
+        sg = SymmetryGroup(symmetry_operations=[s0, s1, s2])
+        
+        unique_mappings = sg.unique_index_mappings
+        self.assertEqual(unique_mappings.shape[0], 2)  # Only 2 unique operations
+    
+    def test_unique_index_mappings_is_cached(self):
+        """Test that unique_index_mappings is cached on repeated access."""
+        s0 = SymmetryOperation.from_vector([1, 2, 3])
+        s1 = SymmetryOperation.from_vector([2, 1, 3])
+        sg = SymmetryGroup(symmetry_operations=[s0, s1])
+        
+        mappings1 = sg.unique_index_mappings
+        mappings2 = sg.unique_index_mappings
+        self.assertIs(mappings1, mappings2)  # Same object
+    
+    def test_operate_on_batched_returns_same_results_as_original(self):
+        """Test that batched operate_on returns same results as original implementation."""
+        s0 = SymmetryOperation.from_vector([1, 2, 3])
+        s1 = SymmetryOperation.from_vector([2, 1, 3])
+        s2 = SymmetryOperation.from_vector([2, 3, 1])
+        sg = SymmetryGroup(symmetry_operations=[s0, s1, s2])
+        config = Configuration([1, 0, 0])
+        
+        results = sg.operate_on(config, minimal_set=False)
+        
+        self.assertEqual(len(results), 3)
+        np.testing.assert_array_equal(results[0].vector, [1, 0, 0])  # Identity
+        np.testing.assert_array_equal(results[1].vector, [0, 1, 0])  # Swap
+        np.testing.assert_array_equal(results[2].vector, [0, 1, 0])  # Cycle result
+    
+    def test_operate_on_minimal_set_removes_duplicates(self):
+        """Test that operate_on with minimal_set=True removes duplicates."""
+        s0 = SymmetryOperation.from_vector([1, 2, 3])
+        s1 = SymmetryOperation.from_vector([2, 1, 3])
+        s2 = SymmetryOperation.from_vector([2, 3, 1])
+        sg = SymmetryGroup(symmetry_operations=[s0, s1, s2])
+        
+        # Configuration where s0 and s1 give same result
+        config = Configuration([1, 1, 0])
+        results = sg.operate_on(config, minimal_set=True)
+        
+        # Should have only 2 unique results
+        self.assertEqual(len(results), 2)
+        result_tuples = [tuple(r.vector) for r in results]
+        self.assertEqual(len(set(result_tuples)), 2)
+    
+    def test_operate_on_minimal_set_false_includes_all(self):
+        """Test that operate_on with minimal_set=False includes all operations."""
+        s0 = SymmetryOperation.from_vector([1, 2, 3])
+        s1 = SymmetryOperation.from_vector([2, 1, 3])
+        sg = SymmetryGroup(symmetry_operations=[s0, s1])
+        
+        config = Configuration([1, 1, 0])
+        results = sg.operate_on(config, minimal_set=False)
+        
+        self.assertEqual(len(results), 2)
+        
+    def test_operate_on_minimal_set_uses_unique_operations(self):
+        """Test that operate_on with minimal_set=True only applies unique operations once."""
+        # Create a group with 3 operations, where 2 have identical index_mappings
+        s0 = SymmetryOperation.from_vector([1, 2, 3])
+        s1 = SymmetryOperation.from_vector([2, 1, 3])
+        s2 = SymmetryOperation.from_vector([1, 2, 3])  # Duplicate of s0
+        sg = SymmetryGroup(symmetry_operations=[s0, s1, s2])
+        
+        # Verify we have 3 operations but only 2 unique mappings
+        self.assertEqual(len(sg.symmetry_operations), 3)
+        self.assertEqual(sg.unique_index_mappings.shape[0], 2)
+        
+        # When minimal_set=True, should only apply the 2 unique operations
+        config = Configuration([1, 0, 0])
+        results = sg.operate_on(config, minimal_set=True)
+        
+        # Should get 2 results (one per unique operation)
+        self.assertEqual(len(results), 2)
+        
+        # When minimal_set=False, should apply all 3 operations
+        results_all = sg.operate_on(config, minimal_set=False)
+        self.assertEqual(len(results_all), 3)
+
+        
 if __name__ == '__main__':
     unittest.main()

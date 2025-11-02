@@ -1,0 +1,48 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [2.0.0] - 2025-11-02
+
+### Added
+- Varying composition enumeration via `unique_configurations_by_composition` method
+- `generate_partitions` utility for integer partitioning
+- `compute_mapping_vectors` for species permutation mapping
+- `satisfies_bounds` for occupancy constraint validation
+- Comprehensive progress tracking with nested progress bars
+- Verbose output options for composition enumeration
+- `unique_structure_substitutions_by_composition` in pymatgen interface
+- Multi-level disorder enumeration documentation and examples
+- Complete documentation restructure with separate Theory and User Guide sections
+- Type hints throughout the codebase with mypy static type checking in CI
+
+### Changed
+- **BREAKING**: Minimum Python version raised to 3.10
+- **BREAKING**: Removed `ColourOperation` class (moved to `feature/colour-operations` branch)
+- Optimised Configuration storage using `np.int8` arrays
+- Implemented batched symmetry operations with cached index mappings
+- Migrated from individual loops to vectorised NumPy operations
+- Updated CI to GitHub Actions with Python 3.10-3.14 support
+- CI now uses pytest as test runner (unittest test suite maintained)
+- Converted narrative documentation from reStructuredText to Markdown
+- Species exchange symmetry optimisation reduces analyses by 40-50%
+
+### Performance
+- Substantially improved configuration enumeration performance
+- Example: 2×2×2 supercell of TiOF₂ shows 4.7× speedup (35.6s → 7.6s) with 13% memory overhead
+- Vectorised operations and optimised data types throughout
+
+### Documentation
+- Complete restructure: Getting Started, Theory, User Guide, API Reference
+- New theory documents explaining mathematical foundations
+- Practical Jupyter notebook tutorials with executable examples
+- Expanded README with installation, testing, and usage examples
+- Added multi-level disorder enumeration examples
+
+### Development
+- Added mypy static type checking to CI pipeline
+- Modernised GitHub Actions workflow with pip caching and parallel coverage
+- Updated to pyproject.toml-based configuration

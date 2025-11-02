@@ -25,9 +25,6 @@ class TestBsymTopLevelClasses( unittest.TestCase ):
     def test_bsym_imports_CoordinateConfigSpace( self ):
         from bsym import CoordinateConfigSpace
 
-    def test_bsym_imports_ColourOperation( self ):
-        from bsym import ColourOperation
-
 class TestOldBsymModule( unittest.TestCase ):
 
     def test_old_bsym_import_quits( self ):
