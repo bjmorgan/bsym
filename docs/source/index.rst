@@ -10,10 +10,9 @@ bsym - A basic symmetry module
    :caption: Contents:
 
    getting_started/index
-   theory/index
    user_guide/index
+   theory/index
    api/modules
-   examples/bsym_examples
 
 Indices and tables
 ==================
