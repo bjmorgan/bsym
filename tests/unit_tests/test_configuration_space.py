@@ -1,7 +1,8 @@
 import unittest
 from unittest.mock import Mock, patch
-from bsym import ConfigurationSpace, SymmetryGroup, SymmetryOperation, Configuration
+from bsym import ConfigurationSpace,SymmetryOperation, Configuration
 from bsym.configuration_space import permutation_as_config_number, colourings_generator, apply_species_mapping
+from bsym.symmetry_group import SymmetryGroup
 import numpy as np
 import io
 
@@ -518,6 +519,34 @@ class ConfigurationSpaceModuleFunctionsTestCase( unittest.TestCase ):
         result = apply_species_mapping(config, mapping)
         
         self.assertEqual(result.count, 42)
+        
+    def test_enumerate_configurations_finds_unique_configs(self):
+        """Test that enumerate_configurations correctly identifies unique configurations."""
+        s0 = SymmetryOperation.from_vector([1, 2, 3])
+        s1 = SymmetryOperation.from_vector([2, 1, 3])  # Swap first two
+        sg = SymmetryGroup(symmetry_operations=[s0, s1])
+        config_space = ConfigurationSpace(objects=[1, 2, 3], symmetry_group=sg)
+        
+        # [1,0,0] and [0,1,0] are equivalent under s1, should get 1 unique config
+        # [0,0,1] is different
+        permutations = iter([(1, 0, 0), (0, 1, 0), (0, 0, 1)])
+        
+        unique_configs = config_space.enumerate_configurations(permutations)
+        
+        self.assertEqual(len(unique_configs), 2)  # Two unique configs
+        
+    def test_enumerate_configurations_sets_correct_counts(self):
+        """Test that degeneracy counts are set correctly."""
+        s0 = SymmetryOperation.from_vector([1, 2, 3])
+        s1 = SymmetryOperation.from_vector([2, 1, 3])
+        sg = SymmetryGroup(symmetry_operations=[s0, s1])
+        config_space = ConfigurationSpace(objects=[1, 2, 3], symmetry_group=sg)
+        
+        permutations = iter([(1, 0, 0)])
+        unique_configs = config_space.enumerate_configurations(permutations)
+        
+        # [1,0,0] has 2 equivalents: [1,0,0] and [0,1,0]
+        self.assertEqual(unique_configs[0].count, 2)
             
 
 if __name__ == '__main__':

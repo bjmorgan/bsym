@@ -11,7 +11,9 @@ from typing import Iterator
 
 class ConfigurationSpace:
 
-    def __init__( self, objects, symmetry_group=None ):
+    def __init__(self,
+        objects: list,
+        symmetry_group: SymmetryGroup | None = None) -> None:
         """
         Create a :any:`ConfigurationSpace` object.
   
@@ -23,7 +25,7 @@ class ConfigurationSpace:
             None
         """
         # Check that all properties have compatible dimensions
-        self.dim = len( objects )
+        self.dim = len(objects)
         self.objects = objects
         if symmetry_group:
             for so in symmetry_group.symmetry_operations:
@@ -63,10 +65,10 @@ class ConfigurationSpace:
         using_tqdm = hasattr(generator, 'postfix')
         
         for new_permutation in generator:
-            perm_as_bytes = np.array(new_permutation, dtype=np.int8).tobytes()
+            perm_as_bytes = Configuration.tuple_to_bytes(new_permutation)
             if perm_as_bytes not in seen:
                 config = Configuration.from_tuple(new_permutation)
-                byte_equivalents = self.symmetry_group.get_numeric_equivalents(config)
+                byte_equivalents = config.get_byte_equivalents(self.symmetry_group)
                 config.count = len(byte_equivalents)
                 seen.update(byte_equivalents)
                 unique_configurations.append(config)
