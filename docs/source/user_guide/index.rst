@@ -11,5 +11,4 @@ These guides show you how to solve common crystallographic problems using the ``
    basic_substitutions
    fixed_composition
    varying_composition
-   molecules
-   performance
+   multi_level_disorder
