@@ -4,17 +4,20 @@ import numpy as np
 from pymatgen.core.lattice import Lattice
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.core.operations import SymmOp
-from bsym.interface.pymatgen import (unique_symmetry_operations_as_vectors_from_structure, 
-                                     space_group_from_structure, 
-                                     parse_site_distribution, 
-                                     unique_structure_substitutions, 
-                                     new_structure_from_substitution, 
-                                     configuration_space_from_structure, 
-                                     space_group_symbol_from_structure, 
-                                     configuration_space_from_molecule, 
-                                     structure_cartesian_coordinates_mapping,
-                                     molecule_cartesian_coordinates_mapping,
-                                     unique_structure_substitutions_by_composition)
+from bsym.interface.pymatgen import (
+    unique_symmetry_operations_as_vectors_from_structure, 
+    space_group_from_structure, 
+    parse_site_distribution, 
+    unique_structure_substitutions, 
+    new_structure_from_substitution, 
+    configuration_space_from_structure, 
+    space_group_symbol_from_structure, 
+    configuration_space_from_molecule, 
+    structure_cartesian_coordinates_mapping,
+    molecule_cartesian_coordinates_mapping,
+    unique_structure_substitutions_by_composition,
+    random_unique_structure_substitutions
+)
 
 from itertools import permutations
 from bsym import SymmetryOperation, Configuration, SpaceGroup, PointGroup, ConfigurationSpace
@@ -231,6 +234,178 @@ class TestPymatgenInterface(unittest.TestCase):
         call_kwargs = mock_config_space.unique_configurations_by_composition.call_args[1]
         self.assertEqual(call_kwargs['verbose'], True)
         self.assertEqual(call_kwargs['show_progress'], 'notebook')
+        
+class TestRandomUniqueStructureSubstitutions(unittest.TestCase):
+    """Tests for random_unique_structure_substitutions."""
+    
+    @patch('bsym.interface.pymatgen.configuration_space_from_structure')
+    @patch('bsym.interface.pymatgen.new_structure_from_substitution')
+    def test_calls_configuration_space_from_structure_correctly(
+        self, mock_new_structure, mock_config_space_from_structure
+    ):
+        """Test that configuration space is created with correct parameters."""
+        mock_structure = Mock(spec=Structure)
+        mock_structure.indices_from_symbol = Mock(return_value=[0, 1, 2, 3])
+        
+        mock_config_space = Mock(spec=ConfigurationSpace)
+        mock_config_space.random_unique_configurations = Mock(return_value=[])
+        mock_config_space_from_structure.return_value = mock_config_space
+        
+        random_unique_structure_substitutions(
+            mock_structure,
+            'X',
+            {'Li': 2, 'Na': 2},
+            n=5,
+            atol=1e-6
+        )
+        
+        mock_config_space_from_structure.assert_called_once_with(
+            mock_structure,
+            subset=[0, 1, 2, 3],
+            atol=1e-6
+        )
+    
+    @patch('bsym.interface.pymatgen.configuration_space_from_structure')
+    @patch('bsym.interface.pymatgen.new_structure_from_substitution')
+    def test_converts_site_distribution_to_numeric(
+        self, mock_new_structure, mock_config_space_from_structure
+    ):
+        """Test that species names are converted to numeric indices."""
+        mock_structure = Mock(spec=Structure)
+        mock_structure.indices_from_symbol = Mock(return_value=[0, 1, 2, 3])
+        
+        mock_config_space = Mock(spec=ConfigurationSpace)
+        mock_config_space.random_unique_configurations = Mock(return_value=[])
+        mock_config_space_from_structure.return_value = mock_config_space
+        
+        random_unique_structure_substitutions(
+            mock_structure,
+            'X',
+            {'Li': 2, 'Na': 2},
+            n=5
+        )
+        
+        call_kwargs = mock_config_space.random_unique_configurations.call_args[1]
+        self.assertEqual(call_kwargs['site_distribution'], {0: 2, 1: 2})
+    
+    @patch('bsym.interface.pymatgen.configuration_space_from_structure')
+    @patch('bsym.interface.pymatgen.new_structure_from_substitution')
+    def test_passes_parameters_to_random_unique_configurations(
+        self, mock_new_structure, mock_config_space_from_structure
+    ):
+        """Test that n, sampling, and seed are passed through correctly."""
+        mock_structure = Mock(spec=Structure)
+        mock_structure.indices_from_symbol = Mock(return_value=[0, 1, 2, 3])
+        
+        mock_config_space = Mock(spec=ConfigurationSpace)
+        mock_config_space.random_unique_configurations = Mock(return_value=[])
+        mock_config_space_from_structure.return_value = mock_config_space
+        
+        random_unique_structure_substitutions(
+            mock_structure,
+            'X',
+            {'Li': 2, 'Na': 2},
+            n=10,
+            sampling='uniform',
+            seed=42
+        )
+        
+        call_kwargs = mock_config_space.random_unique_configurations.call_args[1]
+        self.assertEqual(call_kwargs['n'], 10)
+        self.assertEqual(call_kwargs['sampling'], 'uniform')
+        self.assertEqual(call_kwargs['seed'], 42)
+    
+    @patch('bsym.interface.pymatgen.configuration_space_from_structure')
+    @patch('bsym.interface.pymatgen.new_structure_from_substitution')
+    def test_converts_configurations_to_structures(
+        self, mock_new_structure, mock_config_space_from_structure
+    ):
+        """Test that configurations are converted to Structure objects."""
+        mock_structure = Mock(spec=Structure)
+        mock_structure.indices_from_symbol = Mock(return_value=[0, 1, 2])
+        
+        mock_config = Mock(spec=Configuration)
+        mock_config.tolist = Mock(return_value=[0, 1, 0])  # Li, Na, Li
+        mock_config.count = 3
+        
+        mock_config_space = Mock(spec=ConfigurationSpace)
+        mock_config_space.random_unique_configurations = Mock(return_value=[mock_config])
+        mock_config_space_from_structure.return_value = mock_config_space
+        
+        mock_new_struct = Mock(spec=Structure)
+        mock_new_structure.return_value = mock_new_struct
+        
+        random_unique_structure_substitutions(
+            mock_structure,
+            'X',
+            {'Li': 2, 'Na': 1},
+            n=1
+        )
+        
+        mock_new_structure.assert_called_once_with(
+            mock_structure,
+            [0, 1, 2],
+            ['Li', 'Na', 'Li']
+        )
+    
+    @patch('bsym.interface.pymatgen.configuration_space_from_structure')
+    @patch('bsym.interface.pymatgen.new_structure_from_substitution')
+    def test_sets_number_of_equivalent_configurations(
+        self, mock_new_structure, mock_config_space_from_structure
+    ):
+        """Test that degeneracy is set on returned structures."""
+        mock_structure = Mock(spec=Structure)
+        mock_structure.indices_from_symbol = Mock(return_value=[0, 1, 2])
+        
+        mock_config = Mock(spec=Configuration)
+        mock_config.tolist = Mock(return_value=[0, 1, 0])
+        mock_config.count = 6
+        
+        mock_config_space = Mock(spec=ConfigurationSpace)
+        mock_config_space.random_unique_configurations = Mock(return_value=[mock_config])
+        mock_config_space_from_structure.return_value = mock_config_space
+        
+        mock_new_struct = Mock(spec=Structure)
+        mock_new_structure.return_value = mock_new_struct
+        
+        result = random_unique_structure_substitutions(
+            mock_structure,
+            'X',
+            {'Li': 2, 'Na': 1},
+            n=1
+        )
+        
+        self.assertEqual(result[0].number_of_equivalent_configurations, 6)
+    
+    @patch('bsym.interface.pymatgen.configuration_space_from_structure')
+    def test_returns_correct_number_of_structures(
+        self, mock_config_space_from_structure
+    ):
+        """Test that the correct number of structures is returned."""
+        mock_structure = Mock(spec=Structure)
+        mock_structure.indices_from_symbol = Mock(return_value=[0, 1, 2, 3])
+        
+        mock_configs = []
+        for i in range(5):
+            mock_config = Mock(spec=Configuration)
+            mock_config.tolist = Mock(return_value=[0, 0, 1, 1])
+            mock_config.count = 2
+            mock_configs.append(mock_config)
+        
+        mock_config_space = Mock(spec=ConfigurationSpace)
+        mock_config_space.random_unique_configurations = Mock(return_value=mock_configs)
+        mock_config_space_from_structure.return_value = mock_config_space
+        
+        with patch('bsym.interface.pymatgen.new_structure_from_substitution') as mock_new:
+            mock_new.return_value = Mock(spec=Structure)
+            result = random_unique_structure_substitutions(
+                mock_structure,
+                'X',
+                {'Li': 2, 'Na': 2},
+                n=5
+            )
+        
+        self.assertEqual(len(result), 5)
         
 
 if __name__ == '__main__':

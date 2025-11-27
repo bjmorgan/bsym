@@ -121,6 +121,59 @@ class ConfigurationSpace:
             )  
         return self.enumerate_configurations(generator, verbose=verbose)
 
+    def random_unique_configurations(
+        self,
+        site_distribution: dict[int, int],
+        n: int,
+        sampling: str = 'degeneracy_weighted',
+        seed: int | None = None,
+    ) -> list[Configuration]:
+        """Generate n random symmetry-inequivalent configurations.
+        
+        Args:
+            site_distribution: Dictionary mapping species labels to counts.
+            n: Number of unique configurations to generate.
+            sampling: Sampling method. Either 'degeneracy_weighted' (default) or
+                'uniform'. 'degeneracy_weighted' samples configurations with
+                probability proportional to their degeneracy. 'uniform' samples
+                uniformly over equivalence classes.
+            seed: Random seed for reproducibility.
+        
+        Returns:
+            List of n unique Configuration objects with count attributes set.
+        
+        Raises:
+            ValueError: If sampling is not 'degeneracy_weighted' or 'uniform'.
+        """
+        if sampling not in ('degeneracy_weighted', 'uniform'):
+            raise ValueError(
+                f"sampling must be 'degeneracy_weighted' or 'uniform', got '{sampling}'"
+            )
+        
+        rng = np.random.default_rng(seed)
+        seen: set[bytes] = set()
+        unique_configs: list[Configuration] = []
+        
+        while len(unique_configs) < n:
+            config = self._generate_random_configuration(site_distribution, rng)
+            config_hash = config.as_bytes()
+            
+            if config_hash in seen:
+                continue
+            
+            equivalents = config.get_byte_equivalents(self.symmetry_group)
+            degeneracy = len(equivalents)
+            
+            if sampling == 'uniform':
+                if rng.random() >= 1.0 / degeneracy:
+                    continue
+            
+            seen.update(equivalents)
+            config.count = degeneracy
+            unique_configs.append(config)
+        
+        return unique_configs
+        
     def unique_colourings(self, colours, verbose=False):
         """
         Find the symmetry inequivalent colourings for a given number of 'colours'.
@@ -221,6 +274,38 @@ class ConfigurationSpace:
             print(f"  Total unique configurations: {sum(len(configs) for configs in results.values())}")
         
         return results
+        
+    def _generate_random_configuration(
+        self,
+        site_distribution: dict[int, int],
+        rng: np.random.Generator,
+    ) -> Configuration:
+        """Generate a random configuration with the given site distribution.
+        
+        Args:
+            site_distribution: Dictionary mapping species labels to counts.
+            rng: Random number generator.
+        
+        Returns:
+            A random Configuration with the specified distribution.
+        """
+        n_sites = sum(site_distribution.values())
+        config = np.empty(n_sites, dtype=int)
+        available_indices = np.arange(n_sites)
+        
+        # Process all but the last species
+        species_list = list(site_distribution.items())
+        for species, count in species_list[:-1]:
+            selected = _select_random_indices(available_indices, count, rng)
+            config[selected] = species
+            # Remove selected indices from available
+            available_indices = np.setdiff1d(available_indices, selected)
+        
+        # Last species gets remaining indices
+        last_species, _ = species_list[-1]
+        config[available_indices] = last_species
+        
+        return Configuration(config)
 
 def apply_species_mapping(config, mapping_vector):
     """
@@ -273,3 +358,20 @@ def permutation_as_config_number(p):
         tot *= 10
         tot += num
     return tot
+        
+def _select_random_indices(
+    available_indices: np.ndarray,
+    count: int,
+    rng: np.random.Generator,
+) -> np.ndarray:
+    """Select count random indices from available_indices.
+    
+    Args:
+        available_indices: Array of indices to select from.
+        count: Number of indices to select.
+        rng: Random number generator.
+    
+    Returns:
+        Array of selected indices.
+    """
+    return rng.choice(available_indices, size=count, replace=False)
