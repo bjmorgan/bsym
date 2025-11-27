@@ -547,6 +547,234 @@ class ConfigurationSpaceModuleFunctionsTestCase( unittest.TestCase ):
         
         # [1,0,0] has 2 equivalents: [1,0,0] and [0,1,0]
         self.assertEqual(unique_configs[0].count, 2)
+
+class TestConfigurationSpaceRandomUniqueConfigurations(unittest.TestCase):
+    """Tests for ConfigurationSpace.random_unique_configurations and helpers."""
+    
+    def test_random_unique_configurations_returns_n_configurations(self):
+        """
+        Test that random_unique_configurations returns n configurations
+        when n unique configurations are found.
+        """
+        config_space = ConfigurationSpace(objects=[1, 2, 3, 4])
+        
+        mock_config_1 = Mock(spec=Configuration)
+        mock_config_1.as_bytes.return_value = b'config1'
+        mock_config_1.get_byte_equivalents.return_value = {b'config1'}
+        
+        mock_config_2 = Mock(spec=Configuration)
+        mock_config_2.as_bytes.return_value = b'config2'
+        mock_config_2.get_byte_equivalents.return_value = {b'config2'}
+        
+        with patch.object(config_space, '_generate_random_configuration',
+                          side_effect=[mock_config_1, mock_config_2]):
+            result = config_space.random_unique_configurations(
+                site_distribution={1: 2, 0: 2},
+                n=2,
+                sampling='degeneracy_weighted',
+            )
+        
+        self.assertEqual(len(result), 2)
+    
+    def test_random_unique_configurations_skips_equivalent_configurations(self):
+        """
+        Test that configurations equivalent to already-seen configurations
+        are skipped.
+        """
+        config_space = ConfigurationSpace(objects=[1, 2, 3, 4])
+        
+        mock_config_a = Mock(spec=Configuration)
+        mock_config_a.as_bytes.return_value = b'config_a'
+        mock_config_a.get_byte_equivalents.return_value = {b'config_a', b'config_b'}
+        
+        mock_config_b = Mock(spec=Configuration)
+        mock_config_b.as_bytes.return_value = b'config_b'  # Equivalent to config_a
+        
+        mock_config_c = Mock(spec=Configuration)
+        mock_config_c.as_bytes.return_value = b'config_c'
+        mock_config_c.get_byte_equivalents.return_value = {b'config_c'}
+        
+        with patch.object(config_space, '_generate_random_configuration',
+                          side_effect=[mock_config_a, mock_config_b, mock_config_c]):
+            result = config_space.random_unique_configurations(
+                site_distribution={1: 2, 0: 2},
+                n=2,
+                sampling='degeneracy_weighted',
+            )
+        
+        self.assertEqual(len(result), 2)
+        self.assertIn(mock_config_a, result)
+        self.assertIn(mock_config_c, result)
+        self.assertNotIn(mock_config_b, result)
+    
+    def test_random_unique_configurations_sets_count_attribute(self):
+        """
+        Test that returned configurations have their count attribute
+        set to the number of equivalent configurations.
+        """
+        config_space = ConfigurationSpace(objects=[1, 2, 3, 4])
+        
+        mock_config = Mock(spec=Configuration)
+        mock_config.as_bytes.return_value = b'config'
+        mock_config.get_byte_equivalents.return_value = {b'equiv_1', b'equiv_2'}
+        
+        with patch.object(config_space, '_generate_random_configuration',
+                          return_value=mock_config):
+            result = config_space.random_unique_configurations(
+                site_distribution={1: 2, 0: 2},
+                n=1,
+                sampling='degeneracy_weighted',
+            )
+        
+        self.assertEqual(result[0].count, 2)
+    
+    def test_random_unique_configurations_raises_for_invalid_sampling(self):
+        """
+        Test that an invalid sampling value raises ValueError.
+        """
+        config_space = ConfigurationSpace(objects=[1, 2, 3, 4])
+        
+        with self.assertRaises(ValueError):
+            config_space.random_unique_configurations(
+                site_distribution={1: 2, 0: 2},
+                n=1,
+                sampling='invalid_option',
+            )
+    
+    def test_random_unique_configurations_passes_seed_to_random_generator(self):
+        """
+        Test that the seed parameter is used to initialise the random generator.
+        """
+        config_space = ConfigurationSpace(objects=[1, 2, 3, 4])
+        
+        mock_config = Mock(spec=Configuration)
+        mock_config.as_bytes.return_value = b'config'
+        mock_config.get_byte_equivalents.return_value = {b'config'}
+        
+        with patch('bsym.configuration_space.np.random.default_rng') as mock_rng_constructor:
+            mock_rng = Mock()
+            mock_rng_constructor.return_value = mock_rng
+            
+            with patch.object(config_space, '_generate_random_configuration',
+                              return_value=mock_config):
+                config_space.random_unique_configurations(
+                    site_distribution={1: 2, 0: 2},
+                    n=1,
+                    sampling='degeneracy_weighted',
+                    seed=42,
+                )
+            
+            mock_rng_constructor.assert_called_once_with(42)
+    
+    def test_random_unique_configurations_uniform_rejects_based_on_degeneracy(self):
+        """
+        Test that uniform sampling rejects configurations with probability
+        proportional to their degeneracy.
+        """
+        config_space = ConfigurationSpace(objects=[1, 2, 3, 4])
+        
+        mock_config = Mock(spec=Configuration)
+        mock_config.as_bytes.return_value = b'config'
+        mock_config.get_byte_equivalents.return_value = {b'equiv_1', b'equiv_2'}  # degeneracy = 2
+        
+        mock_rng = Mock()
+        mock_rng.random.return_value = 0.3  # < 0.5 (1/degeneracy = 1/2), so should accept
+        
+        with patch('bsym.configuration_space.np.random.default_rng', return_value=mock_rng):
+            with patch.object(config_space, '_generate_random_configuration',
+                              return_value=mock_config):
+                result = config_space.random_unique_configurations(
+                    site_distribution={1: 2, 0: 2},
+                    n=1,
+                    sampling='uniform',
+                )
+        
+        self.assertEqual(len(result), 1)
+    
+    def test_random_unique_configurations_uniform_rejection_does_not_add_to_seen(self):
+        """
+        Test that when uniform sampling rejects a configuration,
+        it is not added to the seen set (can be found again later).
+        """
+        config_space = ConfigurationSpace(objects=[1, 2, 3, 4])
+        
+        mock_config = Mock(spec=Configuration)
+        mock_config.as_bytes.return_value = b'config'
+        mock_config.get_byte_equivalents.return_value = {b'equiv_1', b'equiv_2'}  # degeneracy = 2
+        
+        mock_rng = Mock()
+        mock_rng.random.side_effect = [0.7, 0.3]  # First reject, then accept
+        
+        with patch('bsym.configuration_space.np.random.default_rng', return_value=mock_rng):
+            with patch.object(config_space, '_generate_random_configuration',
+                            return_value=mock_config) as mock_generate:
+                result = config_space.random_unique_configurations(
+                    site_distribution={1: 2, 0: 2},
+                    n=1,
+                    sampling='uniform',
+                )
+            
+                self.assertEqual(mock_generate.call_count, 2)
+        
+        self.assertEqual(len(result), 1)
+    
+    def test_generate_random_configuration_returns_configuration_with_correct_distribution(self):
+        """
+        Test that _generate_random_configuration returns a Configuration
+        with the correct count of each species.
+        """
+        config_space = ConfigurationSpace(objects=[1, 2, 3, 4])
+        mock_rng = Mock()
+        
+        with patch('bsym.configuration_space._select_random_indices',
+                   return_value=np.array([0, 1])):
+            result = config_space._generate_random_configuration(
+                site_distribution={1: 2, 0: 2},
+                rng=mock_rng,
+            )
+        
+        self.assertIsInstance(result, Configuration)
+        result_list = result.tolist()
+        self.assertEqual(result_list.count(0), 2)
+        self.assertEqual(result_list.count(1), 2)
+    
+    
+    def test_generate_random_configuration_uses_select_random_indices(self):
+        """
+        Test that _generate_random_configuration uses _select_random_indices
+        to select positions for each species.
+        """
+        config_space = ConfigurationSpace(objects=[1, 2, 3, 4])
+        mock_rng = Mock()
+        
+        with patch('bsym.configuration_space._select_random_indices',
+                   return_value=np.array([1, 3])) as mock_select:
+            result = config_space._generate_random_configuration(
+                site_distribution={1: 2, 0: 2},
+                rng=mock_rng,
+            )
+        
+        mock_select.assert_called_once()
+        self.assertEqual(result.tolist(), [0, 1, 0, 1])
+    
+    
+    def test_generate_random_configuration_passes_rng_to_select_random_indices(self):
+        """
+        Test that _generate_random_configuration passes the rng
+        to _select_random_indices.
+        """
+        config_space = ConfigurationSpace(objects=[1, 2, 3, 4])
+        mock_rng = Mock()
+        
+        with patch('bsym.configuration_space._select_random_indices',
+                return_value=np.array([0, 1])) as mock_select:
+            config_space._generate_random_configuration(
+                site_distribution={1: 2, 0: 2},
+                rng=mock_rng,
+            )
+        
+        args, _ = mock_select.call_args
+        self.assertIs(args[2], mock_rng)
             
 
 if __name__ == '__main__':

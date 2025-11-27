@@ -497,3 +497,62 @@ def unique_structure_substitutions_by_composition(
         results[composition_tuple] = structures
 
     return results
+    
+def random_unique_structure_substitutions(
+    structure,
+    to_substitute,
+    site_distribution,
+    n,
+    sampling='degeneracy_weighted',
+    seed=None,
+    atol=1e-5,
+):
+    """
+    Generate n random symmetry-unique structures by substituting sites in a pymatgen structure.
+
+    Args:
+        structure (pymatgen.Structure): The parent structure.
+        to_substitute (str): Atom label for the sites to be substituted.
+        site_distribution (dict): Dictionary mapping species to counts, e.g. {'O': 8, 'F': 8}.
+        n (int): Number of unique structures to generate.
+        sampling (str): Sampling method. Either 'degeneracy_weighted' (default) or 'uniform'.
+            'degeneracy_weighted' samples configurations with probability proportional
+            to their degeneracy. 'uniform' samples uniformly over equivalence classes.
+        seed (int, optional): Random seed for reproducibility.
+        atol (float): Tolerance factor for coordinate mapping. Default=1e-5.
+
+    Returns:
+        list[Structure]: A list of n unique Structure objects. Each has a
+            `number_of_equivalent_configurations` attribute.
+    """
+    site_substitution_index = list(structure.indices_from_symbol(to_substitute))
+    
+    config_space = configuration_space_from_structure(
+        structure,
+        subset=site_substitution_index,
+        atol=atol
+    )
+    
+    numeric_site_distribution, numeric_site_mapping = parse_site_distribution(
+        site_distribution
+    )
+    
+    configurations = config_space.random_unique_configurations(
+        site_distribution=numeric_site_distribution,
+        n=n,
+        sampling=sampling,
+        seed=seed,
+    )
+    
+    unique_structures = []
+    for config in configurations:
+        species_for_sites = [numeric_site_mapping[i] for i in config.tolist()]
+        new_structure = new_structure_from_substitution(
+            structure,
+            site_substitution_index,
+            species_for_sites
+        )
+        new_structure.number_of_equivalent_configurations = config.count
+        unique_structures.append(new_structure)
+    
+    return unique_structures

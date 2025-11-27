@@ -12,3 +12,4 @@ These guides show you how to solve common crystallographic problems using the ``
    fixed_composition
    varying_composition
    multi_level_disorder
+   random_sampling

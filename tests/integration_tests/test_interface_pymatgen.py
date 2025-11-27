@@ -3,15 +3,18 @@ from unittest.mock import Mock, MagicMock, patch, call
 import numpy as np
 from pymatgen.core.lattice import Lattice
 from pymatgen.core.structure import Molecule, Structure
-from bsym.interface.pymatgen import (unique_symmetry_operations_as_vectors_from_structure, 
-                                     space_group_from_structure, 
-                                     parse_site_distribution, 
-                                     unique_structure_substitutions, 
-                                     new_structure_from_substitution, 
-                                     configuration_space_from_structure, 
-                                     space_group_symbol_from_structure, 
-                                     configuration_space_from_molecule,
-                                     unique_structure_substitutions_by_composition)
+from bsym.interface.pymatgen import (
+    unique_symmetry_operations_as_vectors_from_structure, 
+    space_group_from_structure, 
+    parse_site_distribution, 
+    unique_structure_substitutions, 
+    new_structure_from_substitution, 
+    configuration_space_from_structure, 
+    space_group_symbol_from_structure, 
+    configuration_space_from_molecule,
+    unique_structure_substitutions_by_composition,
+    random_unique_structure_substitutions
+)
 
 from itertools import permutations
 from bsym import ( SymmetryOperation, 
@@ -256,6 +259,103 @@ class TestPymatgenInterface( unittest.TestCase ):
         # Verify total unique configurations
         total_unique = sum(len(configs) for configs in results.values())
         self.assertEqual(total_unique, 6)
+        
+class TestRandomUniqueStructureSubstitutions(unittest.TestCase):
+    """Integration tests for random_unique_structure_substitutions."""
+    
+    def setUp(self):
+        """Set up a simple 4x4 square lattice structure."""
+        coords = np.array([[0.0, 0.0, 0.0]])
+        atom_list = ['Li']
+        lattice = Lattice.from_parameters(a=1.0, b=1.0, c=1.0, alpha=90, beta=90, gamma=90)
+        self.parent_structure = Structure(lattice, atom_list, coords) * [4, 4, 1]
+    
+    def test_returns_n_unique_structures(self):
+        """Test that the correct number of structures is returned."""
+        result = random_unique_structure_substitutions(
+            self.parent_structure,
+            'Li',
+            {'Na': 2, 'Li': 14},
+            n=3,
+            seed=42
+        )
+        
+        self.assertEqual(len(result), 3)
+    
+    def test_returned_structures_are_mutually_inequivalent(self):
+        """Test that returned structures are symmetry-inequivalent."""
+        result = random_unique_structure_substitutions(
+            self.parent_structure,
+            'Li',
+            {'Na': 2, 'Li': 14},
+            n=5,
+            seed=42
+        )
+        
+        # Each structure should have Na at different relative positions
+        na_positions = []
+        for struct in result:
+            na_indices = struct.indices_from_symbol('Na')
+            na_coords = tuple(sorted([tuple(struct[i].frac_coords) for i in na_indices]))
+            na_positions.append(na_coords)
+        
+        # All Na position sets should be unique
+        self.assertEqual(len(na_positions), len(set(na_positions)))
+    
+    def test_same_seed_produces_same_results(self):
+        """Test that using the same seed produces identical results."""
+        result_1 = random_unique_structure_substitutions(
+            self.parent_structure,
+            'Li',
+            {'Na': 2, 'Li': 14},
+            n=3,
+            seed=42
+        )
+        
+        result_2 = random_unique_structure_substitutions(
+            self.parent_structure,
+            'Li',
+            {'Na': 2, 'Li': 14},
+            n=3,
+            seed=42
+        )
+        
+        self.assertEqual(len(result_1), len(result_2))
+        for s1, s2 in zip(result_1, result_2):
+            na_idx_1 = list(s1.indices_from_symbol('Na'))
+            na_idx_2 = list(s2.indices_from_symbol('Na'))
+            self.assertEqual(na_idx_1, na_idx_2)
+    
+    def test_structures_have_correct_composition(self):
+        """Test that returned structures have the requested composition."""
+        result = random_unique_structure_substitutions(
+            self.parent_structure,
+            'Li',
+            {'Na': 2, 'Mg': 1, 'Li': 13},
+            n=3,
+            seed=42
+        )
+        
+        for struct in result:
+            composition = struct.composition.as_dict()
+            self.assertEqual(composition['Na'], 2)
+            self.assertEqual(composition['Mg'], 1)
+            self.assertEqual(composition['Li'], 13)
+    
+    def test_structures_have_degeneracy_attribute(self):
+        """Test that returned structures have number_of_equivalent_configurations set."""
+        result = random_unique_structure_substitutions(
+            self.parent_structure,
+            'Li',
+            {'Na': 2, 'Li': 14},
+            n=3,
+            seed=42
+        )
+        
+        for struct in result:
+            self.assertTrue(hasattr(struct, 'number_of_equivalent_configurations'))
+            self.assertIsInstance(struct.number_of_equivalent_configurations, int)
+            self.assertGreater(struct.number_of_equivalent_configurations, 0)
 
 if __name__ == '__main__':
     unittest.main()

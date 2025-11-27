@@ -185,7 +185,7 @@ class Configuration:
         Returns:
             (List)
         """
-        return list(self.vector)
+        return self.vector.tolist()
 
     def pprint(self) -> None:
         print(" ".join([str(e) for e in self.tolist()]))
