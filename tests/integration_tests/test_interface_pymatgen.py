@@ -17,11 +17,15 @@ from bsym.interface.pymatgen import (
 )
 
 from itertools import permutations
-from bsym import ( SymmetryOperation, 
-                   Configuration, 
-                   SpaceGroup, 
-                   PointGroup, 
-                   ConfigurationSpace )
+import tempfile
+import os
+from bsym import (
+    SymmetryOperation, 
+    Configuration, 
+    SpaceGroup, 
+    PointGroup, 
+    ConfigurationSpace
+)
 
 class TestPymatgenInterface( unittest.TestCase ):
 
@@ -356,6 +360,61 @@ class TestRandomUniqueStructureSubstitutions(unittest.TestCase):
             self.assertTrue(hasattr(struct, 'number_of_equivalent_configurations'))
             self.assertIsInstance(struct.number_of_equivalent_configurations, int)
             self.assertGreater(struct.number_of_equivalent_configurations, 0)
+            
+    def test_random_unique_structure_substitutions_exclude_and_output_files(self):
+        """
+        Test the full workflow of generating structures in batches,
+        saving configurations, and excluding previous batches.
+        """
+        # Create parent structure
+        coords = np.array([[0.0, 0.0, 0.0]])
+        lattice = Lattice.from_parameters(a=1.0, b=1.0, c=1.0, alpha=90, beta=90, gamma=90)
+        unit_cell = Structure(lattice, ['Li'], coords)
+        parent_structure = unit_cell * [4, 4, 1]
+        
+        with tempfile.TemporaryDirectory() as tmpdir:
+            batch_1_file = os.path.join(tmpdir, 'batch_1.json')
+            batch_2_file = os.path.join(tmpdir, 'batch_2.json')
+            
+            # Batch 1: generate 5 structures
+            structures_1 = random_unique_structure_substitutions(
+                parent_structure,
+                'Li',
+                {'Na': 4, 'Li': 12},
+                n=5,
+                seed=42,
+                output_file=batch_1_file,
+            )
+            
+            self.assertEqual(len(structures_1), 5)
+            self.assertTrue(os.path.exists(batch_1_file))
+            
+            # Batch 2: generate 5 more, excluding batch 1
+            structures_2 = random_unique_structure_substitutions(
+                parent_structure,
+                'Li',
+                {'Na': 4, 'Li': 12},
+                n=5,
+                seed=43,
+                exclude_file=batch_1_file,
+                output_file=batch_2_file,
+            )
+            
+            self.assertEqual(len(structures_2), 5)
+            self.assertTrue(os.path.exists(batch_2_file))
+            
+            # Verify no overlap between batches
+            na_positions_1 = set()
+            for struct in structures_1:
+                na_indices = tuple(sorted(struct.indices_from_symbol('Na')))
+                na_positions_1.add(na_indices)
+            
+            na_positions_2 = set()
+            for struct in structures_2:
+                na_indices = tuple(sorted(struct.indices_from_symbol('Na')))
+                na_positions_2.add(na_indices)
+            
+            self.assertEqual(len(na_positions_1 & na_positions_2), 0)
 
 if __name__ == '__main__':
     unittest.main()

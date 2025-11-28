@@ -407,6 +407,119 @@ class TestRandomUniqueStructureSubstitutions(unittest.TestCase):
         
         self.assertEqual(len(result), 5)
         
+    def test_random_unique_structure_substitutions_exclude_file_excludes_configurations(self):
+        """
+        Test that configurations from exclude_file are excluded.
+        """
+        mock_structure = Mock(spec=Structure)
+        mock_structure.indices_from_symbol = Mock(return_value=[0, 1, 2, 3])
+        
+        mock_config_space = Mock(spec=ConfigurationSpace)
+        mock_config_space.random_unique_configurations = Mock(return_value=[])
+        
+        mock_excluded_config = Mock(spec=Configuration)
+        mock_excluded_config.tolist = Mock(return_value=[0, 0, 1, 1])  # 4 elements to match 4 sites
+        mock_excluded_configs = [mock_excluded_config]
+        
+        with patch('bsym.interface.pymatgen.configuration_space_from_structure', return_value=mock_config_space):
+            with patch('bsym.interface.pymatgen.load_configurations', return_value=mock_excluded_configs) as mock_load:
+                random_unique_structure_substitutions(
+                    mock_structure,
+                    'X',
+                    {'Li': 2, 'Na': 2},
+                    n=1,
+                    exclude_file='excluded.json',
+                )
+                
+                mock_load.assert_called_once_with('excluded.json')
+                call_kwargs = mock_config_space.random_unique_configurations.call_args[1]
+                self.assertEqual(call_kwargs['exclude'], mock_excluded_configs)
+    
+    
+    def test_random_unique_structure_substitutions_exclude_file_accepts_list(self):
+        """
+        Test that exclude_file accepts a list of files.
+        """
+        mock_structure = Mock(spec=Structure)
+        mock_structure.indices_from_symbol = Mock(return_value=[0, 1, 2, 3])
+        
+        mock_config_space = Mock(spec=ConfigurationSpace)
+        mock_config_space.random_unique_configurations = Mock(return_value=[])
+        
+        mock_config_1 = Mock(spec=Configuration)
+        mock_config_1.tolist = Mock(return_value=[0, 0, 1, 1])
+        mock_configs_1 = [mock_config_1]
+        
+        mock_config_2 = Mock(spec=Configuration)
+        mock_config_2.tolist = Mock(return_value=[0, 1, 0, 1])
+        mock_configs_2 = [mock_config_2]
+        
+        with patch('bsym.interface.pymatgen.configuration_space_from_structure', return_value=mock_config_space):
+            with patch('bsym.interface.pymatgen.load_configurations', side_effect=[mock_configs_1, mock_configs_2]) as mock_load:
+                random_unique_structure_substitutions(
+                    mock_structure,
+                    'X',
+                    {'Li': 2, 'Na': 2},
+                    n=1,
+                    exclude_file=['batch_1.json', 'batch_2.json'],
+                )
+                
+                self.assertEqual(mock_load.call_count, 2)
+                mock_load.assert_any_call('batch_1.json')
+                mock_load.assert_any_call('batch_2.json')
+                call_kwargs = mock_config_space.random_unique_configurations.call_args[1]
+                self.assertEqual(call_kwargs['exclude'], mock_configs_1 + mock_configs_2)
+                
+    def test_random_unique_structure_substitutions_output_file_saves_configurations(self):
+        """
+        Test that output_file saves the generated configurations.
+        """
+        mock_structure = Mock(spec=Structure)
+        mock_structure.indices_from_symbol = Mock(return_value=[0, 1, 2, 3])
+        
+        mock_config = Mock(spec=Configuration)
+        mock_config.tolist = Mock(return_value=[0, 0, 1, 1])
+        mock_config.count = 2
+        
+        mock_config_space = Mock(spec=ConfigurationSpace)
+        mock_config_space.random_unique_configurations = Mock(return_value=[mock_config])
+        
+        with patch('bsym.interface.pymatgen.configuration_space_from_structure', return_value=mock_config_space):
+            with patch('bsym.interface.pymatgen.new_structure_from_substitution') as mock_new_structure:
+                mock_new_structure.return_value = Mock(spec=Structure)
+                with patch('bsym.interface.pymatgen.save_configurations') as mock_save:
+                    random_unique_structure_substitutions(
+                        mock_structure,
+                        'X',
+                        {'Li': 2, 'Na': 2},
+                        n=1,
+                        output_file='output.json',
+                    )
+                    
+                    mock_save.assert_called_once_with([mock_config], 'output.json')
+                    
+    def test_random_unique_structure_substitutions_raises_on_mismatched_configuration_length(self):
+        """
+        Test that ValueError is raised if excluded configuration length
+        doesn't match the number of sites to substitute.
+        """
+        mock_structure = Mock(spec=Structure)
+        mock_structure.indices_from_symbol = Mock(return_value=[0, 1, 2, 3])  # 4 sites
+        
+        mock_config = Mock(spec=Configuration)
+        mock_config.tolist = Mock(return_value=[0, 1, 0])  # 3 elements - mismatch
+        
+        with patch('bsym.interface.pymatgen.configuration_space_from_structure'):
+            with patch('bsym.interface.pymatgen.load_configurations', return_value=[mock_config]):
+                with self.assertRaises(ValueError):
+                    random_unique_structure_substitutions(
+                        mock_structure,
+                        'X',
+                        {'Li': 2, 'Na': 2},
+                        n=1,
+                        exclude_file='excluded.json',
+                    )
+        
 
 if __name__ == '__main__':
     unittest.main()
