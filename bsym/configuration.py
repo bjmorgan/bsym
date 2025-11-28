@@ -3,6 +3,7 @@ from __future__ import annotations
 import numpy as np
 from numpy.typing import NDArray
 from typing import TYPE_CHECKING, Any
+import json
 if TYPE_CHECKING:
     from bsym.symmetry_operation import SymmetryOperation
 
@@ -264,6 +265,26 @@ class Configuration:
             Configuration.array_to_bytes(vec) for vec in transformed_vectors
         )
         return byte_equivalents
+        
+    def to_dict(self) -> dict:
+        """Convert to JSON-serialisable dictionary.
+        
+        Returns:
+            Dictionary with 'vector' key containing the configuration as a list.
+        """
+        return {'vector': self.tolist()}
+    
+    @classmethod
+    def from_dict(cls, d: dict) -> 'Configuration':
+        """Create Configuration from dictionary.
+        
+        Args:
+            d: Dictionary with 'vector' key containing configuration values.
+        
+        Returns:
+            New Configuration instance.
+        """
+        return cls(d['vector'])
 
 def as_number(a: list[int] | NDArray[np.int_]) -> int:
     tot = 0
@@ -271,3 +292,28 @@ def as_number(a: list[int] | NDArray[np.int_]) -> int:
         tot *= 10
         tot += int(num)
     return tot
+    
+def save_configurations(configurations: list[Configuration], filename: str) -> None:
+    """Save configurations to a JSON file.
+    
+    Args:
+        configurations: List of Configuration objects to save.
+        filename: Path to output file.
+    """
+    data = [config.to_dict() for config in configurations]
+    with open(filename, 'w') as f:
+        json.dump(data, f)
+
+
+def load_configurations(filename: str) -> list[Configuration]:
+    """Load configurations from a JSON file.
+    
+    Args:
+        filename: Path to input file.
+        
+    Returns:
+        List of Configuration objects.
+    """
+    with open(filename) as f:
+        data = json.load(f)
+    return [Configuration.from_dict(d) for d in data]

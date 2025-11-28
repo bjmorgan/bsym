@@ -775,6 +775,104 @@ class TestConfigurationSpaceRandomUniqueConfigurations(unittest.TestCase):
         
         args, _ = mock_select.call_args
         self.assertIs(args[2], mock_rng)
+        
+    def test_random_unique_configurations_excludes_provided_configurations(self):
+        """
+        Test that configurations in the exclude list are not returned.
+        """
+        config_space = ConfigurationSpace(objects=[1, 2, 3, 4])
+        
+        mock_config_a = Mock(spec=Configuration)
+        mock_config_a.as_bytes.return_value = b'config_a'
+        mock_config_a.get_byte_equivalents.return_value = {b'config_a'}
+        
+        mock_config_b = Mock(spec=Configuration)
+        mock_config_b.as_bytes.return_value = b'config_b'
+        mock_config_b.get_byte_equivalents.return_value = {b'config_b'}
+        
+        mock_config_c = Mock(spec=Configuration)
+        mock_config_c.as_bytes.return_value = b'config_c'
+        mock_config_c.get_byte_equivalents.return_value = {b'config_c'}
+        
+        # Exclude config_a
+        mock_excluded = Mock(spec=Configuration)
+        mock_excluded.get_byte_equivalents.return_value = {b'config_a'}
+        
+        with patch.object(config_space, '_generate_random_configuration',
+                        side_effect=[mock_config_a, mock_config_b, mock_config_c]):
+            result = config_space.random_unique_configurations(
+                site_distribution={1: 2, 0: 2},
+                n=2,
+                sampling='degeneracy_weighted',
+                exclude=[mock_excluded],
+            )
+        
+        self.assertEqual(len(result), 2)
+        self.assertIn(mock_config_b, result)
+        self.assertIn(mock_config_c, result)
+        self.assertNotIn(mock_config_a, result)
+        
+    def test_random_unique_configurations_excludes_equivalents_of_excluded_configurations(self):
+        """
+        Test that configurations equivalent to those in the exclude list
+        are also not returned.
+        """
+        config_space = ConfigurationSpace(objects=[1, 2, 3, 4])
+        
+        # config_a and config_b are equivalent (both in exclude's equivalents)
+        mock_config_a = Mock(spec=Configuration)
+        mock_config_a.as_bytes.return_value = b'config_a'
+        
+        mock_config_b = Mock(spec=Configuration)
+        mock_config_b.as_bytes.return_value = b'config_b'
+        
+        mock_config_c = Mock(spec=Configuration)
+        mock_config_c.as_bytes.return_value = b'config_c'
+        mock_config_c.get_byte_equivalents.return_value = {b'config_c'}
+        
+        mock_config_d = Mock(spec=Configuration)
+        mock_config_d.as_bytes.return_value = b'config_d'
+        mock_config_d.get_byte_equivalents.return_value = {b'config_d'}
+        
+        # Excluded configuration has both config_a and config_b as equivalents
+        mock_excluded = Mock(spec=Configuration)
+        mock_excluded.get_byte_equivalents.return_value = {b'config_a', b'config_b'}
+        
+        with patch.object(config_space, '_generate_random_configuration',
+                        side_effect=[mock_config_a, mock_config_b, mock_config_c, mock_config_d]):
+            result = config_space.random_unique_configurations(
+                site_distribution={1: 2, 0: 2},
+                n=2,
+                sampling='degeneracy_weighted',
+                exclude=[mock_excluded],
+            )
+        
+        self.assertEqual(len(result), 2)
+        self.assertIn(mock_config_c, result)
+        self.assertIn(mock_config_d, result)
+        self.assertNotIn(mock_config_a, result)
+        self.assertNotIn(mock_config_b, result)
+        
+    def test_random_unique_configurations_with_exclude_none_works_as_default(self):
+        """
+        Test that exclude=None behaves the same as not passing exclude.
+        """
+        config_space = ConfigurationSpace(objects=[1, 2, 3, 4])
+        
+        mock_config = Mock(spec=Configuration)
+        mock_config.as_bytes.return_value = b'config'
+        mock_config.get_byte_equivalents.return_value = {b'config'}
+        
+        with patch.object(config_space, '_generate_random_configuration',
+                        return_value=mock_config):
+            result = config_space.random_unique_configurations(
+                site_distribution={1: 2, 0: 2},
+                n=1,
+                sampling='degeneracy_weighted',
+                exclude=None,
+            )
+        
+        self.assertEqual(len(result), 1)
             
 
 if __name__ == '__main__':

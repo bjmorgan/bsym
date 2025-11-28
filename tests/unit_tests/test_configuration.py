@@ -1,9 +1,13 @@
 import unittest
 from unittest.mock import Mock, patch
 from bsym.configuration import Configuration
+from bsym.configuration import save_configurations, load_configurations
 from bsym.symmetry_group import SymmetryGroup
 from bsym import SymmetryOperation
 import numpy as np
+import tempfile
+import json
+import os
 
 class TestConfiguration(unittest.TestCase):
 
@@ -278,6 +282,94 @@ class TestConfiguration(unittest.TestCase):
         static_result = Configuration.array_to_bytes(config.vector)
         
         self.assertEqual(instance_result, static_result)
+        
+    def test_configuration_to_dict(self):
+        """
+        Test that to_dict returns a JSON-serialisable dictionary.
+        """
+        config = Configuration([0, 1, 0, 1])
+        result = config.to_dict()
+        self.assertEqual(result, {'vector': [0, 1, 0, 1]})
+    
+    def test_configuration_from_dict(self):
+        """
+        Test that from_dict creates a Configuration from a dictionary.
+        """
+        d = {'vector': [1, 0, 1, 0]}    
+        config = Configuration.from_dict(d)
+        self.assertEqual(config.tolist(), [1, 0, 1, 0])
+    
+    def test_configuration_round_trip(self):
+        """
+        Test that to_dict and from_dict round-trip correctly.
+        """
+        original = Configuration([0, 0, 1, 1])    
+        d = original.to_dict()
+        restored = Configuration.from_dict(d)
+        self.assertEqual(original.tolist(), restored.tolist())
+        
+    def test_save_configurations_creates_json_file(self):
+        """
+        Test that save_configurations creates a JSON file.
+        """
+        configs = [Configuration([0, 1, 0, 1]), Configuration([1, 0, 1, 0])]
+        
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+            filename = f.name
+        
+        try:
+            save_configurations(configs, filename)
+            
+            with open(filename) as f:
+                data = json.load(f)
+            
+            self.assertEqual(len(data), 2)
+            self.assertEqual(data[0], {'vector': [0, 1, 0, 1]})
+            self.assertEqual(data[1], {'vector': [1, 0, 1, 0]})
+        finally:
+            os.unlink(filename)
+
+    def test_load_configurations_reads_json_file(self):
+        """
+        Test that load_configurations reads configurations from a JSON file.
+        """
+        data = [{'vector': [0, 1, 0, 1]}, {'vector': [1, 0, 1, 0]}]
+        
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+            json.dump(data, f)
+            filename = f.name
+        
+        try:
+            configs = load_configurations(filename)
+            
+            self.assertEqual(len(configs), 2)
+            self.assertEqual(configs[0].tolist(), [0, 1, 0, 1])
+            self.assertEqual(configs[1].tolist(), [1, 0, 1, 0])
+        finally:
+            os.unlink(filename)
+    
+    def test_save_and_load_configurations_round_trip(self):
+        """
+        Test that save and load round-trip correctly.
+        """
+        original_configs = [
+            Configuration([0, 0, 1, 1]),
+            Configuration([0, 1, 0, 1]),
+            Configuration([1, 1, 0, 0]),
+        ]
+        
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+            filename = f.name
+        
+        try:
+            save_configurations(original_configs, filename)
+            loaded_configs = load_configurations(filename)
+            
+            self.assertEqual(len(loaded_configs), len(original_configs))
+            for orig, loaded in zip(original_configs, loaded_configs):
+                self.assertEqual(orig.tolist(), loaded.tolist())
+        finally:
+            os.unlink(filename)
 
 if __name__ == '__main__':
     unittest.main()

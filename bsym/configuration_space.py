@@ -127,6 +127,7 @@ class ConfigurationSpace:
         n: int,
         sampling: str = 'degeneracy_weighted',
         seed: int | None = None,
+        exclude: list[Configuration] | None = None,
     ) -> list[Configuration]:
         """Generate n random symmetry-inequivalent configurations.
         
@@ -138,6 +139,8 @@ class ConfigurationSpace:
                 probability proportional to their degeneracy. 'uniform' samples
                 uniformly over equivalence classes.
             seed: Random seed for reproducibility.
+            exclude: List of configurations to exclude. Any configuration
+                equivalent to one in this list will not be returned.
         
         Returns:
             List of n unique Configuration objects with count attributes set.
@@ -153,6 +156,11 @@ class ConfigurationSpace:
         rng = np.random.default_rng(seed)
         seen: set[bytes] = set()
         unique_configs: list[Configuration] = []
+        
+        # Pre-populate seen with excluded configurations
+        if exclude is not None:
+            for config in exclude:
+                seen.update(config.get_byte_equivalents(self.symmetry_group))
         
         while len(unique_configs) < n:
             config = self._generate_random_configuration(site_distribution, rng)

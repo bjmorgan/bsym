@@ -8,6 +8,7 @@ from pymatgen.core.structure import Molecule, Structure
 from pymatgen.core.operations import SymmOp
 
 from bsym import SpaceGroup, SymmetryOperation, ConfigurationSpace, PointGroup
+from bsym.configuration import load_configurations, save_configurations
 from copy import copy
 from functools import partial
 import numpy as np
@@ -506,6 +507,8 @@ def random_unique_structure_substitutions(
     sampling='degeneracy_weighted',
     seed=None,
     atol=1e-5,
+    exclude_file=None,
+    output_file=None,
 ):
     """
     Generate n random symmetry-unique structures by substituting sites in a pymatgen structure.
@@ -520,12 +523,15 @@ def random_unique_structure_substitutions(
             to their degeneracy. 'uniform' samples uniformly over equivalence classes.
         seed (int, optional): Random seed for reproducibility.
         atol (float): Tolerance factor for coordinate mapping. Default=1e-5.
+        exclude_file (str or list[str], optional): Path(s) to JSON file(s) of configurations to exclude.
+        output_file (str, optional): Path to save generated configurations.
 
     Returns:
         list[Structure]: A list of n unique Structure objects. Each has a
             `number_of_equivalent_configurations` attribute.
     """
     site_substitution_index = list(structure.indices_from_symbol(to_substitute))
+    n_sites = len(site_substitution_index)
     
     config_space = configuration_space_from_structure(
         structure,
@@ -537,12 +543,33 @@ def random_unique_structure_substitutions(
         site_distribution
     )
     
+    # Load excluded configurations
+    exclude = None
+    if exclude_file is not None:
+        exclude = []
+        if isinstance(exclude_file, str):
+            exclude_file = [exclude_file]
+        for filename in exclude_file:
+            loaded = load_configurations(filename)
+            for config in loaded:
+                if len(config.tolist()) != n_sites:
+                    raise ValueError(
+                        f"Configuration length {len(config.tolist())} in '{filename}' "
+                        f"does not match number of sites {n_sites}"
+                    )
+            exclude.extend(loaded)
+    
     configurations = config_space.random_unique_configurations(
         site_distribution=numeric_site_distribution,
         n=n,
         sampling=sampling,
         seed=seed,
+        exclude=exclude,
     )
+    
+    # Save configurations if requested
+    if output_file is not None:
+        save_configurations(configurations, output_file)
     
     unique_structures = []
     for config in configurations:

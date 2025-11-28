@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [2.1.1] - 2025-05-28
+
+### Added
+- `exclude` parameter for `ConfigurationSpace.random_unique_configurations()` to exclude previously generated configurations
+- `exclude_file` and `output_file` parameters for `random_unique_structure_substitutions()` to support batch generation workflows
+- `Configuration.to_dict()` and `Configuration.from_dict()` methods for serialisation
+- `save_configurations()` and `load_configurations()` utility functions for JSON file I/O
+- Documentation for batch generation workflow in `random_sampling.ipynb`
+
 
 ## [2.0.0] - 2025-11-02
 
