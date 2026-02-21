@@ -5,7 +5,8 @@ from bsym.partitions import generate_partitions, satisfies_bounds
 import numpy as np
 from itertools import combinations_with_replacement
 from collections import Counter
-from tqdm import tqdm, tqdm_notebook
+from tqdm import tqdm
+from tqdm.auto import tqdm as tqdm_auto
 from typing import Iterator
 
 
@@ -112,8 +113,8 @@ class ConfigurationSpace:
             print('evaluating {:d} unique permutations.'.format( total_permutations))
         generator: Iterator[tuple[int, ...]] = unique_permutations(s)
         if show_progress:
-            TqdmClass = tqdm_notebook if show_progress == 'notebook' else tqdm
-            generator = TqdmClass( # type: ignore[assignment]
+            TqdmClass = tqdm_auto if show_progress == 'notebook' else tqdm
+            generator = TqdmClass(
                 generator,
                 total=total_permutations,
                 unit=' permutations',
@@ -245,7 +246,7 @@ class ConfigurationSpace:
         
         # Initialize progress bar without pre-counting (avoids iterator exhaustion)
         if show_progress:
-            TqdmClass = tqdm_notebook if show_progress == 'notebook' else tqdm
+            TqdmClass = tqdm_auto if show_progress == 'notebook' else tqdm
             progress_bar = TqdmClass(
                 desc="Compositions",
                 unit=" compositions",
