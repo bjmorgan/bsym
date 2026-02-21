@@ -189,6 +189,8 @@ class SymmetryGroup:
             self (:any:`SymmetryGroup`)
         """
         self.symmetry_operations.extend( symmetry_operations_list )
+        self._stacked_mappings = None
+        self._unique_mappings = None
         return self
 
     def append(
@@ -205,6 +207,8 @@ class SymmetryGroup:
             self (:any:`SymmetryGroup`)
         """
         self.symmetry_operations.append(symmetry_operation)
+        self._stacked_mappings = None
+        self._unique_mappings = None
         return self
 
     def by_label(

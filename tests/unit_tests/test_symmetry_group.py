@@ -60,13 +60,34 @@ class SymmetryGroupTestCase( unittest.TestCase ):
         s2 = Mock( spec=SymmetryOperation)
         sg.extend( [ s2 ] )
         self.assertEqual( sg.symmetry_operations, [ s0, s1, s2 ] )
-       
+
+    def test_extend_invalidates_caches(self):
+        s0 = SymmetryOperation.from_vector([1, 2, 3])
+        s1 = SymmetryOperation.from_vector([2, 1, 3])
+        sg = SymmetryGroup(symmetry_operations=[s0, s1])
+        # Access to populate caches
+        _ = sg.stacked_index_mappings
+        _ = sg.unique_index_mappings
+        s2 = SymmetryOperation.from_vector([2, 3, 1])
+        sg.extend([s2])
+        self.assertEqual(sg.stacked_index_mappings.shape[0], 3)
+
     def test_append( self ):
         s0, s1 = Mock( spec=SymmetryOperation ), Mock( spec=SymmetryOperation )
         sg = SymmetryGroup( symmetry_operations=[ s0, s1 ] )
         s2 = Mock( spec=SymmetryOperation)
         sg.append( s2 )
         self.assertEqual( sg.symmetry_operations, [ s0, s1, s2 ] )
+
+    def test_append_invalidates_caches(self):
+        s0 = SymmetryOperation.from_vector([1, 2, 3])
+        s1 = SymmetryOperation.from_vector([2, 1, 3])
+        sg = SymmetryGroup(symmetry_operations=[s0, s1])
+        _ = sg.stacked_index_mappings
+        _ = sg.unique_index_mappings
+        s2 = SymmetryOperation.from_vector([2, 3, 1])
+        sg.append(s2)
+        self.assertEqual(sg.stacked_index_mappings.shape[0], 3)
         	     
     def test_by_label( self ):
         s0, s1 = Mock( spec=SymmetryOperation ), Mock( spec=SymmetryOperation )
