@@ -187,7 +187,8 @@ class ConfigurationSpace:
 
             if sampling == 'uniform':
                 if rng.random() >= 1.0 / degeneracy:
-                    consecutive_failures += 1
+                    # Rejection by acceptance test is not a failure to find
+                    # a novel configuration, so don't increment the counter.
                     continue
 
             seen.update(equivalents)

@@ -250,6 +250,10 @@ class SymmetryGroup:
     def __mul__(self, other):
         """
         Direct product.
+
+        Note: the return type is determined by the left operand, so
+        ``SpaceGroup * SymmetryGroup`` returns a ``SpaceGroup`` while
+        ``SymmetryGroup * SpaceGroup`` returns a ``SymmetryGroup``.
         """
         return type(self)([s1 * s2 for s1, s2 in product(self.symmetry_operations, other.symmetry_operations)])
 
