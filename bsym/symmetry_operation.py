@@ -120,7 +120,7 @@ class SymmetryOperation:
         Returns:
             A new `SymmetryOperation` object corresponding to the inverse matrix operation.
         """
-        return SymmetryOperation(np.linalg.inv(self.matrix).astype(int), label=label)
+        return SymmetryOperation(self.matrix.T.copy(), label=label)
 
     @classmethod
     def from_vector(
