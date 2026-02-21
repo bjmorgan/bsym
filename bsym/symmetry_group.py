@@ -29,20 +29,20 @@ class SymmetryGroup:
 
     class_str = 'SymmetryGroup'
 
-    def __init__(self, symmetry_operations=[]):
+    def __init__(self, symmetry_operations: list[SymmetryOperation] | None = None):
         """
         Create a :any:`SymmetryGroup` object.
-    
+
         Args:
-            symmetry_operations (list): A list of :any:`SymmetryOperation` objects.
-    
+            symmetry_operations: A list of :any:`SymmetryOperation` objects.
+
         Returns:
             None
         """
-        self.symmetry_operations = symmetry_operations
+        self.symmetry_operations = symmetry_operations if symmetry_operations is not None else []
         # Cache for batched operations
-        self._stacked_mappings = None
-        self._unique_mappings = None
+        self._stacked_mappings: NDArray[np.int_] | None = None
+        self._unique_mappings: NDArray[np.int_] | None = None
     
     @property
     def stacked_index_mappings(self) -> NDArray[np.int_]:
@@ -189,6 +189,8 @@ class SymmetryGroup:
             self (:any:`SymmetryGroup`)
         """
         self.symmetry_operations.extend( symmetry_operations_list )
+        self._stacked_mappings = None
+        self._unique_mappings = None
         return self
 
     def append(
@@ -205,6 +207,8 @@ class SymmetryGroup:
             self (:any:`SymmetryGroup`)
         """
         self.symmetry_operations.append(symmetry_operation)
+        self._stacked_mappings = None
+        self._unique_mappings = None
         return self
 
     def by_label(
@@ -223,19 +227,14 @@ class SymmetryGroup:
         return next((so for so in self.symmetry_operations if so.label == label), None)
 
     @property
-    def labels(
-        self
-    ) -> list[SymmetryOperation]:
+    def labels(self) -> list[str | None]:
         """
         A list of labels for each :any:`SymmetryOperation` in this spacegroup.
 
-        Args:
-            None
-
         Returns:
-            (list): A list of label strings.
+            A list of label strings.
         """
-        return [so.label for so in self.symmetry_operations] 
+        return [so.label for so in self.symmetry_operations]
 
     def __repr__(self) -> str:
         to_return: str
@@ -251,7 +250,11 @@ class SymmetryGroup:
     def __mul__(self, other):
         """
         Direct product.
+
+        Note: the return type is determined by the left operand, so
+        ``SpaceGroup * SymmetryGroup`` returns a ``SpaceGroup`` while
+        ``SymmetryGroup * SpaceGroup`` returns a ``SymmetryGroup``.
         """
-        return SymmetryGroup([s1 * s2 for s1, s2 in product(self.symmetry_operations, other.symmetry_operations)])
+        return type(self)([s1 * s2 for s1, s2 in product(self.symmetry_operations, other.symmetry_operations)])
 
    

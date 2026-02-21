@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock, patch
 from bsym import ConfigurationSpace,SymmetryOperation, Configuration
-from bsym.configuration_space import permutation_as_config_number, colourings_generator, apply_species_mapping
+from bsym.configuration_space import colourings_generator, apply_species_mapping
 from bsym.symmetry_group import SymmetryGroup
 import numpy as np
 import io
@@ -450,9 +450,6 @@ class ConfigurationSpaceTestCase( unittest.TestCase ):
     
 
 class ConfigurationSpaceModuleFunctionsTestCase( unittest.TestCase ):
-      
-    def test_permutation_as_config_number(self):
-        self.assertEqual( permutation_as_config_number([1, 1, 0, 0, 1]), 11001)
 
     def test_colourings_generator(self):
         colourings = list(colourings_generator([1, 0], dim=3))
@@ -853,6 +850,26 @@ class TestConfigurationSpaceRandomUniqueConfigurations(unittest.TestCase):
         self.assertNotIn(mock_config_a, result)
         self.assertNotIn(mock_config_b, result)
         
+    def test_random_unique_configurations_raises_when_space_exhausted(self):
+        """
+        Test that requesting more configurations than exist raises RuntimeError.
+        """
+        config_space = ConfigurationSpace(objects=[1, 2, 3, 4])
+
+        mock_config = Mock(spec=Configuration)
+        mock_config.as_bytes.return_value = b'only_one'
+        mock_config.get_byte_equivalents.return_value = {b'only_one'}
+
+        with patch.object(config_space, '_generate_random_configuration',
+                          return_value=mock_config):
+            with self.assertRaises(RuntimeError):
+                config_space.random_unique_configurations(
+                    site_distribution={1: 2, 0: 2},
+                    n=2,
+                    sampling='degeneracy_weighted',
+                    max_attempts=10,
+                )
+
     def test_random_unique_configurations_with_exclude_none_works_as_default(self):
         """
         Test that exclude=None behaves the same as not passing exclude.

@@ -1,15 +1,13 @@
 from __future__ import annotations
 
 from typing import Callable, Any
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer, SpacegroupOperations, PointGroupAnalyzer
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer, PointGroupAnalyzer
 from pymatgen.util.coord import coord_list_mapping_pbc, coord_list_mapping
-from pymatgen.core.lattice import Lattice
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.core.operations import SymmOp
 
 from bsym import SpaceGroup, SymmetryOperation, ConfigurationSpace, PointGroup
 from bsym.configuration import load_configurations, save_configurations
-from copy import copy
 from functools import partial
 import numpy as np
 
@@ -140,8 +138,9 @@ def unique_symmetry_operations_as_vectors_from_structure(
         raise ValueError('structure argument should be a Structure or Molecule object')
     
     symmetry_operations = symmetry_analyzer.get_symmetry_operations()
+    seen: set[tuple[int, ...]] = set()
     mappings: list[list[int]] = []
-    
+
     mapping_structure: Structure | Molecule
     if subset:
         species_subset = [spec for i, spec in enumerate(structure.species) if i in subset]
@@ -149,14 +148,16 @@ def unique_symmetry_operations_as_vectors_from_structure(
         mapping_structure = instantiate_structure(species=species_subset, coords=cart_coords_subset)
     else:
         mapping_structure = structure
-    
+
     for symmop in symmetry_operations:
         cart_coords = coord_mapping(mapping_structure, symmop)
         new_structure = instantiate_structure(species=mapping_structure.species, coords=cart_coords)
         new_mapping = [x + 1 for x in list(mapping_list(new_structure, mapping_structure, atol))]
-        if new_mapping not in mappings:
+        key = tuple(new_mapping)
+        if key not in seen:
+            seen.add(key)
             mappings.append(new_mapping)
-    
+
     return mappings
 
 
@@ -273,7 +274,6 @@ def configuration_space_from_molecule(
     .. _coordinate mapping:
         http://pymatgen.org/pymatgen.util.coord_utils.html#pymatgen.util.coord_utils.coord_list_mapping
     """
-    molecule = Molecule(molecule.species, molecule.cart_coords - molecule.center_of_mass)
     point_group = point_group_from_molecule(molecule, subset=subset, atol=atol)
     if subset is None:
         subset = list(range(1, len(molecule) + 1))

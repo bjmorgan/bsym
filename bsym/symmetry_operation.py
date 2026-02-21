@@ -53,11 +53,13 @@ class SymmetryOperation:
         Initialise a `SymmetryOperation` object
 
         Args:
-            matrix: Square 2D vector as either a `numpy.ndarray` or `list`.
-            label: Optional string label for this `SymmetryOperation` object.
+            matrix: Square 2D array as a ``numpy.ndarray``, ``list``, or
+                (deprecated) ``numpy.matrix``.
+            label: Optional string label for this ``SymmetryOperation`` object.
 
         Raises:
-            TypeError: if matrix is not `numpy.ndarray` or `list`.
+            TypeError: if matrix is not ``numpy.ndarray``, ``list``, or
+                ``numpy.matrix``.
             ValueError: if matrix is not square.
             ValueError: if matrix is not a `permutation matrix`_.
 
@@ -70,20 +72,15 @@ class SymmetryOperation:
         Returns:
             None
         """
-        if isinstance(matrix, np.matrix):
-            self.matrix = np.array(matrix)
-        elif isinstance(matrix, np.ndarray):
-            self.matrix = np.array(matrix)
-        elif isinstance(matrix, list):
-            self.matrix = np.array(matrix)
-        else:
+        if not isinstance(matrix, (np.matrix, np.ndarray, list)):
             raise TypeError
+        self.matrix = np.asarray(matrix)
         if not is_square(self.matrix):
             raise ValueError('Not a square matrix')
         if not is_permutation_matrix(self.matrix):
             raise ValueError('Not a permutation matrix')
         self.label = label
-        self.index_mapping: np.ndarray = np.array([np.array(row).tolist().index(1) for row in matrix])
+        self.index_mapping: np.ndarray = np.argmax(self.matrix, axis=1)
 
     @overload
     def __mul__(self, other: SymmetryOperation) -> SymmetryOperation: ...
@@ -120,7 +117,7 @@ class SymmetryOperation:
         Returns:
             A new `SymmetryOperation` object corresponding to the inverse matrix operation.
         """
-        return SymmetryOperation(np.linalg.inv(self.matrix).astype(int), label=label)
+        return SymmetryOperation(self.matrix.T.copy(), label=label)
 
     @classmethod
     def from_vector(
@@ -207,7 +204,7 @@ class SymmetryOperation:
             A vector representation of this symmetry operation (as a list)
         """
         offset = 0 if count_from_zero else 1
-        return [row.tolist().index(1) + offset for row in self.matrix.T]
+        return (np.argmax(self.matrix, axis=0) + offset).tolist()  # type: ignore[no-any-return]
 
     def set_label(self, label: str) -> SymmetryOperation:
         """

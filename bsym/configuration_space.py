@@ -5,7 +5,8 @@ from bsym.partitions import generate_partitions, satisfies_bounds
 import numpy as np
 from itertools import combinations_with_replacement
 from collections import Counter
-from tqdm import tqdm, tqdm_notebook
+from tqdm import tqdm
+from tqdm.auto import tqdm as tqdm_auto
 from typing import Iterator
 
 
@@ -112,8 +113,8 @@ class ConfigurationSpace:
             print('evaluating {:d} unique permutations.'.format( total_permutations))
         generator: Iterator[tuple[int, ...]] = unique_permutations(s)
         if show_progress:
-            TqdmClass = tqdm_notebook if show_progress == 'notebook' else tqdm
-            generator = TqdmClass( # type: ignore[assignment]
+            TqdmClass = tqdm_auto if show_progress == 'notebook' else tqdm
+            generator = TqdmClass(
                 generator,
                 total=total_permutations,
                 unit=' permutations',
@@ -128,9 +129,10 @@ class ConfigurationSpace:
         sampling: str = 'degeneracy_weighted',
         seed: int | None = None,
         exclude: list[Configuration] | None = None,
+        max_attempts: int = 1000,
     ) -> list[Configuration]:
         """Generate n random symmetry-inequivalent configurations.
-        
+
         Args:
             site_distribution: Dictionary mapping species labels to counts.
             n: Number of unique configurations to generate.
@@ -141,45 +143,59 @@ class ConfigurationSpace:
             seed: Random seed for reproducibility.
             exclude: List of configurations to exclude. Any configuration
                 equivalent to one in this list will not be returned.
-        
+            max_attempts: Maximum number of consecutive failed attempts before
+                raising RuntimeError. Default is 1000.
+
         Returns:
             List of n unique Configuration objects with count attributes set.
-        
+
         Raises:
             ValueError: If sampling is not 'degeneracy_weighted' or 'uniform'.
+            RuntimeError: If the configuration space appears exhausted.
         """
         if sampling not in ('degeneracy_weighted', 'uniform'):
             raise ValueError(
                 f"sampling must be 'degeneracy_weighted' or 'uniform', got '{sampling}'"
             )
-        
+
         rng = np.random.default_rng(seed)
         seen: set[bytes] = set()
         unique_configs: list[Configuration] = []
-        
+
         # Pre-populate seen with excluded configurations
         if exclude is not None:
             for config in exclude:
                 seen.update(config.get_byte_equivalents(self.symmetry_group))
-        
+
+        consecutive_failures = 0
         while len(unique_configs) < n:
+            if consecutive_failures >= max_attempts:
+                raise RuntimeError(
+                    f"Failed to find a new unique configuration after "
+                    f"{max_attempts} consecutive attempts. "
+                    f"Found {len(unique_configs)} of {n} requested."
+                )
             config = self._generate_random_configuration(site_distribution, rng)
             config_hash = config.as_bytes()
-            
+
             if config_hash in seen:
+                consecutive_failures += 1
                 continue
-            
+
             equivalents = config.get_byte_equivalents(self.symmetry_group)
             degeneracy = len(equivalents)
-            
+
             if sampling == 'uniform':
                 if rng.random() >= 1.0 / degeneracy:
+                    # Rejection by acceptance test is not a failure to find
+                    # a novel configuration, so don't increment the counter.
                     continue
-            
+
             seen.update(equivalents)
             config.count = degeneracy
             unique_configs.append(config)
-        
+            consecutive_failures = 0
+
         return unique_configs
         
     def unique_colourings(self, colours, verbose=False):
@@ -203,15 +219,33 @@ class ConfigurationSpace:
         verbose: bool = False,
         show_progress: bool | str = False
     ) -> dict[tuple[int, ...], list[Configuration]]:
-        """[docstring unchanged]"""
-        from bsym.partitions import compute_mapping_vector
-        
+        """Find symmetry-inequivalent configurations for all possible compositions.
+
+        Enumerates integer partitions of the number of sites into ``n_species``
+        parts. For each partition, the canonical permutation undergoes full
+        symmetry analysis; non-canonical permutations are obtained by
+        relabelling species.
+
+        Args:
+            n_species: Number of distinct species.
+            bounds: Optional occupancy bounds per species index. Keys are
+                species indices, values are (min, max) tuples. ``None`` in
+                either position means unbounded.
+            verbose: Print verbose output.
+            show_progress: Show a progress bar. ``True`` for a terminal bar,
+                ``"notebook"`` for Jupyter.
+
+        Returns:
+            A dictionary mapping composition tuples to lists of
+            :any:`Configuration` objects. Keys are tuples like ``(2, 1, 1)``
+            where each element gives the count of the corresponding species.
+        """
         n_sites = self.dim
         all_partitions = generate_partitions(n_sites, n_species)
         
         # Initialize progress bar without pre-counting (avoids iterator exhaustion)
         if show_progress:
-            TqdmClass = tqdm_notebook if show_progress == 'notebook' else tqdm
+            TqdmClass = tqdm_auto if show_progress == 'notebook' else tqdm
             progress_bar = TqdmClass(
                 desc="Compositions",
                 unit=" compositions",
@@ -343,8 +377,8 @@ def apply_species_mapping(config, mapping_vector):
         >>> result.count
         2
     """
-    new_config_list = [mapping_vector[species_idx] for species_idx in config.vector]
-    new_config = Configuration(new_config_list)
+    mapping_arr = np.array(mapping_vector, dtype=np.int8)
+    new_config = Configuration(mapping_arr[config.vector])
     new_config.count = config.count
     return new_config
         
@@ -352,20 +386,6 @@ def colourings_generator( colours, dim ):
     for s in combinations_with_replacement( colours, dim ):
         for new_permutation in unique_permutations( s ):
             yield new_permutation 
-        
-def permutation_as_config_number(p):
-    """
-    A numeric representation of a numeric list.
-
-    Example:
-        >>> permutation_as_config_number( [ 1, 1, 0, 0, 1 ] )
-        11001
-    """
-    tot = 0
-    for num in p:
-        tot *= 10
-        tot += num
-    return tot
         
 def _select_random_indices(
     available_indices: np.ndarray,

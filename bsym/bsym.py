@@ -1,6 +1,6 @@
-import warnings
-import sys
-
-warnings.warn( "\nYou are trying to import bsym.bsym, which is not compatible with this version of bsym.\nPlease check the updated API information at https://github.com/bjmorgan/bsym,\n or download a compatible release at https://github.com/bjmorgan/bsym/releases.\n" )
-
-sys.exit()
+raise ImportError(
+    "You are trying to import bsym.bsym, which is not compatible with this "
+    "version of bsym.\nPlease check the updated API information at "
+    "https://github.com/bjmorgan/bsym,\nor download a compatible release at "
+    "https://github.com/bjmorgan/bsym/releases.\n"
+)
