@@ -377,8 +377,8 @@ def apply_species_mapping(config, mapping_vector):
         >>> result.count
         2
     """
-    new_config_list = [mapping_vector[species_idx] for species_idx in config.vector]
-    new_config = Configuration(new_config_list)
+    mapping_arr = np.array(mapping_vector, dtype=np.int8)
+    new_config = Configuration(mapping_arr[config.vector])
     new_config.count = config.count
     return new_config
         
