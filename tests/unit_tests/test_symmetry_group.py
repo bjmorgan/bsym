@@ -71,6 +71,7 @@ class SymmetryGroupTestCase( unittest.TestCase ):
         s2 = SymmetryOperation.from_vector([2, 3, 1])
         sg.extend([s2])
         self.assertEqual(sg.stacked_index_mappings.shape[0], 3)
+        self.assertEqual(sg.unique_index_mappings.shape[0], 3)
 
     def test_append( self ):
         s0, s1 = Mock( spec=SymmetryOperation ), Mock( spec=SymmetryOperation )
@@ -88,6 +89,7 @@ class SymmetryGroupTestCase( unittest.TestCase ):
         s2 = SymmetryOperation.from_vector([2, 3, 1])
         sg.append(s2)
         self.assertEqual(sg.stacked_index_mappings.shape[0], 3)
+        self.assertEqual(sg.unique_index_mappings.shape[0], 3)
         	     
     def test_by_label( self ):
         s0, s1 = Mock( spec=SymmetryOperation ), Mock( spec=SymmetryOperation )

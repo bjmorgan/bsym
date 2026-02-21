@@ -860,19 +860,14 @@ class TestConfigurationSpaceRandomUniqueConfigurations(unittest.TestCase):
         mock_config.as_bytes.return_value = b'only_one'
         mock_config.get_byte_equivalents.return_value = {b'only_one'}
 
-        call_count = 0
-        def generate_side_effect(*args, **kwargs):
-            nonlocal call_count
-            call_count += 1
-            return mock_config
-
         with patch.object(config_space, '_generate_random_configuration',
-                          side_effect=generate_side_effect):
+                          return_value=mock_config):
             with self.assertRaises(RuntimeError):
                 config_space.random_unique_configurations(
                     site_distribution={1: 2, 0: 2},
                     n=2,
                     sampling='degeneracy_weighted',
+                    max_attempts=10,
                 )
 
     def test_random_unique_configurations_with_exclude_none_works_as_default(self):

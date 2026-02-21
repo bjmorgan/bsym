@@ -28,7 +28,6 @@ class TestBsymTopLevelClasses( unittest.TestCase ):
 class TestOldBsymModule( unittest.TestCase ):
 
     def test_old_bsym_import_raises_import_error( self ):
-        import importlib
         import sys
         # Remove cached module if present so the import re-executes
         sys.modules.pop('bsym.bsym', None)
