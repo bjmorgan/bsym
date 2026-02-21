@@ -217,7 +217,27 @@ class ConfigurationSpace:
         verbose: bool = False,
         show_progress: bool | str = False
     ) -> dict[tuple[int, ...], list[Configuration]]:
-        """[docstring unchanged]"""
+        """Find symmetry-inequivalent configurations for all possible compositions.
+
+        Enumerates integer partitions of the number of sites into ``n_species``
+        parts. For each partition, the canonical permutation undergoes full
+        symmetry analysis; non-canonical permutations are obtained by
+        relabelling species.
+
+        Args:
+            n_species: Number of distinct species.
+            bounds: Optional occupancy bounds per species index. Keys are
+                species indices, values are (min, max) tuples. ``None`` in
+                either position means unbounded.
+            verbose: Print verbose output.
+            show_progress: Show a progress bar. ``True`` for a terminal bar,
+                ``"notebook"`` for Jupyter.
+
+        Returns:
+            A dictionary mapping composition tuples to lists of
+            :any:`Configuration` objects. Keys are tuples like ``(2, 1, 1)``
+            where each element gives the count of the corresponding species.
+        """
         from bsym.partitions import compute_mapping_vector
         
         n_sites = self.dim
@@ -366,20 +386,6 @@ def colourings_generator( colours, dim ):
     for s in combinations_with_replacement( colours, dim ):
         for new_permutation in unique_permutations( s ):
             yield new_permutation 
-        
-def permutation_as_config_number(p):
-    """
-    A numeric representation of a numeric list.
-
-    Example:
-        >>> permutation_as_config_number( [ 1, 1, 0, 0, 1 ] )
-        11001
-    """
-    tot = 0
-    for num in p:
-        tot *= 10
-        tot += num
-    return tot
         
 def _select_random_indices(
     available_indices: np.ndarray,

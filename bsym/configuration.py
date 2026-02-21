@@ -12,8 +12,7 @@ class Configuration:
     """
     A :any:`Configuration` describes a specific arrangement of objects in the vector space of possible positions.
     Objects are represented by integers, with indistinguishable objects denoted by identical integers.
-    This class subclasses `numpy.matrix <https://docs.scipy.org/doc/numpy/reference/generated/numpy.matrix.html>`_.
-    Each configuration in the vector space of positions is represented as a column vector.
+    Internally, the configuration is stored as a ``numpy.int8`` array.
 
     Attributes:
         count (int): If symmetry-inequivalent configurations have been generated for a `configuration space`,

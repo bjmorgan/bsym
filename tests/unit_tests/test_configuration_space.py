@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock, patch
 from bsym import ConfigurationSpace,SymmetryOperation, Configuration
-from bsym.configuration_space import permutation_as_config_number, colourings_generator, apply_species_mapping
+from bsym.configuration_space import colourings_generator, apply_species_mapping
 from bsym.symmetry_group import SymmetryGroup
 import numpy as np
 import io
@@ -450,9 +450,6 @@ class ConfigurationSpaceTestCase( unittest.TestCase ):
     
 
 class ConfigurationSpaceModuleFunctionsTestCase( unittest.TestCase ):
-      
-    def test_permutation_as_config_number(self):
-        self.assertEqual( permutation_as_config_number([1, 1, 0, 0, 1]), 11001)
 
     def test_colourings_generator(self):
         colourings = list(colourings_generator([1, 0], dim=3))

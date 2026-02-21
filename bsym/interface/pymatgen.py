@@ -1,15 +1,13 @@
 from __future__ import annotations
 
 from typing import Callable, Any
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer, SpacegroupOperations, PointGroupAnalyzer
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer, PointGroupAnalyzer
 from pymatgen.util.coord import coord_list_mapping_pbc, coord_list_mapping
-from pymatgen.core.lattice import Lattice
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.core.operations import SymmOp
 
 from bsym import SpaceGroup, SymmetryOperation, ConfigurationSpace, PointGroup
 from bsym.configuration import load_configurations, save_configurations
-from copy import copy
 from functools import partial
 import numpy as np
 
@@ -273,7 +271,6 @@ def configuration_space_from_molecule(
     .. _coordinate mapping:
         http://pymatgen.org/pymatgen.util.coord_utils.html#pymatgen.util.coord_utils.coord_list_mapping
     """
-    molecule = Molecule(molecule.species, molecule.cart_coords - molecule.center_of_mass)
     point_group = point_group_from_molecule(molecule, subset=subset, atol=atol)
     if subset is None:
         subset = list(range(1, len(molecule) + 1))
