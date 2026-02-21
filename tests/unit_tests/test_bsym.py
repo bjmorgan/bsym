@@ -27,19 +27,14 @@ class TestBsymTopLevelClasses( unittest.TestCase ):
 
 class TestOldBsymModule( unittest.TestCase ):
 
-    def test_old_bsym_import_quits( self ):
-        with self.assertRaises( SystemExit ):
-            with warnings.catch_warnings():
-                warnings.simplefilter( 'ignore' )
-                from bsym import bsym
-
-    def test_old_bsym_import_warns( self ):
-        with self.assertRaises( Exception ) as w:
-            with warnings.catch_warnings():
-                warnings.simplefilter( 'error' )
-                from bsym import bsym
-                self.assertEqual( len(w), 1 )
-                self.assertEqual( "You are trying to import bsym.bsym" in str( w[-1].message, True ) )
+    def test_old_bsym_import_raises_import_error( self ):
+        import importlib
+        import sys
+        # Remove cached module if present so the import re-executes
+        sys.modules.pop('bsym.bsym', None)
+        with self.assertRaises( ImportError ) as cm:
+            from bsym import bsym
+        self.assertIn("bsym.bsym", str(cm.exception))
 
 if __name__ == '__main__':
     unittest.main()
