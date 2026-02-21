@@ -240,8 +240,6 @@ class ConfigurationSpace:
             :any:`Configuration` objects. Keys are tuples like ``(2, 1, 1)``
             where each element gives the count of the corresponding species.
         """
-        from bsym.partitions import compute_mapping_vector
-        
         n_sites = self.dim
         all_partitions = generate_partitions(n_sites, n_species)
         

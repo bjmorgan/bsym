@@ -53,11 +53,13 @@ class SymmetryOperation:
         Initialise a `SymmetryOperation` object
 
         Args:
-            matrix: Square 2D vector as either a `numpy.ndarray` or `list`.
-            label: Optional string label for this `SymmetryOperation` object.
+            matrix: Square 2D array as a ``numpy.ndarray``, ``list``, or
+                (deprecated) ``numpy.matrix``.
+            label: Optional string label for this ``SymmetryOperation`` object.
 
         Raises:
-            TypeError: if matrix is not `numpy.ndarray` or `list`.
+            TypeError: if matrix is not ``numpy.ndarray``, ``list``, or
+                ``numpy.matrix``.
             ValueError: if matrix is not square.
             ValueError: if matrix is not a `permutation matrix`_.
 
