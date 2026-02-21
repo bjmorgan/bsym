@@ -13,6 +13,11 @@ class SymmetryGroupTestCase( unittest.TestCase ):
         self.assertEqual( sg.symmetry_operations[0], s0 )
         self.assertEqual( sg.symmetry_operations[1], s1 )
 
+    def test_default_symmetry_operations_are_not_shared(self):
+        sg1 = SymmetryGroup()
+        sg2 = SymmetryGroup()
+        self.assertIsNot(sg1.symmetry_operations, sg2.symmetry_operations)
+
     def test_read_from_file( self ):
         s0, s1 = Mock( spec=SymmetryOperation ), Mock( spec=SymmetryOperation )
         with patch( 'numpy.loadtxt' ) as mock_np_loadtxt:

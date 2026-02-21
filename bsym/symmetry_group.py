@@ -29,17 +29,17 @@ class SymmetryGroup:
 
     class_str = 'SymmetryGroup'
 
-    def __init__(self, symmetry_operations=[]):
+    def __init__(self, symmetry_operations: list[SymmetryOperation] | None = None):
         """
         Create a :any:`SymmetryGroup` object.
-    
+
         Args:
-            symmetry_operations (list): A list of :any:`SymmetryOperation` objects.
-    
+            symmetry_operations: A list of :any:`SymmetryOperation` objects.
+
         Returns:
             None
         """
-        self.symmetry_operations = symmetry_operations
+        self.symmetry_operations = symmetry_operations if symmetry_operations is not None else []
         # Cache for batched operations
         self._stacked_mappings = None
         self._unique_mappings = None
