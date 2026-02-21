@@ -41,8 +41,8 @@ class SymmetryGroup:
         """
         self.symmetry_operations = symmetry_operations if symmetry_operations is not None else []
         # Cache for batched operations
-        self._stacked_mappings = None
-        self._unique_mappings = None
+        self._stacked_mappings: NDArray[np.int_] | None = None
+        self._unique_mappings: NDArray[np.int_] | None = None
     
     @property
     def stacked_index_mappings(self) -> NDArray[np.int_]:
@@ -227,19 +227,14 @@ class SymmetryGroup:
         return next((so for so in self.symmetry_operations if so.label == label), None)
 
     @property
-    def labels(
-        self
-    ) -> list[SymmetryOperation]:
+    def labels(self) -> list[str | None]:
         """
         A list of labels for each :any:`SymmetryOperation` in this spacegroup.
 
-        Args:
-            None
-
         Returns:
-            (list): A list of label strings.
+            A list of label strings.
         """
-        return [so.label for so in self.symmetry_operations] 
+        return [so.label for so in self.symmetry_operations]
 
     def __repr__(self) -> str:
         to_return: str
