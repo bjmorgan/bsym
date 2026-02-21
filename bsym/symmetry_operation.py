@@ -83,7 +83,7 @@ class SymmetryOperation:
         if not is_permutation_matrix(self.matrix):
             raise ValueError('Not a permutation matrix')
         self.label = label
-        self.index_mapping: np.ndarray = np.array([np.array(row).tolist().index(1) for row in matrix])
+        self.index_mapping: np.ndarray = np.argmax(self.matrix, axis=1)
 
     @overload
     def __mul__(self, other: SymmetryOperation) -> SymmetryOperation: ...
@@ -207,7 +207,7 @@ class SymmetryOperation:
             A vector representation of this symmetry operation (as a list)
         """
         offset = 0 if count_from_zero else 1
-        return [row.tolist().index(1) + offset for row in self.matrix.T]
+        return (np.argmax(self.matrix, axis=0) + offset).tolist()  # type: ignore[no-any-return]
 
     def set_label(self, label: str) -> SymmetryOperation:
         """
