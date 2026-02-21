@@ -251,6 +251,6 @@ class SymmetryGroup:
         """
         Direct product.
         """
-        return SymmetryGroup([s1 * s2 for s1, s2 in product(self.symmetry_operations, other.symmetry_operations)])
+        return type(self)([s1 * s2 for s1, s2 in product(self.symmetry_operations, other.symmetry_operations)])
 
    

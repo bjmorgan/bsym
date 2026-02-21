@@ -244,6 +244,6 @@ class SymmetryGroupTestCase( unittest.TestCase ):
         results_all = sg.operate_on(config, minimal_set=False)
         self.assertEqual(len(results_all), 3)
 
-        
+
 if __name__ == '__main__':
     unittest.main()

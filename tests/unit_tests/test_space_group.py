@@ -78,5 +78,13 @@ class SpaceGroupTestCase( unittest.TestCase ):
         sg = SpaceGroup( symmetry_operations=[ s0, s1 ] )
         self.assertEqual( sg.labels, [ 'A', 'B' ] )
   
+    def test_mul_preserves_space_group_type(self):
+        s0 = SymmetryOperation.from_vector([1, 2])
+        sg1 = SpaceGroup(symmetry_operations=[s0])
+        sg2 = SpaceGroup(symmetry_operations=[s0])
+        result = sg1 * sg2
+        self.assertIsInstance(result, SpaceGroup)
+
+
 if __name__ == '__main__':
     unittest.main()
