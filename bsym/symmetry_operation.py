@@ -70,14 +70,9 @@ class SymmetryOperation:
         Returns:
             None
         """
-        if isinstance(matrix, np.matrix):
-            self.matrix = np.array(matrix)
-        elif isinstance(matrix, np.ndarray):
-            self.matrix = np.array(matrix)
-        elif isinstance(matrix, list):
-            self.matrix = np.array(matrix)
-        else:
+        if not isinstance(matrix, (np.matrix, np.ndarray, list)):
             raise TypeError
+        self.matrix = np.asarray(matrix)
         if not is_square(self.matrix):
             raise ValueError('Not a square matrix')
         if not is_permutation_matrix(self.matrix):
