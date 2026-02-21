@@ -128,9 +128,10 @@ class ConfigurationSpace:
         sampling: str = 'degeneracy_weighted',
         seed: int | None = None,
         exclude: list[Configuration] | None = None,
+        max_attempts: int = 1000,
     ) -> list[Configuration]:
         """Generate n random symmetry-inequivalent configurations.
-        
+
         Args:
             site_distribution: Dictionary mapping species labels to counts.
             n: Number of unique configurations to generate.
@@ -141,45 +142,58 @@ class ConfigurationSpace:
             seed: Random seed for reproducibility.
             exclude: List of configurations to exclude. Any configuration
                 equivalent to one in this list will not be returned.
-        
+            max_attempts: Maximum number of consecutive failed attempts before
+                raising RuntimeError. Default is 1000.
+
         Returns:
             List of n unique Configuration objects with count attributes set.
-        
+
         Raises:
             ValueError: If sampling is not 'degeneracy_weighted' or 'uniform'.
+            RuntimeError: If the configuration space appears exhausted.
         """
         if sampling not in ('degeneracy_weighted', 'uniform'):
             raise ValueError(
                 f"sampling must be 'degeneracy_weighted' or 'uniform', got '{sampling}'"
             )
-        
+
         rng = np.random.default_rng(seed)
         seen: set[bytes] = set()
         unique_configs: list[Configuration] = []
-        
+
         # Pre-populate seen with excluded configurations
         if exclude is not None:
             for config in exclude:
                 seen.update(config.get_byte_equivalents(self.symmetry_group))
-        
+
+        consecutive_failures = 0
         while len(unique_configs) < n:
+            if consecutive_failures >= max_attempts:
+                raise RuntimeError(
+                    f"Failed to find a new unique configuration after "
+                    f"{max_attempts} consecutive attempts. "
+                    f"Found {len(unique_configs)} of {n} requested."
+                )
             config = self._generate_random_configuration(site_distribution, rng)
             config_hash = config.as_bytes()
-            
+
             if config_hash in seen:
+                consecutive_failures += 1
                 continue
-            
+
             equivalents = config.get_byte_equivalents(self.symmetry_group)
             degeneracy = len(equivalents)
-            
+
             if sampling == 'uniform':
                 if rng.random() >= 1.0 / degeneracy:
+                    consecutive_failures += 1
                     continue
-            
+
             seen.update(equivalents)
             config.count = degeneracy
             unique_configs.append(config)
-        
+            consecutive_failures = 0
+
         return unique_configs
         
     def unique_colourings(self, colours, verbose=False):

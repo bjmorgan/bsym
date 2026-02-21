@@ -853,6 +853,31 @@ class TestConfigurationSpaceRandomUniqueConfigurations(unittest.TestCase):
         self.assertNotIn(mock_config_a, result)
         self.assertNotIn(mock_config_b, result)
         
+    def test_random_unique_configurations_raises_when_space_exhausted(self):
+        """
+        Test that requesting more configurations than exist raises RuntimeError.
+        """
+        config_space = ConfigurationSpace(objects=[1, 2, 3, 4])
+
+        mock_config = Mock(spec=Configuration)
+        mock_config.as_bytes.return_value = b'only_one'
+        mock_config.get_byte_equivalents.return_value = {b'only_one'}
+
+        call_count = 0
+        def generate_side_effect(*args, **kwargs):
+            nonlocal call_count
+            call_count += 1
+            return mock_config
+
+        with patch.object(config_space, '_generate_random_configuration',
+                          side_effect=generate_side_effect):
+            with self.assertRaises(RuntimeError):
+                config_space.random_unique_configurations(
+                    site_distribution={1: 2, 0: 2},
+                    n=2,
+                    sampling='degeneracy_weighted',
+                )
+
     def test_random_unique_configurations_with_exclude_none_works_as_default(self):
         """
         Test that exclude=None behaves the same as not passing exclude.
